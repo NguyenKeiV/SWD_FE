@@ -5,7 +5,7 @@ import text from "../../constants/resources.json";
 const images = [IMAGES.CS1, IMAGES.CS2, IMAGES.CS3, IMAGES.CS4, IMAGES.CS5];
 const cities = [text.HANOI, text.DANANG, text.CANTHO, text.TPHCM, text.CANTHO];
 const studentFees = [text.HPHANOI, text.HPDANANG, text.HPCANTHO, text.HPTPHCM, text.HPCANTHO]
-export default function InfiniteCarousel() {
+export default function StudentFee() {
   return (
     <div className="flex MyGradient w-[76%] mx-[12%] py-10 overflow-hidden">
       <motion.div
