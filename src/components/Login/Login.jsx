@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
-
+import axios from 'axios';
 const LoginPage = () => {
 
     const [username, setUsername] = useState('');
@@ -71,37 +71,33 @@ const LoginPage = () => {
         setIsLoading(true);
 
         try {
-            // Thay đổi endpoint và method theo Swagger backend của bạn
-            const response = await fetch(
+            // Gọi API bằng axios
+            const response = await axios.post(
                 'https://apigateway-app.wonderfulground-90a44e52.southeastasia.azurecontainerapps.io/user/auth/login',
                 {
-                    method: 'POST',
+                    email: username,
+                    password: password,
+                },
+                {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        email: username,
-                        password: password,
-                    }),
                 }
             );
 
-            if (!response.ok) {
-                // Xử lý lỗi trả về từ backend
-                const errorData = await response.json();
-                setErrors({ username: errorData.message || "Login failed. Please check your credentials." });
-                setIsLoading(false);
-                return;
-            }
-
             // Đăng nhập thành công
-            const data = await response.json();
-            // Lưu token nếu có: localStorage.setItem('token', data.token);
+            // Lưu token nếu có: localStorage.setItem('token', response.data.token);
             setShowSuccess(true);
             setTimeout(() => setShowSuccess(false), 3000);
-            window.location.href = "/register";
+            setTimeout(() => {
+                window.location.href = "/register";
+            }, 2000);
         } catch (error) {
-            setErrors({ username: "Network error. Please try again." });
+            if (error.response && error.response.data && error.response.data.message) {
+                setErrors({ username: error.response.data.message });
+            } else {
+                setErrors({ username: "Network error. Please try again." });
+            }
         } finally {
             setIsLoading(false);
         }
