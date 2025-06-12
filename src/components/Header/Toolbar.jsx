@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react"; // Hoặc dùng react-icons nếu thích
 import text from "../../constants/resources.json";
-
+import { Link } from "react-router-dom"
 const Toolbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -13,10 +13,8 @@ const Toolbar = () => {
     text.TinTuc,
     text.NganhHoc,
     text.TuyenSinh,
-    text.TraiNghiem,
-    text.Sinhvien,
-    text.CuuSinhVien,
     text.LienHe,
+    text.Login
   ];
 
   return (
@@ -28,7 +26,11 @@ const Toolbar = () => {
             key={index}
             className="h-full text-white font-medium p-4 hover:text-black hover:underline hover:bg-orange-700"
           >
-            {item}
+            <Link to={item === text.Login ? "/login" : `/${item.toLowerCase()}`}>
+
+              {item}
+            </Link>
+
           </button>
         ))}
       </div>
