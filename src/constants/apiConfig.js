@@ -1,1 +1,0 @@
-export const CHATBOT_API = "AIzaSyDxho5g5fwcyf6qrjDT-9or61_VBYyNuxo";

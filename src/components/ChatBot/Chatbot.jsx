@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import knowledgeRaw from "../../constants/knowledge.txt?raw";
-import { CHATBOT_API } from "../../constants/apiConfig";
 
 const ChatBot = () => {
   const [input, setInput] = useState("");
