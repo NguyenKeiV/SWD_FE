@@ -14,7 +14,7 @@ const Toolbar = () => {
     text.NganhHoc,
     text.TuyenSinh,
     text.LienHe,
-    text.Login
+
   ];
 
   return (
@@ -26,10 +26,7 @@ const Toolbar = () => {
             key={index}
             className="h-full text-white font-medium p-4 hover:text-black hover:underline hover:bg-orange-700"
           >
-            <Link to={item === text.Login ? "/login" : `/${item.toLowerCase()}`}>
-
-              {item}
-            </Link>
+            {item}
 
           </button>
         ))}

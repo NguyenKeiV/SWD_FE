@@ -300,7 +300,7 @@ const LoginPage = () => {
                                 onClick={handleLogin}
                                 disabled={isLoading} // khi nút đang loading thì không cho người dùng click nữa
                                 className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all duration-200 mt-10 ${isLoading
-                                    ? 'bg-gray-400 cursor-grab-not-allowed'
+                                    ? 'bg-gray-400 cursor-not-allowed'
                                     : 'bg-orange-500 hover:bg-orange-600 active:scale-95'
                                     } shadow-lg hover:shadow-xl cursor-grab`}
                             >
