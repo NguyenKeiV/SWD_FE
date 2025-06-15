@@ -14,7 +14,8 @@ const Toolbar = () => {
     text.NganhHoc,
     text.TuyenSinh,
     text.LienHe,
-
+    text.DangKyXetTuyen,
+    text.TraCuu
   ];
 
   return (
@@ -26,7 +27,17 @@ const Toolbar = () => {
             key={index}
             className="h-full text-white font-medium p-4 hover:text-black hover:underline hover:bg-orange-700"
           >
-            {item}
+            {item === text.DangKyXetTuyen ? (
+              <Link to="/admission-form" className="text-white">
+                {item}
+              </Link>
+            ) : item === text.TraCuuHoSo ? (
+              <Link to="/lookup-profile" className="text-white">
+                {item}
+              </Link>
+            ) : (
+              item
+            )}
 
           </button>
         ))}

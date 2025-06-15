@@ -17,11 +17,11 @@ const LoginPage = () => {
     const navigate = useNavigate(); // Hook để điều hướng
 
 
-// Microsoft Identity Claims: Backend sử dụng Microsoft Identity framework,
-//  nên role được lưu theo format claim standard của Microsoft
+    // Microsoft Identity Claims: Backend sử dụng Microsoft Identity framework,
+    //  nên role được lưu theo format claim standard của Microsoft
 
     // Hàm decode JWT token để lấy role
-    function decodeJWTToken(token) {
+    const decodeJWTToken = (token) => {
         try {
             // JWT có 3 phần: header.payload.signature
             const base64Url = token.split('.')[1];
@@ -42,7 +42,7 @@ const LoginPage = () => {
     }
 
     // Hàm lấy role từ JWT payload
-    function getRoleFromToken(decodedToken) {
+    const getRoleFromToken = (decodedToken) => {
         if (!decodedToken) return null;
 
         // Kiểm tra các trường role có thể có
@@ -134,7 +134,7 @@ const LoginPage = () => {
 
                     setTimeout(() => {
                         // Điều hướng dựa trên role (chuyển thành uppercase để đảm bảo)
-                        const userRole = role ? role.toUpperCase() : 'USER';
+                        const userRole = role ? role.toUpperCase() : '';
 
                         if (userRole === "ADMIN" || userRole === "Admin" || userRole === "admin") {
                             navigate("/register");
@@ -184,7 +184,7 @@ const LoginPage = () => {
             {/* Background Image */}
 
             <div
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-100 contrast-125 saturate-150"
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-95 contrast-150 saturate-200"
                 style={{
                     backgroundImage: `url('https://daihoc.fpt.edu.vn/wp-content/uploads/2022/08/dai-hoc-fpt-tp-hcm-1.jpeg')`
                 }}

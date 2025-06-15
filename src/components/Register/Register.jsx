@@ -34,7 +34,7 @@ const RegisterPage = () => {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-orange-50">
             {/* Background Image */}
             <div
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-100 contrast-125 saturate-150"
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-100 contrast-150 saturate-200"
                 style={{
                     backgroundImage: `url('https://fptcity.vn/wp-content/uploads/truong-fpt-university.jpg')`
                 }}
@@ -79,10 +79,10 @@ const RegisterPage = () => {
                             onChange={(e) => setUsername(e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 text-gray-700"
                             placeholder="Username"
-                            required
+
                         />
                         {errors.username && (
-                            <div className="mt-2 text-red-500 text-sm flex items-center">
+                            <div className="mt-2 text-red-500 text-sm flex items-center font-serif">
                                 <AlertCircle size={16} className="mr-1" />
                                 {errors.username}
                             </div>
@@ -96,10 +96,10 @@ const RegisterPage = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 text-gray-700"
                             placeholder="Email"
-                            required
+
                         />
                         {errors.email && (
-                            <div className="mt-2 text-red-500 text-sm flex items-center">
+                            <div className="mt-2 text-red-500 text-sm flex items-center font-serif">
                                 <AlertCircle size={16} className="mr-1" />
                                 {errors.email}
                             </div>
@@ -113,18 +113,19 @@ const RegisterPage = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 text-gray-700 pr-12"
                             placeholder="Mật khẩu"
-                            required
+
                         />
                         <button
                             type="button"
                             onClick={togglePasswordVisibility}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors"
-                            style={{ height: '40px', width: '40px' }}
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors flex items-center justify-center"
+                            style={{ pointerEvents: "auto" }} // Đảm bảo nút luôn ở vị trí này
+                            tabIndex={-1} // Không bị focus khi tab qua lỗi
                         >
-                            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            {showPassword ? <EyeOff size={20} flex items-center justify-center /> : <Eye size={20} flex items-center justify-center />}
                         </button>
                         {errors.password && (
-                            <div className="mt-2 text-red-500 text-sm flex items-center">
+                            <div className="text-red-500 text-sm flex items-center font-serif absolute left-0 w-full mt-auto">
                                 <AlertCircle size={16} className="mr-1" />
                                 {errors.password}
                             </div>
