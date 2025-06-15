@@ -35,6 +35,10 @@ const Toolbar = () => {
               <Link to="/lookup-profile" className="text-white">
                 {item}
               </Link>
+            ) : item === text.TraCuu ? (
+              <Link to="/lookup-profile" className="text-white">
+                {item}
+              </Link>
             ) : (
               item
             )}

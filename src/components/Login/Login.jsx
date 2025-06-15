@@ -184,7 +184,7 @@ const LoginPage = () => {
             {/* Background Image */}
 
             <div
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-95 contrast-150 saturate-200"
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-90 contrast-150 saturate-200"
                 style={{
                     backgroundImage: `url('https://daihoc.fpt.edu.vn/wp-content/uploads/2022/08/dai-hoc-fpt-tp-hcm-1.jpeg')`
                 }}
