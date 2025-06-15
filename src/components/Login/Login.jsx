@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 const LoginPage = () => {
@@ -10,44 +11,65 @@ const LoginPage = () => {
     const [errors, setErrors] = useState({});
     const [showSuccess, setShowSuccess] = useState(false); // Thêm state cho toast
 
+    const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
-    // const handleLogin = async (e) => {
-    //     e.preventDefault();
-    //     let newErrors = {};
-    //     // xác thực email hợp lệ
-    //     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const navigate = useNavigate(); // Hook để điều hướng
 
-    //     if (!username && !password) {
-    //         newErrors.password = "Please fill out this field";
-    //         newErrors.username = "Please fill out this field";
-    //     } else if (!username) {
-    //         newErrors.username = "Please fill out this field";
-    //     } else if (!password) {
-    //         newErrors.password = "Please fill out this field";;
-    //     } else if (!emailRegex.test(username)) {
-    //         newErrors.username = "Please enter a valid email address";
-    //     }
 
-    //     setErrors(newErrors);
+// Microsoft Identity Claims: Backend sử dụng Microsoft Identity framework,
+//  nên role được lưu theo format claim standard của Microsoft
 
-    //     if (Object.keys(newErrors).length > 0) {
-    //         setIsLoading(false);
-    //         return;
-    //     }
+    // Hàm decode JWT token để lấy role
+    function decodeJWTToken(token) {
+        try {
+            // JWT có 3 phần: header.payload.signature
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(
+                atob(base64)
+                    .split('')
+                    .map(function (c) {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    })
+                    .join('')
+            );
+            return JSON.parse(jsonPayload);
+        } catch (error) {
+            console.error('Error decoding JWT:', error);
+            return null;
+        }
+    }
 
-    //     setIsLoading(true);
+    // Hàm lấy role từ JWT payload
+    function getRoleFromToken(decodedToken) {
+        if (!decodedToken) return null;
 
-    //     // Hiển thị toast notification
-    //     setTimeout(() => {
-    //         setIsLoading(false); // Giả lập quá trình đăng nhập thành công
-    //         setShowSuccess(true);
-    //         setTimeout(() => setShowSuccess(false), 3000); // 3s tự ẩn
-    //     }, 1500);
-    // };
+        // Kiểm tra các trường role có thể có
+        const roleClaims = [
+            'http://schemas.microsoft.com/ws/2008/06/identity/claims/role', // Microsoft Identity role claim
+            'role',
+            'userRole',
+            'user_role',
+            'authority',
+            'authorities',
+            'scope'
+        ];
+
+        for (const claim of roleClaims) {
+            if (decodedToken[claim]) {
+                return decodedToken[claim];
+            }
+        }
+
+        return null;
+    }
+
 
     const handleLogin = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Ngăn chặn hành vi mặc định của form (submit, reload trang, v.v.)
         let newErrors = {};
+        // email regex để kiểm tra định dạng email
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
         if (!username && !password) {
@@ -71,9 +93,8 @@ const LoginPage = () => {
         setIsLoading(true);
 
         try {
-            // Gọi API bằng axios
             const response = await axios.post(
-                'https://apigateway-app.wonderfulground-90a44e52.southeastasia.azurecontainerapps.io/user/auth/login',
+                'https://apigateway-app.victorioussmoke-6853e8b3.southeastasia.azurecontainerapps.io/user/auth/login',
                 {
                     email: username,
                     password: password,
@@ -85,19 +106,70 @@ const LoginPage = () => {
                 }
             );
 
-            // Đăng nhập thành công
-            // Lưu token nếu có: localStorage.setItem('token', response.data.token);
-            setShowSuccess(true);
-            setTimeout(() => setShowSuccess(false), 3000);
-            setTimeout(() => {
-                window.location.href = "/register";
-            }, 2000);
+            console.log('Full response:', response);
+            console.log('Response data:', response.data);
+
+            if (response.status === 200) {
+                const { data } = response;
+
+                // Lấy token từ response
+                const token = data.token || data.accessToken || data.access_token;
+
+                if (token) {
+                    // Decode JWT token để lấy role
+                    const decodedToken = decodeJWTToken(token);
+                    console.log('Decoded token payload:', decodedToken);
+
+                    const role = getRoleFromToken(decodedToken);
+                    console.log('Extracted role:', role);
+
+                    // Lưu token và role vào localStorage
+                    localStorage.setItem('token', token);
+                    if (role) {
+                        localStorage.setItem('role', role);
+                    }
+
+                    setShowSuccess(true);
+                    setTimeout(() => setShowSuccess(false), 3000);
+
+                    setTimeout(() => {
+                        // Điều hướng dựa trên role (chuyển thành uppercase để đảm bảo)
+                        const userRole = role ? role.toUpperCase() : 'USER';
+
+                        if (userRole === "ADMIN" || userRole === "Admin" || userRole === "admin") {
+                            navigate("/register");
+                        } else if (userRole === "CONSULTANT" || userRole === "Consultant" || userRole === "consultant") {
+                            navigate("/consultant");
+                        } else {
+                            navigate("/");
+                        }
+                    }, 2500);
+
+                } else {
+                    setErrors("Login response missing token");
+                    setErrorMessage("Login response missing token");
+                    setShowError(true);
+                    setTimeout(() => setShowError(false), 3000);
+                }
+            } else {
+                setErrors("Unexpected response status: " + response.status);
+                setErrorMessage("Unexpected response status: " + response.status);
+                setShowError(true);
+                setTimeout(() => setShowError(false), 3000);
+            }
+
         } catch (error) {
+            console.error('Login error:', error);
+
             if (error.response && error.response.data && error.response.data.message) {
-                setErrors({ username: error.response.data.message });
+                setErrorMessage(error.response.data.message); // Lấy thông báo lỗi từ response
             } else {
                 setErrors({ username: "Network error. Please try again." });
+                setErrorMessage("Network error. Please try again.");
             }
+
+            setShowError(true);
+            setTimeout(() => setShowError(false), 3000);
         } finally {
             setIsLoading(false);
         }
@@ -110,22 +182,38 @@ const LoginPage = () => {
     return (
         <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50 to-orange-50">
             {/* Background Image */}
+
             <div
-                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-100 contrast-125 saturate-150"
                 style={{
                     backgroundImage: `url('https://daihoc.fpt.edu.vn/wp-content/uploads/2022/08/dai-hoc-fpt-tp-hcm-1.jpeg')`
                 }}
             />
-
             <div className="overflow-hidden bg-gradient-to-br from-blue-50 to-orange-50">
                 {/* Notification Bar */}
                 {showSuccess && (
                     <div className="fixed top-6 right-6 z-50">
-                        <div className="flex items-center px-6 py-3 bg-green-500 text-white rounded-lg shadow-lg animate-fade-in-down">
+                        <div className="flex items-center px-6 py-3 bg-green-500 text-white rounded-lg shadow-lg animate-fade-in-down font-serif">
                             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                             </svg>
                             Đăng nhập thành công!
+                        </div>
+                    </div>
+                )}
+
+                {showError && (
+                    <div className="fixed top-6 right-6 z-50">
+                        <div className="flex items-center px-6 py-3 bg-red-500 text-white rounded-lg shadow-2xl transition-transform duration-500 ease-out transform scale-105"
+                            style={{
+                                transform: showError ? 'translateX(0)' : 'translateX(100%)',
+                                boxShadow: '0 8px 32px 0 rgba(239,68,68,0.45), 0 1.5px 8px 0 rgba(0,0,0,0.15)'
+                            }}
+                        >
+                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <span className="font-serif text-lg drop-shadow-lg">{errorMessage}</span>
                         </div>
                     </div>
                 )}
@@ -164,15 +252,16 @@ const LoginPage = () => {
                             {/* Username Field */}
                             <div>
                                 <input
-                                    type="text"
+                                    type="email"
+                                    autoComplete="username"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 text-gray-700"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 text-gray-700 "
                                     placeholder="Email"
                                     required
                                 />
                                 {errors.username && (
-                                    <div className="mt-2 text-red-500 text-sm flex items-center">
+                                    <div className="text-red-500 text-sm flex items-center font-serif mt-auto">
                                         <AlertCircle size={16} className="mr-1" />
                                         {errors.username}
                                     </div>
@@ -193,11 +282,13 @@ const LoginPage = () => {
                                     type="button"
                                     onClick={togglePasswordVisibility}
                                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors flex items-center justify-center"
+                                    style={{ pointerEvents: "auto" }} // Đảm bảo nút luôn ở vị trí này
+                                    tabIndex={-1} // Không bị focus khi tab qua lỗi
                                 >
                                     {showPassword ? <EyeOff size={20} flex items-center justify-center /> : <Eye size={20} flex items-center justify-center />}
                                 </button>
                                 {errors.password && (
-                                    <div className="mt-2 text-red-500 text-sm flex items-center">
+                                    <div className="text-red-500 text-sm flex items-center font-serif absolute left-0 w-full mt-auto">
                                         <AlertCircle size={16} className="mr-1" />
                                         {errors.password}
                                     </div>
@@ -208,18 +299,23 @@ const LoginPage = () => {
                             <button
                                 onClick={handleLogin}
                                 disabled={isLoading} // khi nút đang loading thì không cho người dùng click nữa
-                                className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all duration-200 ${isLoading
-                                    ? 'bg-gray-400 cursor-not-allowed'
+                                className={`w-full py-3 px-4 rounded-lg font-semibold text-white transition-all duration-200 mt-10 ${isLoading
+                                    ? 'bg-gray-400 cursor-grab-not-allowed'
                                     : 'bg-orange-500 hover:bg-orange-600 active:scale-95'
-                                    } shadow-lg hover:shadow-xl`}
+                                    } shadow-lg hover:shadow-xl cursor-grab`}
                             >
                                 {isLoading ? ( // Hiển thị loading khi đang đăng nhập
                                     <div className="flex items-center justify-center">
                                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                                         Đang đăng nhập...
                                     </div>
+                                ) : showSuccess ? ( // Hiển thị loading khi đang điều hướng
+                                    <div className="flex items-center justify-center opacity-60">
+                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                                        Đang điều hướng trang...
+                                    </div>
                                 ) : (
-                                    'Log in'
+                                    'Log in' // Hiển thị chữ "Log in" khi không đang loading
                                 )}
                             </button>
                         </div>
