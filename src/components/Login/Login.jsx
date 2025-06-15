@@ -231,20 +231,15 @@ const LoginPage = () => {
                         {/* Logo Section */}
                         <div className="text-center mb-8">
                             <div className="flex items-center justify-center mb-4">
-                                <div className="flex space-x-1">
-                                    <div className="w-8 h-8 bg-blue-600 rounded-sm flex items-center justify-center">
-                                        <span className="text-white font-bold text-sm">F</span>
-                                    </div>
-                                    <div className="w-8 h-8 bg-orange-500 rounded-sm flex items-center justify-center">
-                                        <span className="text-white font-bold text-sm">P</span>
-                                    </div>
-                                    <div className="w-8 h-8 bg-green-500 rounded-sm flex items-center justify-center">
-                                        <span className="text-white font-bold text-sm">T</span>
-                                    </div>
-                                </div>
-                                <span className="ml-2 text-blue-600 font-semibold">Education</span>
+                                <img
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/FPT_Education_logo.svg/2560px-FPT_Education_logo.svg.png"
+                                    alt="FPT Education Logo"
+                                    className="h-16 w-auto"
+                                    style={{ backgroundColor: 'transparent' }} // Đảm bảo logo có nền trong suốt
+
+                                />
                             </div>
-                            <h1 className="text-2xl font-bold text-orange-500 mb-2">TRƯỜNG ĐẠI HỌC FPT</h1>
+                            <h1 className="text-2xl font-bold text-orange-600 mb-2">TRƯỜNG ĐẠI HỌC FPT</h1>
                         </div>
 
                         {/* Login Form */}

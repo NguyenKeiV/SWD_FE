@@ -7,6 +7,9 @@ const Toolbar = () => {
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
+  const [showRegisterOptions, setShowRegisterOptions] = useState(false); // Quản lý hiển thị menu đăng ký xét tuyển
+
+
   const menuItems = [
     text.TrangChu,
     text.GioiThieu,
@@ -28,13 +31,33 @@ const Toolbar = () => {
             className="h-full text-white font-medium p-4 hover:text-black hover:underline hover:bg-orange-700"
           >
             {item === text.DangKyXetTuyen ? (
-              <Link to="/admission-form" className="text-white">
-                {item}
-              </Link>
-            ) : item === text.TraCuuHoSo ? (
-              <Link to="/lookup-profile" className="text-white">
-                {item}
-              </Link>
+              <div className="relative inline-block">
+                <button
+                  className="text-white"
+                  onClick={() => setShowRegisterOptions((prev) => !prev)} // Hàm xử lý sự kiện click
+                  
+                >
+                  {item}
+                </button>
+                {showRegisterOptions && (
+                  <div className="absolute right-(-1) mt-2 w-42 bg-white rounded-lg shadow-lg z-10">
+                    <Link
+                      to="/consulting"
+                      className="block px-4 py-3 hover:bg-orange-400 text-gray-700 border-b border-gray-100 font-mono whitespace-nowrap"
+                      onClick={() => setShowRegisterOptions(false)}
+                    >
+                      Đăng ký Tư Vấn
+                    </Link>
+                    <Link
+                      to="/admission-form"
+                      className="block px-4  py-3 hover:bg-orange-400 text-gray-700 font-mono whitespace-nowrap"
+                      onClick={() => setShowRegisterOptions(false)}
+                    >
+                      Đăng Ký Xét Tuyển
+                    </Link>
+                  </div>
+                )}
+              </div>
             ) : item === text.TraCuu ? (
               <Link to="/lookup-profile" className="text-white">
                 {item}

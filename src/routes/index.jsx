@@ -4,6 +4,8 @@ import LoginPage from "../components/Login/Login";
 import RegisterPage from "../components/Register/Register";
 import AdmissionForm from "../components/AdmissionForm/AdmissionForm";
 import ProfileResearch from "../components/ProfileResearch/ProfileResearch";
+import ConsultingForm from "../components/ConsultingForm/ConsultingForm"; 
+
 
 const AppRouter = createBrowserRouter([
   { path: "/", element: <HomePage /> },
@@ -11,6 +13,8 @@ const AppRouter = createBrowserRouter([
   { path: "/register", element: <RegisterPage /> },
   { path: "/admission-form", element: <AdmissionForm /> },
   { path: "/lookup-profile", element: <ProfileResearch /> },
+  { path: "/consulting", element: <ConsultingForm /> },
+
 
 ]);
 

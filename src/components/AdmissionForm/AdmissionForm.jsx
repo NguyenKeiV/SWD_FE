@@ -78,7 +78,8 @@ const AdmissionForm = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-50"
+            style={{ backgroundImage: "url('https://vinaconex25.com.vn/wp-content/uploads/2020/04/phoi-canh-1.jpg')" }}>
             {/* Header */}
             <div className="bg-white shadow-sm border-b">
                 <div className="max-w-7xl mx-auto px-4 py-4">
@@ -87,7 +88,7 @@ const AdmissionForm = () => {
                             <img
                                 src="https://fpteducationgroup.wordpress.com/wp-content/uploads/2015/03/cropped-logo-co-kem-3-sao-012.png"
                                 alt="FPT Education Logo"
-                                className="h-16 w-auto contrast-100 saturate-100"
+                                className="h-16 w-auto contrast-more:100 saturate-150 brightness-90"
                             />
 
                         </div>
@@ -98,7 +99,7 @@ const AdmissionForm = () => {
                                 </svg>
                                 <p className="text-sm text-gray-600 font-bold">Hotline tư vấn</p>
                             </div>
-                            <p className="text-lg font-bold text-orange-500 mt-1">1900 2233</p>
+                            <p className="text-lg font-bold text-orange-500 mt-1">1900 9009</p>
                         </div>
                     </div>
                 </div>
@@ -142,7 +143,16 @@ const AdmissionForm = () => {
                     {/* Form Section */}
                     <div className="lg:col-span-2">
                         <div className="bg-white rounded-2xl shadow-xl p-8">
-                            <h2 className="text-3xl font-bold text-orange-600 mb-8 text-center">
+                            <div className="flex items-center justify-center mb-4">
+                                <img
+                                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/FPT_Education_logo.svg/2560px-FPT_Education_logo.svg.png"
+                                    alt="FPT Education Logo"
+                                    className="h-16 w-auto"
+                                    style={{ backgroundColor: 'transparent' }} // Đảm bảo logo có nền trong suốt
+
+                                />
+                            </div>
+                            <h2 className="text-3xl font-serif font-bold text-orange-600 mb-8 text-center">
                                 Đăng ký xét tuyển 2025
                             </h2>
 
@@ -489,7 +499,7 @@ const AdmissionForm = () => {
                     <div className="space-y-6">
                         {/* Reasons to Choose FPTU */}
                         <div className="bg-white rounded-2xl shadow-xl p-6">
-                            <h3 className="text-2xl font-bold text-gray-800 mb-6">5 LÝ DO chọn FPTU</h3>
+                            <h3 className="text-2xl  font-serif font-bold text-orange-600 mb-6">5 LÝ DO chọn FPTU</h3>
 
                             <div className="space-y-4">
                                 <div className="flex items-start space-x-3">
@@ -553,7 +563,7 @@ const AdmissionForm = () => {
                             <ul className="space-y-2">
                                 <li className="flex items-center space-x-2">
                                     <Phone className="h-5 w-5 text-gray-500" />
-                                    <span className="text-gray-700">Hotline: 1900 1234</span>
+                                    <span className="text-orange-600 font-bold">Hotline: 1900 9789</span>
                                 </li>
 
                             </ul>

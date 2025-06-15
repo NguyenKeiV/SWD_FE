@@ -64,7 +64,7 @@ const ProfileResearch = () => {
                     <img
                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/FPT_Education_logo.svg/2560px-FPT_Education_logo.svg.png"
                         alt="FPT Education Logo"
-                        className="h-12"
+                        className="h-16"
                     />
                 </div>
                 <h2 className="text-2xl font-bold text-center text-orange-600 mb-2 drop-shadow">Tra cứu hồ sơ xét tuyển</h2>
