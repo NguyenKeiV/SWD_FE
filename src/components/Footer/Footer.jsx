@@ -10,7 +10,7 @@ const Footer = () => {
             <h2 class="mb-6 text-sm font-semibold text-orange-500 uppercase ">
               {text.HANOI}
             </h2>
-            <ul class="text-gray-500  font-medium">
+            <ul class="text-gray-500  font-base">
               <li class="mb-4">
                 <a href="#" class=" hover:underline">
                   Khu Giáo dục và Đào tạo – Khu Công nghệ cao Hòa Lạc – Km29 Đại lộ Thăng Long, H. Thạch Thất, TP. Hà Nội
@@ -33,7 +33,7 @@ const Footer = () => {
             <h2 class="mb-6 text-sm font-semibold text-orange-500 uppercase ">
               {text.TPHCM}
             </h2>
-            <ul class="text-gray-500  font-medium">
+            <ul class="text-gray-500  font-base">
               <li class="mb-4">
                 <a href="#" class="hover:underline">
                   Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, Thành Phố Hồ Chí Minh
@@ -56,7 +56,7 @@ const Footer = () => {
             <h2 class="mb-6 text-sm font-semibold text-orange-500 uppercase ">
               {text.DANANG}
             </h2>
-            <ul class="text-gray-500  font-medium">
+            <ul class="text-gray-500  font-base">
               <li class="mb-4">
                 <a href="#" class="hover:underline">
                   Khu đô thị công nghệ FPT Đà Nẵng, P. Hoà Hải, Quận Ngũ Hành Sơn, Thành Phố Đà Nẵng
@@ -80,7 +80,7 @@ const Footer = () => {
             <h2 class="mb-6 text-sm font-semibold text-orange-500 uppercase ">
               {text.CANTHO}
             </h2>
-            <ul class="text-gray-500  font-medium">
+            <ul class="text-gray-500  font-base">
               <li class="mb-4">
                 <a href="#" class="hover:underline">
                   Số 600 Đường Nguyễn Văn Cừ (nối dài), Phường An Bình, Quận Ninh Kiều, Thành Phố Cần Thơ
@@ -102,7 +102,7 @@ const Footer = () => {
             <h2 class="mb-6 text-sm font-semibold text-orange-500 uppercase ">
               {text.QUYNHON}
             </h2>
-            <ul class="text-gray-500  font-medium">
+            <ul class="text-gray-500  font-base">
               <li class="mb-4">
                 <a href="#" class="hover:underline">
                   Khu đô thị mới An Phú Thịnh, Phường Nhơn Bình & Phường Đống Đa, TP. Quy Nhơn, Bình Định
