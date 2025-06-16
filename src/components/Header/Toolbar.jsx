@@ -32,7 +32,7 @@ const Toolbar = () => {
     setTimeout(() => {
       setLoading(false);
       navigate(path);
-    }, 2500);
+    }, 1500);
   };
   return (
     <div className="w-full mt-2 bg-orange-600">

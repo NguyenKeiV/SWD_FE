@@ -17,8 +17,7 @@ const RegisterPage = () => {
         if (!username) newErrors.username = "Please fill out this field";
         if (!email) newErrors.email = "Please fill out this field";
         else if (!emailRegex.test(email)) newErrors.email = "Please enter a valid email address";
-        if (!password) newErrors.password = "Please fill out this field";
-
+       
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length > 0) return;
@@ -36,7 +35,7 @@ const RegisterPage = () => {
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-100 contrast-150 saturate-200"
                 style={{
-                    backgroundImage: `url('https://fptcity.vn/wp-content/uploads/truong-fpt-university.jpg')`
+                    backgroundImage: `url('https://fptcity.vn/wp-content/uploads/FPT_bridview_final-1-scaled.jpg')`
                 }}
             />
 

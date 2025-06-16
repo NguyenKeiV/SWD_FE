@@ -11,7 +11,7 @@ const Banner = () => {
     setLoading(true);
     setTimeout(() => {
       window.location.href = "/admission-form";
-    }, 2000); // 1 giây loading, có thể điều chỉnh
+    }, 1500); // 1 giây loading, có thể điều chỉnh
   };
 
 

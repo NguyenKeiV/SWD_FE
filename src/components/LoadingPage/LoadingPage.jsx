@@ -1,7 +1,7 @@
 import React from "react";
 
 const LoadingPage = () => (
-  <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-orange-50 to-blue-50">
+  <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-orange-50 to-blue-50 bg-or">
     {/* Logo FPT Education */}
     <img
       src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/FPT_Education_logo.svg/2560px-FPT_Education_logo.svg.png"

@@ -5,10 +5,31 @@ import searchIcon from "../../assets/search.svg";
 import vnFlag from "../../assets/Flag_of_Vietnam.svg.png";
 import enFlag from "../../assets/Flag_of_US.png";
 import Toolbar from "./Toolbar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@material-tailwind/react";
+import LoadingPage from "../LoadingPage/LoadingPage";
+
+
 const Header = () => {
+
+
+  const [loading, setLoading] = React.useState(false);
+  
+  const navigate = useNavigate();
+
+  const handleNavigateWithLoading = (path) => {
+    setLoading(true);
+   
+    setTimeout(() => {
+      setLoading(false);
+      navigate(path);
+    }, 1500);
+  };
+
+
   return (
     <div className="w-full">
+      {loading && <LoadingPage />}
       {/* Header top */}
       <div className="flex justify-evenly items-center px-4 py-2">
         {/* Logo */}
@@ -35,12 +56,13 @@ const Header = () => {
             aria-label="English"
           />
           <div className="flex">
-            <Link
+            <Button
               to="/login"
-              className="ml-10  px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
+              className="ml-10 px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 font-normal"
+              onClick={() => handleNavigateWithLoading("/login")}
             >
               {text.Login}
-            </Link>
+            </Button>
           </div>
         </div>
       </div>
