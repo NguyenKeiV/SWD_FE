@@ -6,7 +6,6 @@ import AdmissionForm from "../components/AdmissionForm/AdmissionForm";
 import ProfileResearch from "../components/ProfileResearch/ProfileResearch";
 import ConsultingForm from "../components/ConsultingForm/ConsultingForm"; 
 
-
 const AppRouter = createBrowserRouter([
   { path: "/", element: <HomePage /> },
   { path: "/login", element: <LoginPage /> },

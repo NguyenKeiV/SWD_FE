@@ -26,21 +26,9 @@ const AdmissionForm = () => {
 
 
     const majors = [
-
-        'Kỹ thuật phần mềm',
-        'An toàn thông tin',
-        'Trí tuệ nhân tạo',
-        'Vi mạch bán dẫn',
-        'Thiết kế mỹ thuật số',
-        'Truyền thông đa phương tiện',
-        'Digital Marketing',
-        'Luật kinh tế',
-        'Kinh doanh quốc tế',
-        'Ngôn ngữ Anh',
-        'Ngôn ngữ Nhật',
-        'Ngôn ngữ Hàn',
-        'Ngôn ngữ Trung Quốc',
-
+        'Kỹ thuật phần mềm', 'An toàn thông tin', 'Trí tuệ nhân tạo', 'Vi mạch bán dẫn',
+        'Thiết kế mỹ thuật số', 'Truyền thông đa phương tiện', 'Digital Marketing',
+        'Luật kinh tế', 'Kinh doanh quốc tế', 'Ngôn ngữ Anh', 'Ngôn ngữ Nhật', 'Ngôn ngữ Hàn', 'Ngôn ngữ Trung Quốc',
     ];
 
     const campuses = [
@@ -52,18 +40,15 @@ const AdmissionForm = () => {
     ];
 
     const provinces = [
-        "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh",
-        "Bến Tre", "Bình Định", "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau",
-        "Cần Thơ", "Cao Bằng", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Điện Biên",
-        "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội",
-        "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên",
-        "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn",
-        "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận",
-        "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh",
-        "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên",
-        "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "TP. Hồ Chí Minh", "Trà Vinh",
-        "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
+        "Hà Nội", "Hải Phòng", "Huế", "Đà Nẵng",
+        "Cần Thơ", "TP. Hồ Chí Minh", "Lai Châu", "Điện Biên", "Sơn La", "Lạng Sơn", "Quảng Ninh",
+        "Thanh Hóa", "Nghệ An", "Hà Tĩnh", "Cao Bằng", "Tuyên Quang", "Lào Cai", "Thái Nguyên", "Phú Thọ",
+        "Bắc Ninh", "Hưng Yên", "Hải Dương", "Ninh Bình", "Quảng Trị", "Gia Lai", "Khánh Hòa", "Lâm Đồng", "Đắk Lắk", "Đồng Nai",
+        "Tây Ninh", "Vĩnh Long", "Đồng Tháp", "Cà Mau", "An Giang"
     ];
+
+
+    const sortedProvinces = [...provinces].sort((a, b) => a.localeCompare(b, 'vi'));
 
     const handleInputChange = (name, value) => {
         setFormData(prev => ({
@@ -94,12 +79,12 @@ const AdmissionForm = () => {
                         </div>
                         <div className="text-right flex flex-col items-end">
                             <div className="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2 text-orange-600">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
                                 </svg>
-                                <p className="text-sm text-gray-600 font-bold">Hotline tư vấn</p>
+                                <p className="text-sm text-orange-600 font-bold">Hotline tư vấn</p>
                             </div>
-                            <p className="text-lg font-bold text-orange-500 mt-1">1900 9009</p>
+                            <p className="text-lg font-bold text-dark-500 mt-1">1900 9009</p>
                         </div>
                     </div>
                 </div>
@@ -184,7 +169,7 @@ const AdmissionForm = () => {
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Họ và tên *
+                                                Họ và tên <span className="text-red-500">*</span>
                                             </label>
                                             <div className="relative">
                                                 <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
@@ -200,7 +185,7 @@ const AdmissionForm = () => {
 
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Số điện thoại *
+                                                Số điện thoại <span className="text-red-500">*</span>
                                             </label>
                                             <div className="relative">
                                                 <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
@@ -216,7 +201,7 @@ const AdmissionForm = () => {
 
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Email *
+                                                Email <span className="text-red-500">*</span>
                                             </label>
                                             <div className="relative">
                                                 <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
@@ -232,7 +217,7 @@ const AdmissionForm = () => {
 
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Ngày sinh *
+                                                Ngày sinh <span className="text-red-500">*</span>
                                             </label>
                                             <div className="relative">
                                                 <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
@@ -247,7 +232,7 @@ const AdmissionForm = () => {
 
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Giới tính *
+                                                Giới tính <span className="text-red-500">*</span>
                                             </label>
                                             <select
                                                 value={formData.gender}
@@ -263,7 +248,7 @@ const AdmissionForm = () => {
 
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Tỉnh/Thành phố *
+                                                Tỉnh/Thành phố <span className="text-red-500">*</span>
                                             </label>
                                             <select
                                                 value={formData.province}
@@ -271,7 +256,7 @@ const AdmissionForm = () => {
                                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                             >
                                                 <option value="">Chọn tỉnh/thành phố</option>
-                                                {provinces.map((province) => (
+                                                {sortedProvinces.map((province) => (
                                                     <option key={province} value={province}>{province}</option>
                                                 ))}
                                             </select>
@@ -280,7 +265,7 @@ const AdmissionForm = () => {
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Địa chỉ *
+                                            Địa chỉ <span className="text-red-500">*</span>
                                         </label>
                                         <div className="relative">
                                             <MapPin className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
@@ -312,7 +297,7 @@ const AdmissionForm = () => {
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Trường THPT *
+                                                Trường THPT <span className="text-red-500">*</span>
                                             </label>
                                             <div className="relative">
                                                 <GraduationCap className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
@@ -328,7 +313,7 @@ const AdmissionForm = () => {
 
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Năm tốt nghiệp *
+                                                Năm tốt nghiệp <span className="text-red-500">*</span>
                                             </label>
                                             <select
                                                 value={formData.graduationYear}
@@ -346,7 +331,7 @@ const AdmissionForm = () => {
 
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Ngành học
+                                                Ngành học <span className="text-red-500">*</span>
                                             </label>
                                             <select
                                                 value={formData.priority1}
@@ -362,7 +347,7 @@ const AdmissionForm = () => {
 
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                Cơ sở đào tạo *
+                                                Cơ sở đào tạo <span className="text-red-500">*</span>
                                             </label>
                                             <select
                                                 value={formData.campus}
@@ -379,11 +364,11 @@ const AdmissionForm = () => {
                                     </div>
 
                                     <div className="border-t pt-6">
-                                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Điểm thi THPT</h3>
+                                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Điểm thi THPT <span className="text-red-500">*</span></h3>
                                         <div className="grid md:grid-cols-3 gap-6">
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Điểm Toán
+                                                    Điểm Toán <span className="text-red-500">*</span>
                                                 </label>
                                                 <input
                                                     type="number"
@@ -398,7 +383,7 @@ const AdmissionForm = () => {
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Điểm Văn
+                                                    Điểm Văn <span className="text-red-500">*</span>
                                                 </label>
                                                 <input
                                                     type="number"
@@ -413,7 +398,7 @@ const AdmissionForm = () => {
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Điểm Tiếng Anh
+                                                    Điểm Tiếng Anh <span className="text-red-500">*</span>
                                                 </label>
                                                 <input
                                                     type="number"
@@ -558,7 +543,7 @@ const AdmissionForm = () => {
                         </div>
                         {/* Contact Information */}
                         <div className="bg-white rounded-2xl shadow-xl p-6">
-                            <h3 className="text-2xl font-bold text-gray-800 mb-6">Thông tin liên hệ</h3>
+                            <h3 className="text-2xl font-bold text-dark-800 mb-6">Thông tin liên hệ</h3>
                             <p className="text-sm text-gray-600 mb-4">Nếu bạn cần hỗ trợ, vui lòng liên hệ với chúng tôi qua:</p>
                             <ul className="space-y-2">
                                 <li className="flex items-center space-x-2">

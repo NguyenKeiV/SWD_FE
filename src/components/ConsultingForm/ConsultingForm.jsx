@@ -1,22 +1,19 @@
 import React, { useState } from "react";
 
 const provinces = [
-    "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh",
-    "Bến Tre", "Bình Định", "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau",
-    "Cần Thơ", "Cao Bằng", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Điện Biên",
-    "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội",
-    "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên",
-    "Khánh Hòa", "Kiên Giang", "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn",
-    "Lào Cai", "Long An", "Nam Định", "Nghệ An", "Ninh Bình", "Ninh Thuận",
-    "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh",
-    "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên",
-    "Thanh Hóa", "Thừa Thiên Huế", "Tiền Giang", "TP. Hồ Chí Minh", "Trà Vinh",
-    "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
+    "Hà Nội", "Hải Phòng", "Huế", "Đà Nẵng",
+    "Cần Thơ", "TP. Hồ Chí Minh", "Lai Châu", "Điện Biên", "Sơn La", "Lạng Sơn", "Quảng Ninh",
+    "Thanh Hóa", "Nghệ An", "Hà Tĩnh", "Cao Bằng", "Tuyên Quang", "Lào Cai", "Thái Nguyên", "Phú Thọ",
+    "Bắc Ninh", "Hưng Yên", "Hải Dương", "Ninh Bình", "Quảng Trị", "Gia Lai", "Khánh Hòa", "Lâm Đồng", "Đắk Lắk", "Đồng Nai",
+    "Tây Ninh", "Vĩnh Long", "Đồng Tháp", "Cà Mau", "An Giang"
 ];
+
+const sortedProvinces = [...provinces].sort((a, b) => a.localeCompare(b, 'vi'));
 
 const ConsultingForm = () => {
     const [form, setForm] = useState({
         name: "",
+        phonenumber: "",
         email: "",
         province: "",
         notes: ""
@@ -49,7 +46,7 @@ const ConsultingForm = () => {
                     <img
                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/FPT_Education_logo.svg/2560px-FPT_Education_logo.svg.png"
                         alt="FPT Education Logo"
-                        className="h-14"
+                        className="h-16 w-auto"
                     />
                 </div>
                 <h2 className="text-2xl font-bold text-center text-orange-600 mb-6">Đăng Ký Tư Vấn</h2>
@@ -61,6 +58,17 @@ const ConsultingForm = () => {
                             name="name"
                             placeholder="Nhập họ và tên"
                             value={form.name}
+                            onChange={handleChange}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700 font-medium mb-1">Số điện thoại <span className="text-red-500">*</span></label>
+                        <input
+                            type="phone"
+                            name="email"
+                            placeholder="Nhập số điện thoại"
+                            value={form.phonenumber}
                             onChange={handleChange}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50"
                         />
@@ -85,7 +93,7 @@ const ConsultingForm = () => {
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50"
                         >
                             <option value="">-- Chọn tỉnh/thành phố --</option>
-                            {provinces.map((p) => (
+                            {sortedProvinces.map((p) => (
                                 <option key={p} value={p}>{p}</option>
                             ))}
                         </select>

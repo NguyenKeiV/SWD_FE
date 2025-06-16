@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import LoadingPage from '../LoadingPage/LoadingPage';
 const LoginPage = () => {
 
     const [username, setUsername] = useState('');

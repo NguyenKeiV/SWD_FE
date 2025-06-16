@@ -30,28 +30,28 @@ const ProfileResearch = () => {
             return;
         }
 
-        // try {
-        //     setLoading(true);
-        //     // Gọi API tra cứu (thay URL bên dưới bằng endpoint thật)
-        //     const response = await fetch('https://your-api-url.com/api/tra-cuu', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(formData),
-        //     });
+        try {
+            setLoading(true);
+            // Gọi API tra cứu (thay URL bên dưới bằng endpoint thật)
+            const response = await fetch('https://your-api-url.com/api/tra-cuu', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
 
-        //     if (!response.ok) {
-        //         throw new Error('Không tìm thấy hồ sơ. Vui lòng kiểm tra lại.');
-        //     }
+            if (!response.ok) {
+                throw new Error('Không tìm thấy hồ sơ. Vui lòng kiểm tra lại.');
+            }
 
-        //     const data = await response.json();
-        //     setResult(data);
-        // } catch (err) {
-        //     setError(err.message || 'Đã xảy ra lỗi khi tra cứu.');
-        // } finally {
-        //     setLoading(false);
-        // }
+            const data = await response.json();
+            setResult(data);
+        } catch (err) {
+            setError(err.message || 'Đã xảy ra lỗi khi tra cứu.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
