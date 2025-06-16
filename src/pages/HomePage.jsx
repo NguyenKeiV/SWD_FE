@@ -6,6 +6,7 @@ import Reason from "../components/Reasons/Reason"
 import Schoolarship from "../components/Schoolarship/Schoolarship"
 import StudentFee from "../components/StudentFee/StudentFee"
 import Footer from "../components/Footer/Footer"
+import ScrollToTopButton from "../components/ScrollToTopButton/ScrollToTopButton"
 const HomePage = () => {
   return (
     <div >
@@ -17,6 +18,7 @@ const HomePage = () => {
       <StudentFee/>
       <RecruitmentMethod/>
       <Footer/>
+      <ScrollToTopButton/>
     </div>
   )
 }

@@ -5,7 +5,7 @@ import searchIcon from "../../assets/search.svg";
 import vnFlag from "../../assets/Flag_of_Vietnam.svg.png";
 import enFlag from "../../assets/Flag_of_US.png";
 import Toolbar from "./Toolbar";
-
+import { Link } from "react-router-dom";
 const Header = () => {
   return (
     <div className="w-full">
@@ -34,6 +34,14 @@ const Header = () => {
             style={{ backgroundImage: `url(${enFlag})` }}
             aria-label="English"
           />
+          <div className="flex">
+            <Link
+              to="/login"
+              className="ml-10  px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
+            >
+              {text.Login}
+            </Link>
+          </div>
         </div>
       </div>
 
