@@ -14,12 +14,12 @@ const Header = () => {
 
 
   const [loading, setLoading] = React.useState(false);
-  
+
   const navigate = useNavigate();
 
   const handleNavigateWithLoading = (path) => {
     setLoading(true);
-   
+
     setTimeout(() => {
       setLoading(false);
       navigate(path);
@@ -55,10 +55,9 @@ const Header = () => {
             style={{ backgroundImage: `url(${enFlag})` }}
             aria-label="English"
           />
-          <div className="flex">
+          <div className="flex justify-end ml-20">
             <Button
-              to="/login"
-              className="ml-10 px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 font-normal"
+              className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 font-normal"
               onClick={() => handleNavigateWithLoading("/login")}
             >
               {text.Login}

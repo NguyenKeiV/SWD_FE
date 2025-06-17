@@ -35,7 +35,7 @@ const RegisterPage = () => {
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-100 contrast-150 saturate-200"
                 style={{
-                    backgroundImage: `url('https://fptcity.vn/wp-content/uploads/FPT_bridview_final-1-scaled.jpg')`
+                    backgroundImage: `url('https://vinaconex25.com.vn/wp-content/uploads/2020/06/1.jpg')`
                 }}
             />
 

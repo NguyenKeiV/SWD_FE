@@ -32,7 +32,7 @@ const Toolbar = () => {
     setTimeout(() => {
       setLoading(false);
       navigate(path);
-    }, 1500);
+    }, 1000);
   };
   return (
     <div className="w-full mt-2 bg-orange-600">
@@ -50,7 +50,7 @@ const Toolbar = () => {
               <div className="relative inline-block">
                 <button
                   className="text-white"
-                  // Hàm xử lý sự kiện click để hiển thị menu đăng ký xét tuyển
+                  // Hàm xử lý sự kiện click để hiển thị menu dropdown đăng ký xét tuyển
                   onClick={() => setShowRegisterOptions((prev) => !prev)} // Hàm xử lý sự kiện click 
 
                 >
@@ -74,16 +74,60 @@ const Toolbar = () => {
                   </div>
                 )}
               </div>
-            ) : item === text.TraCuu ? (
+            ) : item === text.TrangChu ? (
               <button
                 className="text-white"
-                onClick={() => handleNavigateWithLoading("/lookup-profile")}
+                onClick={() => handleNavigateWithLoading("/")}
               >
                 {item}
               </button>
-            ) : (
-              item
-            )}
+            )
+              : item === text.TraCuu ? (
+                <button
+                  className="text-white"
+                  onClick={() => handleNavigateWithLoading("/lookup-profile")}
+                >
+                  {item}
+                </button>
+              ) : item === text.GioiThieu ? (
+                <button
+                  className="text-white"
+                  onClick={() => handleNavigateWithLoading("/introduction")}
+                >
+                  {item}
+                </button>
+              ) : item === text.TinTuc ? (
+                <button
+                  className="text-white"
+                  onClick={() => handleNavigateWithLoading("/news")}
+                >
+                  {item}
+                </button>
+              ) : item === text.LienHe ? (
+                <button
+                  className="text-white"
+                  onClick={() => handleNavigateWithLoading("/contact")}
+                >
+                  {item}
+                </button>
+              ) : item === text.TuyenSinh ? (
+                <button
+                  className="text-white"
+                  onClick={() => handleNavigateWithLoading("/")}
+                >
+                  {item}
+                </button>
+              ) : item === text.NganhHoc ? (
+                <button
+                  className="text-white"
+                  onClick={() => handleNavigateWithLoading("/majors")}
+                >
+                  {item}
+                </button>
+              )
+                : (
+                  item
+                )}
 
           </button>
         ))}
