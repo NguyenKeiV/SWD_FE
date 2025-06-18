@@ -22,8 +22,8 @@ const Contact = () => {
                     className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <h1 className="text-4xl md:text-5xl font-bold text-white text-center px-4">
-                        Liên hệ với chúng tôi
+                    <h1 className="text-2xl md:text-5xl font-bold text-white text-center px-4">
+                        LIÊN HỆ VỚI CHÚNG TÔI
                     </h1>
                 </div>
             </div>

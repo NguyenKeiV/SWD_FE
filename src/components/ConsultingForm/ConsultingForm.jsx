@@ -49,7 +49,7 @@ const ConsultingForm = () => {
                         className="h-16 w-auto"
                     />
                 </div>
-                <h2 className="text-2xl font-bold text-center text-orange-600 mb-6">Đăng Ký Tư Vấn</h2>
+                <h2 className="text-3xl text-center text-orange-600 mb-6 font-bold font-mono">Đăng Ký Tư Vấn</h2>
                 <form className="space-y-5" onSubmit={handleSubmit}>
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">Họ và tên <span className="text-red-500">*</span></label>

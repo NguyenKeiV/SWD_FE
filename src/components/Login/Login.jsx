@@ -95,7 +95,7 @@ const LoginPage = () => {
 
         try {
             const response = await axios.post(
-                'http://localhost:5002/auth/login', // Địa chỉ API đăng nhập
+                'http://localhost:8080/auth/login', // Địa chỉ API đăng nhập
                 {
                     email: username,
                     password: password,
@@ -181,13 +181,13 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50 to-orange-50">
+        <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-blue-50 to-orange-50 contrast:150 saturate-150 brightness-100">
             {/* Background Image */}
 
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                 style={{
-                    backgroundImage: `url('https://vinaconex25.com.vn/wp-content/uploads/2020/06/1.jpg')`
+                    backgroundImage: `url('https://fptcity.vn/wp-content/uploads/FPT_bridview_final-1-scaled.jpg')`
                 }}
             />
             <div className="overflow-hidden bg-gradient-to-br from-blue-50 to-orange-50">

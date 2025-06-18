@@ -1,6 +1,7 @@
 import React from "react";
 import Toolbar from "../Header/Toolbar";
-
+import Footer from "../Footer/Footer";
+import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
 const majors = [
   {
     name: "Công nghệ thông tin",
@@ -161,6 +162,8 @@ const Majors = () => {
           </a>
         </div>
       </div>
+      <ScrollToTopButton />
+      <Footer/> 
     </div>
   );
 };
