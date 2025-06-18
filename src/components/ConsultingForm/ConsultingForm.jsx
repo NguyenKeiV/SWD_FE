@@ -1,46 +1,122 @@
 import React, { useState } from "react";
-
-const provinces = [
-    "Hà Nội", "Hải Phòng", "Huế", "Đà Nẵng",
-    "Cần Thơ", "TP. Hồ Chí Minh", "Lai Châu", "Điện Biên", "Sơn La", "Lạng Sơn", "Quảng Ninh",
-    "Thanh Hóa", "Nghệ An", "Hà Tĩnh", "Cao Bằng", "Tuyên Quang", "Lào Cai", "Thái Nguyên", "Phú Thọ",
-    "Bắc Ninh", "Hưng Yên", "Hải Dương", "Ninh Bình", "Quảng Trị", "Gia Lai", "Khánh Hòa", "Lâm Đồng", "Đắk Lắk", "Đồng Nai",
-    "Tây Ninh", "Vĩnh Long", "Đồng Tháp", "Cà Mau", "An Giang"
-];
-
-const sortedProvinces = [...provinces].sort((a, b) => a.localeCompare(b, 'vi'));
-
+import axios from "axios";
+import { AlertCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import LoadingPage from "../LoadingPage/LoadingPage";
 const ConsultingForm = () => {
-    const [form, setForm] = useState({
-        name: "",
-        phonenumber: "",
-        email: "",
-        province: "",
-        notes: ""
-    });
-    const [error, setError] = useState("");
+
+    const provinces = [
+        "Hà Nội", "Hải Phòng", "Huế", "Đà Nẵng",
+        "Cần Thơ", "TP. Hồ Chí Minh", "Lai Châu", "Điện Biên", "Sơn La", "Lạng Sơn", "Quảng Ninh",
+        "Thanh Hóa", "Nghệ An", "Hà Tĩnh", "Cao Bằng", "Tuyên Quang", "Lào Cai", "Thái Nguyên", "Phú Thọ",
+        "Bắc Ninh", "Hưng Yên", "Hải Dương", "Ninh Bình", "Quảng Trị", "Gia Lai", "Khánh Hòa", "Lâm Đồng", "Đắk Lắk", "Đồng Nai",
+        "Tây Ninh", "Vĩnh Long", "Đồng Tháp", "Cà Mau", "An Giang"
+    ];
+
+    const sortedProvinces = [...provinces].sort((a, b) => a.localeCompare(b, 'vi'));
+
+
+    const [isLoadingPage, setIsLoadingPage] = useState(false);
+
+    // Separate states for each field
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [reason, setReason] = useState('');
+
+    // Error states
+    const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-        setError("");
-    };
+    const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const handleSubmit = (e) => {
+
+    const navigate = useNavigate();
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!form.name || !form.email || !form.province) {
-            setError("Vui lòng nhập đầy đủ thông tin bắt buộc.");
+        let newErrors = {};
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+        // const phoneNumberRegex = !/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
+
+        // Validate each field independently
+        if (!name) {
+            newErrors.name = "Please fill out this field";
+        }
+
+        if (!email) {
+            newErrors.email = "Please fill out this field";
+        } else if (!emailRegex.test(email)) {
+            newErrors.email = "Please enter valid email address with format (e.g.. abc@gmail.com)";
+        }
+
+        if (!phoneNumber.trim()) {
+            newErrors.phoneNumber = "Please fill out this field";
+        } else if (!/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/.test(phoneNumber)) {
+            newErrors.phoneNumber = "Please enter a valid Vietnamese phone number with 10 characters (e.g. 0912345678)";
+        }
+
+        if (!reason) {
+            newErrors.reason = "Please fill out this field";
+        }
+
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
             return;
         }
-        // Gửi dữ liệu tới backend tại đây nếu cần
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
-        setForm({ name: "", email: "", province: "", notes: "" });
+
+        setIsLoading(true); 
+
+        try {
+            const response = await axios.post(
+                'http://localhost:8080/bookings/create-consult-booking',
+                {
+                    userFullName: name,
+                    userEmail: email,
+                    userPhoneNumber: phoneNumber,
+                    reason: reason,
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.status === 200 || response.status === 201) {
+                setShowSuccess(true);
+
+                // Show loading page before navigation
+                setIsLoadingPage(true);
+                setTimeout(() => {
+                    setShowSuccess(false);
+
+                    setIsLoadingPage(false);
+                    navigate('/');
+                }, 2000);
+            }
+        } catch (error) {
+            console.error('Booking error:', error);
+            // Show error toast
+            setErrorMessage(error.response?.data?.message || "Đăng ký tư vấn thất bại. Vui lòng thử lại.");
+            setShowError(true);
+            setTimeout(() => {
+                setShowError(false);
+            }, 2000);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-blue-50 py-10  bg-cover bg-center bg-no-repeat contrast-more:150 saturate-150 brightness-90"
             style={{ backgroundImage: "url('https://vinaconex25.com.vn/wp-content/uploads/2025/02/phoi-canh-01-scaled.jpg')" }}>
+            {isLoadingPage && <LoadingPage />}
             <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl p-8">
                 <div className="flex justify-center mb-6">
                     <img
@@ -55,36 +131,55 @@ const ConsultingForm = () => {
                         <label className="block text-gray-700 font-medium mb-1">Họ và tên <span className="text-red-500">*</span></label>
                         <input
                             type="text"
-                            name="name"
+                            autoComplete="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 text-gray-700 "
                             placeholder="Nhập họ và tên"
-                            value={form.name}
-                            onChange={handleChange}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50"
+
                         />
+                        {errors.name && (
+                            <div className="text-red-500 text-sm flex items-center font-serif mt-auto">
+                                <AlertCircle size={16} className="mr-1" />
+                                {errors.name}
+                            </div>
+                        )}
                     </div>
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">Số điện thoại <span className="text-red-500">*</span></label>
                         <input
-                            type="phone"
-                            name="email"
+                            type="text"
+                            name="name"
                             placeholder="Nhập số điện thoại"
-                            value={form.phonenumber}
-                            onChange={handleChange}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            value={phoneNumber}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50"
                         />
+                        {errors.phoneNumber && (
+                            <div className="text-red-500 text-sm flex items-center font-serif mt-auto">
+                                <AlertCircle size={16} className="mr-1" />
+                                {errors.phoneNumber}
+                            </div>
+                        )}
                     </div>
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">Email <span className="text-red-500">*</span></label>
                         <input
-                            type="email"
-                            name="email"
+                            type="text"
+                            name="name"
                             placeholder="Nhập email"
-                            value={form.email}
-                            onChange={handleChange}
+                            onChange={(e) => setEmail(e.target.value)}
+                            value={email}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50"
                         />
+                        {errors.email && (
+                            <div className="text-red-500 text-sm flex items-center font-serif mt-auto">
+                                <AlertCircle size={16} className="mr-1" />
+                                {errors.email}
+                            </div>
+                        )}
                     </div>
-                    <div>
+                    {/* <div>
                         <label className="block text-gray-700 font-medium mb-1">Tỉnh/Thành phố <span className="text-red-500">*</span></label>
                         <select
                             name="province"
@@ -97,19 +192,24 @@ const ConsultingForm = () => {
                                 <option key={p} value={p}>{p}</option>
                             ))}
                         </select>
-                    </div>
+                    </div> */}
                     <div>
-                        <label className="block text-gray-700 font-medium mb-1">Ghi chú</label>
+                        <label className="block text-gray-700 font-medium mb-1">Ghi chú <span className="text-red-500">*</span></label>
                         <textarea
                             name="notes"
                             placeholder="Ghi chú thêm (nếu có)"
-                            value={form.notes}
-                            onChange={handleChange}
+                            value={reason}
+                            onChange={(e) => setReason(e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50"
                             rows={3}
                         />
+                        {errors.reason && (
+                            <div className="text-red-500 text-sm flex items-center font-serif mt-auto">
+                                <AlertCircle size={16} className="mr-1" />
+                                {errors.reason}
+                            </div>
+                        )}
                     </div>
-                    {error && <div className="text-red-500 text-sm">{error}</div>}
                     <button
                         type="submit"
                         className="w-full py-3 px-4 rounded-lg font-semibold text-white bg-orange-500 hover:bg-orange-600 transition-all duration-200 shadow-lg"
@@ -147,7 +247,39 @@ const ConsultingForm = () => {
                         </div>
                     </div>
                 )}
+
+                {showError && (
+                    <div className="fixed top-6 right-6 z-50 flex items-start">
+                        <div className="flex bg-white rounded-lg shadow-lg border-l-4 border-red-500 p-4 min-w-[320px] transition-transform duration-500 ease-out transform scale-105"
+                            style={{ transform: showError ? 'translateX(0)' : 'translateX(100%)' }}>
+                            <div className="flex-shrink-0">
+                                <div className="h-8 w-8 rounded-full bg-red-400 flex items-center justify-center">
+                                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div className="ml-4 flex-1">
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <div className="font-bold text-lg text-gray-900">Thất bại</div>
+                                        <div className="text-gray-500 text-base">{errorMessage}</div>
+                                    </div>
+                                    <button
+                                        onClick={() => setShowError(false)}
+                                        className="text-gray-400 hover:text-gray-700 ml-4"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
+
         </div>
     );
 };
