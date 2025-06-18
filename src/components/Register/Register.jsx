@@ -1,33 +1,91 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
-
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 const RegisterPage = () => {
-    const [username, setUsername] = useState('');
+    const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({});
     const [showSuccess, setShowSuccess] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const navigate = useNavigate();
 
-    const handleRegister = (e) => {
+    // Authentication check
+    useEffect(() => {
+        const token = localStorage.getItem('token'); // lấy token của Admin khi Login
+        const role = localStorage.getItem('role');
+        const userRole = role ? role.toUpperCase() : '';
+
+        if (!token || userRole !== 'ADMIN') {
+            navigate('/login');
+            return;
+        }
+    }, [navigate]);
+
+    const handleRegister = async (e) => {
         e.preventDefault();
+
         let newErrors = {};
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-        if (!username) newErrors.username = "Please fill out this field";
+        if (!fullName) newErrors.fullName = "Please fill out this field";
         if (!email) newErrors.email = "Please fill out this field";
         else if (!emailRegex.test(email)) newErrors.email = "Please enter a valid email address";
-       
+
         setErrors(newErrors);
 
         if (Object.keys(newErrors).length > 0) return;
 
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
-        // Gửi API đăng ký tại đây nếu cần
-    };
+        const token = localStorage.getItem('token'); // Get token when making request
 
-    const togglePasswordVisibility = () => setShowPassword(!showPassword);
+        // setShowSuccess(true);
+        // setTimeout(() => setShowSuccess(false), 3000);
+        // Gửi API đăng ký tại đây nếu cần
+
+        try {
+            const response = await axios.post(
+                'http://localhost:8080/user/register',
+                {
+                    email: email.trim(),
+                    fullName: fullName.trim(),
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+
+            console.log('Registration response:', response);
+
+            if (response.status === 200) {
+                setShowSuccess(true);
+                setTimeout(() => {
+                    setShowSuccess(false);
+                    navigate('/login'); // or wherever you want to redirect
+                }, 2000);
+            }
+        } catch (error) {
+            console.error('Registration error:', error);
+
+            if (error.response?.status === 401) {
+                setErrorMessage("Unauthorized. Please login again.");
+                navigate('/login');
+            } else if (error.response?.data?.message) {
+                setErrorMessage(error.response.data.message);
+            } else {
+                setErrorMessage("Registration failed. Please try again.");
+            }
+
+            setShowError(true);
+            setTimeout(() => setShowError(false), 3000);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-orange-50">
@@ -46,6 +104,15 @@ const RegisterPage = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                         Tạo tài khoản thành công!
+                    </div>
+                </div>
+            )}
+
+            {showError && (
+                <div className="fixed top-6 right-6 z-50">
+                    <div className="flex items-center px-6 py-3 bg-red-500 text-white rounded-lg shadow-lg">
+                        <AlertCircle className="w-5 h-5 mr-2" />
+                        {errorMessage}
                     </div>
                 </div>
             )}
@@ -70,23 +137,7 @@ const RegisterPage = () => {
                     <h1 className="text-2xl font-bold text-orange-500 mb-2">TRƯỜNG ĐẠI HỌC FPT</h1>
                 </div>
                 <form className="space-y-6" onSubmit={handleRegister}>
-                    {/* Username */}
-                    <div>
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 text-gray-700"
-                            placeholder="Username"
 
-                        />
-                        {errors.username && (
-                            <div className="mt-2 text-red-500 text-sm flex items-center font-serif">
-                                <AlertCircle size={16} className="mr-1" />
-                                {errors.username}
-                            </div>
-                        )}
-                    </div>
                     {/* Email */}
                     <div>
                         <input
@@ -104,37 +155,35 @@ const RegisterPage = () => {
                             </div>
                         )}
                     </div>
-                    {/* Password */}
-                    <div className="relative">
+
+                    {/* Username */}
+                    <div>
                         <input
-                            type={showPassword ? "text" : "password"}
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 text-gray-700 pr-12"
-                            placeholder="Mật khẩu"
+                            type="text"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 text-gray-700"
+                            placeholder="Username"
 
                         />
-                        <button
-                            type="button"
-                            onClick={togglePasswordVisibility}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors flex items-center justify-center"
-                            style={{ pointerEvents: "auto" }} // Đảm bảo nút luôn ở vị trí này
-                            tabIndex={-1} // Không bị focus khi tab qua lỗi
-                        >
-                            {showPassword ? <EyeOff size={20} flex items-center justify-center /> : <Eye size={20} flex items-center justify-center />}
-                        </button>
-                        {errors.password && (
-                            <div className="text-red-500 text-sm flex items-center font-serif absolute left-0 w-full mt-auto">
+                        {errors.fullName && (
+                            <div className="mt-2 text-red-500 text-sm flex items-center font-serif">
                                 <AlertCircle size={16} className="mr-1" />
-                                {errors.password}
+                                {errors.fullName}
                             </div>
                         )}
                     </div>
+                    {errors.submit && (
+                        <div className="text-red-500 text-sm text-center">
+                            {errors.submit}
+                        </div>
+                    )}
                     <button
                         type="submit"
-                        className="w-full py-3 px-4 rounded-lg font-semibold text-white transition-all duration-200 bg-orange-500 hover:bg-orange-600 active:scale-95 shadow-lg hover:shadow-xl"
+                        className="w-full py-3 px-4 rounded-lg font-semibold text-white transition-all duration-200 bg-orange-500 hover:bg-orange-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isLoading}
                     >
-                        Create Account
+                        {isLoading ? 'Đang xử lý...' : 'Create Account'}
                     </button>
                 </form>
             </div>
