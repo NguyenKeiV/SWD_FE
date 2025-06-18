@@ -117,7 +117,7 @@ const ConsultingForm = () => {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-blue-50 py-10  bg-cover bg-center bg-no-repeat contrast-more:150 saturate-150 brightness-90"
             style={{ backgroundImage: "url('https://vinaconex25.com.vn/wp-content/uploads/2025/02/phoi-canh-01-scaled.jpg')" }}>
             {isLoadingPage && <LoadingPage />}
-            <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl p-8">
+            <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl p-8 mb-10">
                 <div className="flex justify-center mb-6">
                     <img
                         src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/FPT_Education_logo.svg/2560px-FPT_Education_logo.svg.png"
@@ -125,7 +125,7 @@ const ConsultingForm = () => {
                         className="h-16 w-auto"
                     />
                 </div>
-                <h2 className="text-3xl text-center text-orange-600 mb-6 font-bold font-mono">Đăng Ký Tư Vấn</h2>
+                <h2 className="text-3xl text-center text-orange-600 mb-6 font-bold font-mono mt-3">Đăng Ký Tư Vấn</h2>
                 <form className="space-y-5" onSubmit={handleSubmit}>
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">Họ và tên <span className="text-red-500">*</span></label>
@@ -195,7 +195,7 @@ const ConsultingForm = () => {
                     </div> */}
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">Ghi chú <span className="text-red-500">*</span></label>
-                        <textarea
+                        <input
                             name="notes"
                             placeholder="Ghi chú thêm (nếu có)"
                             value={reason}

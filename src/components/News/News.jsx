@@ -178,7 +178,7 @@ const News = () => {
                     className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <h1 className="text-4xl md:text-5xl font-normal text-white text-center px-4">
+                    <h1 className="text-4xl md:text-5xl font-semibold text-white text-center px-4">
                         TIN TỨC & SỰ KIỆN
                     </h1>
                 </div>

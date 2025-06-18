@@ -31,30 +31,13 @@ const Header = () => {
     <div className="w-full">
       {loading && <LoadingPage />}
       {/* Header top */}
-      <div className="flex justify-evenly items-center px-4 py-2">
+      <div className="flex justify-between items-center px-4 py-2">
         {/* Logo */}
-        <img src={IMAGES.LOGO} alt="logo" className="w-32 md:w-[12%] h-auto" />
+        <img src='https://caohoc.fpt.edu.vn/wp-content/uploads/2023/08/logo-qs-star-2012.png'
+          alt="logo" className="w-20 md:w-[] h-auto contrast-more:100 saturate-150 brightness-100" />
+        <img src={IMAGES.LOGO} alt="logo" className="w-32 md:w-[16%] h-auto ml-64 contrast-more:90 saturate-150 brightness-100" />
+
         <div className="hidden md:flex">
-          <div className="flex border border-gray-500">
-            <input
-              type="text"
-              placeholder={text.timkiem}
-              className="w-64 p-1 border border-gray-300 rounded-md m-1"
-            />
-            <button className="w-14 bg-orange-600 rounded-md m-1 flex items-center justify-center">
-              <img src={searchIcon} alt="" />
-            </button>
-          </div>
-          <button
-            className="w-10 h-10 rounded-full ml-2 border border-gray-300 bg-cover bg-center"
-            style={{ backgroundImage: `url(${vnFlag})` }}
-            aria-label="Vietnamese"
-          />
-          <button
-            className="w-10 h-10 rounded-full ml-2 border border-gray-300 bg-cover bg-center"
-            style={{ backgroundImage: `url(${enFlag})` }}
-            aria-label="English"
-          />
           <div className="flex justify-end ml-20">
             <Button
               className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 font-normal"
