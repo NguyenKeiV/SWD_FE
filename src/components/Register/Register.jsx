@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 const RegisterPage = () => {
     const [fullName, setFullName] = useState('');
@@ -10,19 +11,10 @@ const RegisterPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showError, setShowError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+
+    const [searchParams] = useSearchParams();
+    const [verificationStatus, setVerificationStatus] = useState(null);
     const navigate = useNavigate();
-
-    // Authentication check
-    useEffect(() => {
-        const token = localStorage.getItem('token'); // lấy token của Admin khi Login
-        const role = localStorage.getItem('role');
-        const userRole = role ? role.toUpperCase() : '';
-
-        if (!token || userRole !== 'ADMIN') {
-            navigate('/login');
-            return;
-        }
-    }, [navigate]);
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -38,6 +30,7 @@ const RegisterPage = () => {
 
         if (Object.keys(newErrors).length > 0) return;
 
+        setIsLoading(true);
         const token = localStorage.getItem('token'); // Get token when making request
 
         // setShowSuccess(true);
@@ -64,7 +57,9 @@ const RegisterPage = () => {
             if (response.status === 200) {
                 setShowSuccess(true);
                 setTimeout(() => {
-                    setShowSuccess(false);
+                    setShowSuccess(true);
+                    setEmail('');
+                    setFullName('');
                     navigate('/login'); // or wherever you want to redirect
                 }, 2000);
             }
@@ -87,9 +82,77 @@ const RegisterPage = () => {
         }
     };
 
+
+
+
+    const handleEmailVerification = async (token) => {
+        try {
+            const response = await axios.get(
+                `http://localhost:8080/user/confirm?token=${token}`
+            );
+
+            if (response.status === 200) {
+                setVerificationStatus('success');
+                setTimeout(() => {
+                    navigate('/login');
+                }, 1500);
+            }
+        } catch (error) {
+            setVerificationStatus('error');
+        }
+    };
+
+    // Check for verification token on component mount
+    useEffect(() => {
+        const token = searchParams.get('token');
+        if (token) {
+            handleEmailVerification(token);
+        }
+    }, [searchParams]);
+
+
+
+    // If in verification mode, show verification status
+    if (verificationStatus) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-orange-50">
+                <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md mx-4">
+                    {verificationStatus === 'success' ? (
+                        <div className="text-center">
+                            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                                <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <h2 className="mt-4 text-xl font-semibold text-gray-800">Email verification successful!</h2>
+                            <p className="mt-2 text-gray-600">Redirecting to login page...</p>
+                        </div>
+                    ) : (
+                        <div className="text-center">
+                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+                                <AlertCircle className="w-8 h-8 text-red-500" />
+                            </div>
+                            <h2 className="mt-4 text-xl font-semibold text-gray-800">Verification failed!</h2>
+                            <p className="mt-2 text-red-600">Invalid or expired verification link.</p>
+                            <button
+                                onClick={() => navigate('/login')}
+                                className="mt-4 px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+                            >
+                                Back to Login
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+        );
+    }
+
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-orange-50">
             {/* Background Image */}
+
+
             <div
                 className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-100 contrast-150 saturate-200"
                 style={{
