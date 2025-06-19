@@ -72,7 +72,7 @@ const ProfileResearch = () => {
 
                 <form className="space-y-5" onSubmit={handleSubmit}>
                     <div>
-                        <label className="block text-gray-700 font-medium mb-1">Họ và tên</label>
+                        <label className="block text-gray-700 font-medium mb-1">Họ và tên <span className="text-red-500">*</span></label>
                         <input
                             type="text"
                             name="hoTen"
@@ -83,7 +83,7 @@ const ProfileResearch = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700 font-medium mb-1">Số điện thoại</label>
+                        <label className="block text-gray-700 font-medium mb-1">Số điện thoại <span className="text-red-500">*</span></label>
                         <input
                             type="text"
                             name="sdt"
@@ -94,7 +94,7 @@ const ProfileResearch = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700 font-medium mb-1">Email</label>
+                        <label className="block text-gray-700 font-medium mb-1">Email <span className="text-red-500">*</span></label>
                         <input
                             type="email"
                             name="email"
