@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react"; // Hoặc dùng react-icons nếu thích
 import text from "../../constants/resources.json";
-
+import { Link, useNavigate } from "react-router-dom"
+import LoadingPage from "../LoadingPage/LoadingPage";
+import { Button } from "@material-tailwind/react";
 const Toolbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
+
+  const [showRegisterOptions, setShowRegisterOptions] = useState(false); // Quản lý hiển thị menu đăng ký xét tuyển
+
+  const navigate = useNavigate();
 
   const menuItems = [
     text.TrangChu,
@@ -13,14 +19,26 @@ const Toolbar = () => {
     text.TinTuc,
     text.NganhHoc,
     text.TuyenSinh,
-    text.TraiNghiem,
-    text.Sinhvien,
-    text.CuuSinhVien,
     text.LienHe,
+    text.DangKyXetTuyen,
+    text.TraCuu
   ];
 
+  const [loading, setLoading] = useState(false);
+
+  const handleNavigateWithLoading = (path) => {
+    setLoading(true);
+    setShowRegisterOptions(false);
+    setTimeout(() => {
+      setLoading(false);
+      navigate(path);
+    }, 2500);
+  };
   return (
     <div className="w-full mt-2 bg-orange-600">
+
+      {/*  Hiển thị LoadingPage khi đang tải */}
+      {loading && <LoadingPage />}
       {/* Desktop Toolbar */}
       <div className="hidden md:flex justify-center gap-3 w-full h-auto">
         {menuItems.map((item, index) => (
@@ -28,7 +46,45 @@ const Toolbar = () => {
             key={index}
             className="h-full text-white font-medium p-4 hover:text-black hover:underline hover:bg-orange-700"
           >
-            {item}
+            {item === text.DangKyXetTuyen ? (
+              <div className="relative inline-block">
+                <button
+                  className="text-white"
+                  // Hàm xử lý sự kiện click để hiển thị menu đăng ký xét tuyển
+                  onClick={() => setShowRegisterOptions((prev) => !prev)} // Hàm xử lý sự kiện click 
+
+                >
+                  {item}
+                </button>
+                {showRegisterOptions && (
+                  <div className="absolute right-(-1) mt-2 w-42 bg-white rounded-lg shadow-lg z-10">
+                    <Button
+                      className="w-full px-4 py-3 hover:bg-orange-400 text-gray-700 border-b border-gray-100 font-mono whitespace-nowrap"
+                      onClick={() => handleNavigateWithLoading("/consulting")}
+                    >
+                      Đăng ký Tư Vấn
+                    </Button>
+
+                    <Button
+                      className="w-full block px-4 py-3 hover:bg-orange-400 text-gray-700 font-mono whitespace-nowrap"
+                      onClick={() => handleNavigateWithLoading("/admission-form")}
+                    >
+                      Đăng Ký Xét Tuyển
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ) : item === text.TraCuu ? (
+              <button
+                className="text-white"
+                onClick={() => handleNavigateWithLoading("/lookup-profile")}
+              >
+                {item}
+              </button>
+            ) : (
+              item
+            )}
+
           </button>
         ))}
       </div>
