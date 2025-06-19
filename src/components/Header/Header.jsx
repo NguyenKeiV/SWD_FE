@@ -34,13 +34,13 @@ const Header = () => {
       <div className="flex justify-between items-center px-4 py-2">
         {/* Logo */}
         <img src='https://caohoc.fpt.edu.vn/wp-content/uploads/2023/08/logo-qs-star-2012.png'
-          alt="logo" className="w-20 md:w-[] h-auto contrast-more:100 saturate-150 brightness-100" />
-        <img src={IMAGES.LOGO} alt="logo" className="w-32 md:w-[16%] h-auto ml-64 contrast-more:90 saturate-150 brightness-100" />
+          alt="logo" className="w-20 md:w-[8%] h-auto contrast-more:100 saturate-150 brightness-100" />
+        <img src={IMAGES.LOGO} alt="logo" className="w-32 md:w-[16%] h-auto ml-44 contrast-more:90 saturate-150 brightness-100" />
 
         <div className="hidden md:flex">
           <div className="flex justify-end ml-20">
             <Button
-              className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 font-normal"
+              className="px-4 py-4 bg-orange-600 text-white rounded-md hover:bg-orange-700 font-mono text-sm "
               onClick={() => handleNavigateWithLoading("/login")}
             >
               {text.Login}

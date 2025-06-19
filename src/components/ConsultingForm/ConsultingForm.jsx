@@ -42,20 +42,30 @@ const ConsultingForm = () => {
         // const phoneNumberRegex = !/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
 
         // Validate each field independently
-        if (!name) {
+        if (!name && !email && !phoneNumber && !reason) {
+            newErrors.name = "Please fill out this field";
+            newErrors.email = "Please fill out this field";
+            newErrors.phoneNumber = "Please fill out this field";
+            newErrors.reason = "Please fill out this field";
+        }
+
+        else if (!name) {
             newErrors.name = "Please fill out this field";
         }
-
+        else if (!/^[AÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪBCDĐEÈÉẸẺẼÊỀẾỆỂỄFGHIÌÍỊỈĨJKLMNOÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠPQRSTUÙÚỤỦŨƯỪỨỰỬỮVWXYỲÝỴỶỸZ][aàáạảãăằắặẳẵâầấậẩẫbcdđeèéẹẻẽêềếệểễfghiìíịỉĩjklmnoòóọỏõôồốộổỗơờớợởỡpqrstuùúụủũưừứựửữvwxyỳýỵỷỹz]+ [AÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪBCDĐEÈÉẸẺẼÊỀẾỆỂỄFGHIÌÍỊỈĨJKLMNOÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠPQRSTUÙÚỤỦŨƯỪỨỰỬỮVWXYỲÝỴỶỸZ][aàáạảãăằắặẳẵâầấậẩẫbcdđeèéẹẻẽêềếệểễfghiìíịỉĩjklmnoòóọỏõôồốộổỗơờớợởỡpqrstuùúụủũưừứựửữvwxyỳýỵỷỹz]+(?: [AÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪBCDĐEÈÉẸẺẼÊỀẾỆỂỄFGHIÌÍỊỈĨJKLMNOÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠPQRSTUÙÚỤỦŨƯỪỨỰỬỮVWXYỲÝỴỶỸZ][aàáạảãăằắặẳẵâầấậẩẫbcdđeèéẹẻẽêềếệểễfghiìíịỉĩjklmnoòóọỏõôồốộổỗơờớợởỡpqrstuùúụủũưừứựửữvwxyỳýỵỷỹz]+)*$/.test(name)) {
+            newErrors.name = "Please enter a valid Vietnamese name\n(e.g. Nguyễn Văn A)";
+        }
         if (!email) {
             newErrors.email = "Please fill out this field";
-        } else if (!emailRegex.test(email)) {
-            newErrors.email = "Please enter valid email address with format (e.g.. abc@gmail.com)";
         }
-
+        else if (!emailRegex.test(email)) {
+            newErrors.email = "Please enter valid email address with format (...@gmail.com)";
+        }
         if (!phoneNumber.trim()) {
             newErrors.phoneNumber = "Please fill out this field";
-        } else if (!/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/.test(phoneNumber)) {
-            newErrors.phoneNumber = "Please enter a valid Vietnamese phone number with 10 characters (e.g. 0912345678)";
+        }
+        else if (!/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/.test(phoneNumber)) {
+            newErrors.phoneNumber = "Please enter a valid Vietnamese phone number with 10 characters (e.g. 0912345678 or +84912345678)";
         }
 
         if (!reason) {
@@ -70,7 +80,7 @@ const ConsultingForm = () => {
             return;
         }
 
-        setIsLoading(true); 
+        setIsLoading(true);
 
         try {
             const response = await axios.post(
@@ -139,8 +149,8 @@ const ConsultingForm = () => {
 
                         />
                         {errors.name && (
-                            <div className="text-red-500 text-sm flex items-center font-serif mt-auto">
-                                <AlertCircle size={16} className="mr-1" />
+                            <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                <AlertCircle size={12} className="mr-1" />
                                 {errors.name}
                             </div>
                         )}
@@ -156,7 +166,7 @@ const ConsultingForm = () => {
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50"
                         />
                         {errors.phoneNumber && (
-                            <div className="text-red-500 text-sm flex items-center font-serif mt-auto">
+                            <div className="text-red-500 text-xs flex items-center font-mono mt-auto font-bold ">
                                 <AlertCircle size={16} className="mr-1" />
                                 {errors.phoneNumber}
                             </div>
@@ -173,7 +183,7 @@ const ConsultingForm = () => {
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50"
                         />
                         {errors.email && (
-                            <div className="text-red-500 text-sm flex items-center font-serif mt-auto">
+                            <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
                                 <AlertCircle size={16} className="mr-1" />
                                 {errors.email}
                             </div>
@@ -204,7 +214,7 @@ const ConsultingForm = () => {
                             rows={3}
                         />
                         {errors.reason && (
-                            <div className="text-red-500 text-sm flex items-center font-serif mt-auto">
+                            <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
                                 <AlertCircle size={16} className="mr-1" />
                                 {errors.reason}
                             </div>

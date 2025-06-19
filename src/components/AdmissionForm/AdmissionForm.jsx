@@ -73,7 +73,7 @@ const AdmissionForm = () => {
                             <img
                                 src="https://fpteducationgroup.wordpress.com/wp-content/uploads/2015/03/cropped-logo-co-kem-3-sao-012.png"
                                 alt="FPT Education Logo"
-                                className="h-16 w-auto contrast-more:100 saturate-150 brightness-90"
+                                className="h-16 w-auto saturate-100"
                             />
 
                         </div>
