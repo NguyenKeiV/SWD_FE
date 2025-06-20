@@ -1,17 +1,20 @@
 import React from "react";
 import banner from "../../assets/Banner.png";
 import text from "../../constants/resources.json";
-import LoadingPage from "../LoadingPage/LoadingPage"; 
+import LoadingPage from "../LoadingPage/LoadingPage";
+import { useNavigate } from "react-router-dom";
 const Banner = () => {
 
   const [loading, setLoading] = React.useState(false);
-  
+
+  const navigate = useNavigate();
+
   const handleRegisterClick = (e) => {
     e.preventDefault();
     setLoading(true);
     setTimeout(() => {
-      window.location.href = "/admission-form";
-    }, 2000); // 1 giây loading, có thể điều chỉnh
+      navigate('/admission-form');
+    }, 1000); // 1 giây loading, có thể điều chỉnh
   };
 
 
