@@ -13,6 +13,10 @@ import Introduction from "../components/Introduction/Introduction";
 import News from "../components/News/News";
 import Contact from "../components/Contact/Contact";
 import Majors from "../components/Majors/Majors";
+import ConsultantHomePage from "../pages/ConsultantPage";
+import ConsultingBriefCase from "../components/BriefCase/ConsultingBriefCase";
+
+
 const AppRouter = createBrowserRouter([
   { path: "/", element: <HomePage /> },
   { path: "/login", element: <LoginPage /> },
@@ -21,6 +25,8 @@ const AppRouter = createBrowserRouter([
   { path: "/lookup-profile", element: <ProfileResearch /> },
   { path: "/consulting", element: <ConsultingForm /> },
 
+  { path: "/consultant", element: <ConsultantHomePage /> },
+  { path: "/consultingBriefCase", element: <ConsultingBriefCase /> },
   {
     path: "/admin",
     element: <AdminPage />,
