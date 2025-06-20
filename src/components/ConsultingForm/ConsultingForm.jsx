@@ -108,7 +108,7 @@ const ConsultingForm = () => {
 
                     setIsLoadingPage(false);
                     navigate('/');
-                }, 2000);
+                }, 1500);
             }
         } catch (error) {
             console.error('Booking error:', error);

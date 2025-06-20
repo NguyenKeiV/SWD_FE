@@ -1,30 +1,20 @@
 import React, { useState } from 'react';
 import { Calendar, Phone, Mail, MapPin, User, GraduationCap, FileText, Star, Award, Users, Globe, ChevronDown, Check } from 'lucide-react';
-
+import axios from 'axios';
+import { AlertCircle } from 'lucide-react';
+import LoadingPage from '../LoadingPage/LoadingPage';
+import { useNavigate } from 'react-router-dom';
 const AdmissionForm = () => {
-    const [formData, setFormData] = useState({
-        fullName: '',
-        phone: '',
-        email: '',
-        birthDate: '',
-        gender: '',
-        address: '',
-        province: '',
-        school: '',
-        major: '',
-        campus: '',
-        graduationYear: '',
-        englishScore: '',
-        mathScore: '',
-        literatureScore: '',
-        priority1: '',
-        notes: ''
-    });
+
 
     const [activeTab, setActiveTab] = useState('personal');
-    const [showSuccess, setShowSuccess] = useState(false);
 
 
+    const [isLoadingPage, setIsLoadingPage] = useState(false);
+
+
+    const navigate = useNavigate();
+    
     const majors = [
         'Kỹ thuật phần mềm', 'An toàn thông tin', 'Trí tuệ nhân tạo', 'Vi mạch bán dẫn',
         'Thiết kế mỹ thuật số', 'Truyền thông đa phương tiện', 'Digital Marketing',
@@ -50,16 +40,190 @@ const AdmissionForm = () => {
 
     const sortedProvinces = [...provinces].sort((a, b) => a.localeCompare(b, 'vi'));
 
-    const handleInputChange = (name, value) => {
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+    // Individual states for form fields
+    const [fullName, setFullName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [birthDate, setBirthDate] = useState('');
+    const [gender, setGender] = useState('');
+    const [address, setAddress] = useState('');
+    const [province, setProvince] = useState('');
+    const [school, setSchool] = useState('');
+    const [major, setMajor] = useState('');
+    const [campus, setCampus] = useState('');
+    const [graduationYear, setGraduationYear] = useState('');
+    const [englishScore, setEnglishScore] = useState('');
+    const [mathScore, setMathScore] = useState('');
+    const [literatureScore, setLiteratureScore] = useState('');
+    // const [priority1, setPriority1] = useState('');
+    const [notes, setNotes] = useState('');
+
+    const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [showError, setShowError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const validatePersonalInfo = () => {
+        let newErrors = {};
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+        const phoneRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
+
+        const vietnameseNameRegex = /^[AÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪBCDĐEÈÉẸẺẼÊỀẾỆỂỄFGHIÌÍỊỈĨJKLMNOÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠPQRSTUÙÚỤỦŨƯỪỨỰỬỮVWXYỲÝỴỶỸZ][aàáạảãăằắặẳẵâầấậẩẫbcdđeèéẹẻẽêềếệểễfghiìíịỉĩjklmnoòóọỏõôồốộổỗơờớợởỡpqrstuùúụủũưừứựửữvwxyỳýỵỷỹz]+ [AÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪBCDĐEÈÉẸẺẼÊỀẾỆỂỄFGHIÌÍỊỈĨJKLMNOÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠPQRSTUÙÚỤỦŨƯỪỨỰỬỮVWXYỲÝỴỶỸZ][aàáạảãăằắặẳẵâầấậẩẫbcdđeèéẹẻẽêềếệểễfghiìíịỉĩjklmnoòóọỏõôồốộổỗơờớợởỡpqrstuùúụủũưừứựửữvwxyỳýỵỷỹz]+/;
+
+        // Full Name Validation
+        if (!fullName.trim()) {
+            newErrors.fullName = "Please enter your full name";
+        } else if (!vietnameseNameRegex.test(fullName)) {
+            newErrors.fullName = "Please enter a valid Vietnamese name\n(e.g. Nguyễn Văn A)";
+        }
+
+        // Phone Validation
+        if (!phone.trim()) {
+            newErrors.phone = "Please enter your phone number";
+        } else if (!phoneRegex.test(phone)) {
+            newErrors.phone = "Please enter a valid Vietnamese phone number\n(e.g. 0912345678)";
+        }
+
+        // Email Validation
+        if (!email.trim()) {
+            newErrors.email = "Please enter personal email";
+        } else if (!emailRegex.test(email)) {
+            newErrors.email = "Please enter a valid email address\n(e.g. example@gmail.com)";
+        }
+
+        // Birth Date Validation
+        if (!birthDate) {
+            newErrors.birthDate = "Please enter your birthdate";
+        } else {
+            const date = new Date(birthDate);
+            const now = new Date();
+            if (date > now) {
+                newErrors.birthDate = "Birth date cannot be in the future";
+            }
+        }
+
+        // Gender Validation
+        if (!gender) {
+            newErrors.gender = "Please select your gender";
+        }
+
+        // Address Validation
+        if (!address.trim()) {
+            newErrors.address = "Please illustrate hometown address detailed";
+        }
+
+        // Province Validation
+        if (!province) {
+            newErrors.province = "Please select your province";
+        }
+        return newErrors;
     };
 
-    const handleSubmit = () => {
-        setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        let newErrors = {};
+
+        // --- Validate Personal Info (nếu muốn kiểm tra lại) ---
+        Object.assign(newErrors, validatePersonalInfo());
+
+
+        // School Validation
+        if (!school.trim()) {
+            newErrors.school = "Please fill out your High-school";
+        }
+
+        // Major Validation
+        if (!major) {
+            newErrors.major = "Please select your major";
+        }
+
+        // Campus Validation
+        if (!campus) {
+            newErrors.campus = "Please select your campus";
+        }
+
+        // Graduation Year Validation
+        if (!graduationYear) {
+            newErrors.graduationYear = "Please select graduation year";
+        } else {
+            const year = parseInt(graduationYear);
+            const currentYear = new Date().getFullYear();
+            if (year < currentYear - 5 || year > currentYear + 5) {
+                newErrors.graduationYear = "Please enter a valid graduation year";
+            }
+        }
+        if (!mathScore) {
+            newErrors.mathScore = "Please fill out Math score";
+        } else if (!/^\d*\.?\d+$/.test(mathScore) || parseFloat(mathScore) < 0 || parseFloat(mathScore) > 10) {
+            newErrors.mathScore = "Please enter a valid score between 0-10";
+        } else if (!/^\d*\.?\d{0,2}$/.test(mathScore)) {
+            newErrors.mathScore = "Score can only have up to 2 decimal places";
+        }
+
+        if (!literatureScore) {
+            newErrors.literatureScore = "Please fill out Literature score";
+        } else if (!/^\d*\.?\d+$/.test(literatureScore) || parseFloat(literatureScore) < 0 || parseFloat(literatureScore) > 10) {
+            newErrors.literatureScore = "Please enter a valid score between 0-10";
+        } else if (!/^\d*\.?\d{0,2}$/.test(literatureScore)) {
+            newErrors.literatureScore = "Score can only have up to 2 decimal places";
+        }
+
+        // Score Validation
+        if (!englishScore) {
+            newErrors.englishScore = "Please fill out English score";
+        } else if (!/^\d*\.?\d+$/.test(englishScore) || parseFloat(englishScore) < 0 || parseFloat(englishScore) > 10) {
+            newErrors.englishScore = "Please enter a valid score between 0-10";
+        } else if (!/^\d*\.?\d{0,2}$/.test(englishScore)) {
+            newErrors.englishScore = "Score can only have up to 2 decimal places";
+        }
+
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+        setIsLoading(true);
+        setErrors(newErrors);
+        setShowError(false);
+        setShowSuccess(false);
+
+
+        try {
+            // Thay thế URL và payload phù hợp với API của bạn
+            await axios.post('/api/admission', {
+                fullName, phone, email, birthDate, gender, province, address,
+                school, major, campus, graduationYear,
+                mathScore, literatureScore, englishScore, notes
+            });
+
+            setShowSuccess(true);
+            setShowError(false);
+            // Reset form nếu muốn
+            // setFullName(''); setPhone(''); ...
+        } catch (error) {
+            console.error('Booking error:', error);
+            // Show error toast
+            setErrorMessage(error.response?.data?.message || "Đăng ký xét tuyển thất bại. Vui lòng thử lại.");
+            setShowError(true);
+            setTimeout(() => {
+                setShowError(false);
+                navigate('/');
+            }, 2000);
+        } finally {
+            setIsLoading(false);
+        }
+
+        // Rest of your submission logic
+    };
+
+    const handleNextTab = (e) => {
+        e.preventDefault();
+        const newErrors = validatePersonalInfo();
+        setErrors(newErrors);
+        if (Object.keys(newErrors).length === 0) { // KHÔNG CÒN BẤT KỲ THÔNG BÁO LỖI NÀO NỮA
+            setActiveTab('academic');
+        }
     };
 
     return (
@@ -171,16 +335,21 @@ const AdmissionForm = () => {
                                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                                 Họ và tên <span className="text-red-500">*</span>
                                             </label>
-                                            <div className="relative">
-                                                <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                                                <input
-                                                    type="text"
-                                                    value={formData.fullName}
-                                                    onChange={(e) => handleInputChange('fullName', e.target.value)}
-                                                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                                                    placeholder="Nhập họ và tên"
-                                                />
-                                            </div>
+                                            <input
+                                                type="text"
+                                                autoComplete="name"
+                                                value={fullName}
+                                                onChange={(e) => setFullName(e.target.value)}
+                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all duration-200 bg-gray-50 text-gray-700 "
+                                                placeholder="Nhập họ và tên"
+
+                                            />
+                                            {errors.fullName && (
+                                                <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                    <AlertCircle size={12} className="mr-1" />
+                                                    {errors.fullName}
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div>
@@ -191,11 +360,17 @@ const AdmissionForm = () => {
                                                 <Phone className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                                                 <input
                                                     type="tel"
-                                                    value={formData.phone}
-                                                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                                                    value={phone}
+                                                    onChange={(e) => setPhone(e.target.value)}
                                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                                     placeholder="Nhập số điện thoại"
                                                 />
+                                                {errors.phone && (
+                                                    <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                        <AlertCircle size={12} className="mr-1" />
+                                                        {errors.phone}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
 
@@ -207,11 +382,17 @@ const AdmissionForm = () => {
                                                 <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                                                 <input
                                                     type="email"
-                                                    value={formData.email}
-                                                    onChange={(e) => handleInputChange('email', e.target.value)}
+                                                    value={email}
+                                                    onChange={(e) => setEmail(e.target.value)}
                                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                                     placeholder="Nhập email"
                                                 />
+                                                {errors.email && (
+                                                    <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                        <AlertCircle size={12} className="mr-1" />
+                                                        {errors.email}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
 
@@ -223,10 +404,16 @@ const AdmissionForm = () => {
                                                 <Calendar className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                                                 <input
                                                     type="date"
-                                                    value={formData.birthDate}
-                                                    onChange={(e) => handleInputChange('birthDate', e.target.value)}
+                                                    value={birthDate}
+                                                    onChange={(e) => setBirthDate(e.target.value)}
                                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                                 />
+                                                {errors.birthDate && (
+                                                    <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                        <AlertCircle size={12} className="mr-1" />
+                                                        {errors.birthDate}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
 
@@ -235,8 +422,8 @@ const AdmissionForm = () => {
                                                 Giới tính <span className="text-red-500">*</span>
                                             </label>
                                             <select
-                                                value={formData.gender}
-                                                onChange={(e) => handleInputChange('gender', e.target.value)}
+                                                value={gender}
+                                                onChange={(e) => setGender(e.target.value)}
                                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                             >
                                                 <option value="">Chọn giới tính</option>
@@ -244,6 +431,12 @@ const AdmissionForm = () => {
                                                 <option value="female">Nữ</option>
 
                                             </select>
+                                            {errors.gender && (
+                                                <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                    <AlertCircle size={12} className="mr-1" />
+                                                    {errors.gender}
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div>
@@ -251,8 +444,8 @@ const AdmissionForm = () => {
                                                 Tỉnh/Thành phố <span className="text-red-500">*</span>
                                             </label>
                                             <select
-                                                value={formData.province}
-                                                onChange={(e) => handleInputChange('province', e.target.value)}
+                                                value={province}
+                                                onChange={(e) => setProvince(e.target.value)}
                                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                             >
                                                 <option value="">Chọn tỉnh/thành phố</option>
@@ -260,6 +453,12 @@ const AdmissionForm = () => {
                                                     <option key={province} value={province}>{province}</option>
                                                 ))}
                                             </select>
+                                            {errors.province && (
+                                                <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                    <AlertCircle size={12} className="mr-1" />
+                                                    {errors.province}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
@@ -270,19 +469,25 @@ const AdmissionForm = () => {
                                         <div className="relative">
                                             <MapPin className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                                             <textarea
-                                                value={formData.address}
-                                                onChange={(e) => handleInputChange('address', e.target.value)}
+                                                value={address}
+                                                onChange={(e) => setAddress(e.target.value)}
                                                 rows={3}
                                                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                                 placeholder="Nhập địa chỉ chi tiết"
                                             />
+                                            {errors.address && (
+                                                <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                    <AlertCircle size={12} className="mr-1" />
+                                                    {errors.address}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
 
                                     <div className="flex justify-end">
                                         <button
-                                            onClick={() => setActiveTab('academic')}
+                                            onClick={handleNextTab}
                                             className="px-8 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium"
                                         >
                                             Tiếp theo
@@ -303,11 +508,17 @@ const AdmissionForm = () => {
                                                 <GraduationCap className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                                                 <input
                                                     type="text"
-                                                    value={formData.school}
-                                                    onChange={(e) => handleInputChange('school', e.target.value)}
+                                                    value={school}
+                                                    onChange={(e) => setSchool(e.target.value)}
                                                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                                     placeholder="Nhập tên trường THPT"
                                                 />
+                                                {errors.school && (
+                                                    <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                        <AlertCircle size={12} className="mr-1" />
+                                                        {errors.school}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
 
@@ -316,17 +527,19 @@ const AdmissionForm = () => {
                                                 Năm tốt nghiệp <span className="text-red-500">*</span>
                                             </label>
                                             <select
-                                                value={formData.graduationYear}
-                                                onChange={(e) => handleInputChange('graduationYear', e.target.value)}
+                                                value={graduationYear}
+                                                onChange={(e) => setGraduationYear(e.target.value)}
                                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                             >
                                                 <option value="">Chọn năm tốt nghiệp</option>
-                                                <option value="2024">2024</option>
-                                                <option value="2023">2023</option>
-                                                <option value="2022">2022</option>
-                                                <option value="2021">2021</option>
-                                                <option value="2020">2020</option>
+                                                <option value="2025">2025</option>
                                             </select>
+                                            {errors.graduationYear && (
+                                                <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                    <AlertCircle size={12} className="mr-1" />
+                                                    {errors.graduationYear}
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div>
@@ -334,8 +547,8 @@ const AdmissionForm = () => {
                                                 Ngành học <span className="text-red-500">*</span>
                                             </label>
                                             <select
-                                                value={formData.priority1}
-                                                onChange={(e) => handleInputChange('priority1', e.target.value)}
+                                                value={major}
+                                                onChange={(e) => setMajor(e.target.value)}
                                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                             >
                                                 <option value="">Chọn ngành học</option>
@@ -343,6 +556,12 @@ const AdmissionForm = () => {
                                                     <option key={major} value={major}>{major}</option>
                                                 ))}
                                             </select>
+                                            {errors.major && (
+                                                <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                    <AlertCircle size={12} className="mr-1" />
+                                                    {errors.major}
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div>
@@ -350,8 +569,8 @@ const AdmissionForm = () => {
                                                 Cơ sở đào tạo <span className="text-red-500">*</span>
                                             </label>
                                             <select
-                                                value={formData.campus}
-                                                onChange={(e) => handleInputChange('campus', e.target.value)}
+                                                value={campus}
+                                                onChange={(e) => setCampus(e.target.value)}
                                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                             >
                                                 <option value="">Chọn cơ sở</option>
@@ -359,6 +578,12 @@ const AdmissionForm = () => {
                                                     <option key={campus} value={campus}>{campus}</option>
                                                 ))}
                                             </select>
+                                            {errors.campus && (
+                                                <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                    <AlertCircle size={12} className="mr-1" />
+                                                    {errors.campus}
+                                                </div>
+                                            )}
                                         </div>
 
                                     </div>
@@ -371,15 +596,18 @@ const AdmissionForm = () => {
                                                     Điểm Toán <span className="text-red-500">*</span>
                                                 </label>
                                                 <input
-                                                    type="number"
-                                                    step="0.1"
-                                                    min="0"
-                                                    max="10"
-                                                    value={formData.mathScore}
-                                                    onChange={(e) => handleInputChange('mathScore', e.target.value)}
+                                                    type='text'
+                                                    value={mathScore}
+                                                    onChange={(e) => setMathScore(e.target.value)}
                                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                                     placeholder="0.0"
                                                 />
+                                                {errors.mathScore && (
+                                                    <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                        <AlertCircle size={12} className="mr-1" />
+                                                        {errors.mathScore}
+                                                    </div>
+                                                )}
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -387,29 +615,36 @@ const AdmissionForm = () => {
                                                 </label>
                                                 <input
                                                     type="number"
-                                                    step="0.1"
-                                                    min="0"
-                                                    max="10"
-                                                    value={formData.literatureScore}
-                                                    onChange={(e) => handleInputChange('literatureScore', e.target.value)}
+                                                    value={literatureScore}
+                                                    onChange={(e) => setLiteratureScore(e.target.value)}
                                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                                     placeholder="0.0"
                                                 />
+                                                {errors.literatureScore && (
+                                                    <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                        <AlertCircle size={12} className="mr-1" />
+                                                        {errors.literatureScore}
+                                                    </div>
+                                                )}
                                             </div>
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                                     Điểm Tiếng Anh <span className="text-red-500">*</span>
                                                 </label>
                                                 <input
-                                                    type="number"
-                                                    step="0.1"
-                                                    min="0"
-                                                    max="10"
-                                                    value={formData.englishScore}
-                                                    onChange={(e) => handleInputChange('englishScore', e.target.value)}
+                                                    type="text"
+
+                                                    value={englishScore}
+                                                    onChange={(e) => setEnglishScore(e.target.value)}
                                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                                     placeholder="0.0"
                                                 />
+                                                {errors.englishScore && (
+                                                    <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                        <AlertCircle size={12} className="mr-1" />
+                                                        {errors.englishScore}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
@@ -419,12 +654,18 @@ const AdmissionForm = () => {
                                             Ghi chú thêm
                                         </label>
                                         <textarea
-                                            value={formData.notes}
-                                            onChange={(e) => handleInputChange('notes', e.target.value)}
+                                            value={notes}
+                                            onChange={(e) => setNotes(e.target.value)}
                                             rows={4}
                                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                                             placeholder="Nhập thông tin bổ sung (nếu có)"
                                         />
+                                        {errors.notes && (
+                                            <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                                <AlertCircle size={12} className="mr-1" />
+                                                {errors.notes}
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className="flex justify-between">
@@ -463,6 +704,37 @@ const AdmissionForm = () => {
                                                             </div>
                                                             <button
                                                                 onClick={() => setShowSuccess(false)}
+                                                                className="text-gray-400 hover:text-gray-700 ml-4"
+                                                            >
+                                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {showError && (
+                                            <div className="fixed top-6 right-6 z-50 flex items-start">
+                                                <div className="flex bg-white rounded-lg shadow-lg border-l-4 border-red-500 p-4 min-w-[320px] transition-transform duration-500 ease-out transform scale-105"
+                                                    style={{ transform: showError ? 'translateX(0)' : 'translateX(100%)' }}>
+                                                    <div className="flex-shrink-0">
+                                                        <div className="h-8 w-8 rounded-full bg-red-400 flex items-center justify-center">
+                                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                    <div className="ml-4 flex-1">
+                                                        <div className="flex justify-between items-start">
+                                                            <div>
+                                                                <div className="font-bold text-lg text-gray-900">Thất bại</div>
+                                                                <div className="text-gray-500 text-base">{errorMessage}</div>
+                                                            </div>
+                                                            <button
+                                                                onClick={() => setShowError(false)}
                                                                 className="text-gray-400 hover:text-gray-700 ml-4"
                                                             >
                                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">

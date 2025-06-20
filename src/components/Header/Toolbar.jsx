@@ -52,21 +52,20 @@ const Toolbar = () => {
                   className="text-white"
                   // Hàm xử lý sự kiện click để hiển thị menu dropdown đăng ký xét tuyển
                   onClick={() => setShowRegisterOptions((prev) => !prev)} // Hàm xử lý sự kiện click 
-
                 >
                   {item}
                 </button>
                 {showRegisterOptions && (
                   <div className="absolute right-(-1) mt-2 w-42 bg-white rounded-lg shadow-lg z-10">
                     <Button
-                      className="w-full px-4 py-3 hover:bg-orange-400 text-gray-700 border-b border-gray-100 font-mono whitespace-nowrap"
+                      className="w-full px-4 py-3 hover:bg-orange-400 text-gray-800 border-b border-gray-100 font-mono whitespace-nowrap text-sm "
                       onClick={() => handleNavigateWithLoading("/consulting")}
                     >
                       Đăng ký Tư Vấn
                     </Button>
 
                     <Button
-                      className="w-full block px-4 py-3 hover:bg-orange-400 text-gray-700 font-mono whitespace-nowrap"
+                      className="w-full block px-4 py-3 hover:bg-orange-400 text-gray-800 font-mono whitespace-nowrap text-sm"
                       onClick={() => handleNavigateWithLoading("/admission-form")}
                     >
                       Đăng Ký Xét Tuyển

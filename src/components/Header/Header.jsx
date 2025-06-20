@@ -35,7 +35,7 @@ const Header = () => {
         {/* Logo */}
         <img src='https://caohoc.fpt.edu.vn/wp-content/uploads/2023/08/logo-qs-star-2012.png'
           alt="logo" className="w-20 md:w-[8%] h-auto contrast-more:100 saturate-150 brightness-100" />
-        <img src={IMAGES.LOGO} alt="logo" className="w-32 md:w-[16%] h-auto ml-44 contrast-more:90 saturate-150 brightness-100" />
+        <img src={IMAGES.LOGO} alt="logo" className="w-32 md:w-[15%] h-auto ml-52 contrast-more:90 saturate-150 brightness-100" />
 
         <div className="hidden md:flex">
           <div className="flex justify-end ml-20">

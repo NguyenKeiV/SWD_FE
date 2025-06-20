@@ -146,6 +146,7 @@ const LoginPage = () => {
                         }
                     }, 2500);
 
+                    
                 } else {
                     setErrors("Login response missing token");
                     setErrorMessage("Login response missing token");
