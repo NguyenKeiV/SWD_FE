@@ -165,7 +165,7 @@ const ConsultingBriefCase = () => {
         setError("");
 
         try {
-            const response = await axios.get("http://localhost:8080/bookings/get-all-bookings", {
+            const response = await axios.get("http://localhost:8080/bookings/get-all-bookings?status=InProgress", {
                 params: {
                     claimedByConsultantId: consultantId, // ✅ truyền ID vào query param
                 },
@@ -174,9 +174,7 @@ const ConsultingBriefCase = () => {
                 },
             });
 
-            const claimedInProgress = (response.data?.data?.items || []).filter(
-                (booking) => booking.status === "InProgress"
-            );
+            const claimedInProgress = (response.data?.data?.items || []);
 
             setClaimedBookings(claimedInProgress);
         } catch (error) {
