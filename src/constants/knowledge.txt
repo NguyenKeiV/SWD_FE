@@ -10,27 +10,27 @@ CÁC CƠ SỞ (CAMPUS) CỦA ĐẠI HỌC FPT
    - Môi trường học tập xanh, rộng rãi, hiện đại
 
 2. FPT TP. Hồ Chí Minh
-   - Địa chỉ: Công viên phần mềm Quang Trung, Quận 12
+   - Địa chỉ: Lô E2a-7, Đường D1 Khu Công nghệ cao, P. Long Thạnh Mỹ, TP. Thủ Đức, Thành Phố Hồ Chí Minh
    - Gần trung tâm công nghệ lớn, thuận tiện đi lại
 
 3. FPT Đà Nẵng
-   - Địa chỉ: Khu đô thị FPT City, Ngũ Hành Sơn
+   - Địa chỉ: Khu đô thị công nghệ FPT Đà Nẵng, P. Hoà Hải, Quận Ngũ Hành Sơn, Thành Phố Đà Nẵng
    - Cơ sở hiện đại, môi trường thân thiện gần biển
 
 4. FPT Cần Thơ
-   - Địa chỉ: Khu đô thị FPT Cần Thơ, Quận Bình Thủy
+   - Địa chỉ: Số 600 Đường Nguyễn Văn Cừ (nối dài), Phường An Bình, Quận Ninh Kiều, Thành Phố Cần Thơ
    - Không gian mở, cơ sở vật chất mới
 
 5. FPT Quy Nhơn
-   - Địa chỉ: Khu đô thị AI Quy Nhơn
+   - Địa chỉ: Khu đô thị mới An Phú Thịnh, Phường Nhơn Bình & Phường Đống Đa, TP. Quy Nhơn, Bình Định
    - Tập trung phát triển ngành Trí tuệ nhân tạo
 
 HỌC PHÍ THAM KHẢO (CÓ THỂ THAY ĐỔI THEO NĂM HỌC)
 
 Campus       | Học phí Đại học (VNĐ/năm) | Ghi chú
 ------------------------------------------------------------
-Hà Nội       | ~ 27 – 30 triệu/kỳ        | 3 kỳ/năm
-TP.HCM       | ~ 27 – 30 triệu/kỳ        | Có chương trình tiếng Nhật
+Hà Nội       | ~ 27 – 35.5 triệu/kỳ        | 3 kỳ/năm
+TP.HCM       | ~ 27.3 – 35.5 triệu/kỳ        | Có chương trình tiếng Nhật
 Đà Nẵng      | ~ 25 – 28 triệu/kỳ        |
 Cần Thơ      | ~ 23 – 26 triệu/kỳ        |
 Quy Nhơn     | ~ 20 – 24 triệu/kỳ        | Chuyên về AI
@@ -71,6 +71,8 @@ CÁC NGÀNH ĐÀO TẠO TẠI ĐẠI HỌC FPT
    - Luật kinh doanh
    - Công nghệ tài chính (FinTech)
    - Khoa học dữ liệu
+   - Luật kinh tế
+   - Luật thương mại quốc tế
 
 HƯỚNG DẪN ĐĂNG KÝ TƯ VẤN TUYỂN SINH
 
@@ -78,15 +80,36 @@ Bạn quan tâm đến một ngành học cụ thể hoặc cần tư vấn ch�
 
 ➡ Hãy nhấn vào nút “Đăng ký tư vấn” dưới đây để được đội ngũ tư vấn viên hỗ trợ trực tiếp.
 
-[ĐĂNG KÝ TƯ VẤN NGAY](#)
-(Thay thế # bằng link form Google Form hoặc trang đăng ký tư vấn thực tế của bạn)
+LIÊN HỆ ĐẠI HỌC FPT
+
+- Website: http://localhost:5173/consulting
+- Hotline: 1900 6606
+- Email: tuyensinh@fpt.edu.vn
+- Fanpage: http://localhost:5173/
+
+HƯỚNG DẪN ĐĂNG KÝ XÉT TUYỂN
+
+Theo quy định của trường Đại học FPT, việc xét tuyển vào trường theo phương thức điểm thi Tốt nghiệp (Toán, Văn, Anh)
+➡ Hãy nhấn vào nút “Đăng ký Xét tuyển” dưới đây để nộp đơn đăng ký xét tuyển vào trường nhé.
 
 LIÊN HỆ ĐẠI HỌC FPT
 
-- Website: https://daihoc.fpt.edu.vn
+- Website: http://localhost:5173/admission-form
 - Hotline: 1900 6606
 - Email: tuyensinh@fpt.edu.vn
-- Fanpage: https://www.facebook.com/daihocfpt
+- Fanpage: http://localhost:5173/
+
+
+TRA CỨU HỒ SƠ XÉT TUYỂN
+
+Để tra cứu hồ sơ xét tuyển, bạn vui lòng nhấn vào mục "TRA CỨU HỒ SƠ" hiển thị trên thanh Menu
+hoặc tìm kiếm "http://localhost:5173/lookup-profile".
+Đảm bảo (Họ và tên, Số điện thoại, Email) bạn đã điền vào form "Đăng ký xét tuyển" là khớp dữ liệu.
+
+TRƯỜNG HỢP KHÔNG CÓ DỮ LIỆU TRẢ VỀ
+
+Vui lòng liên hệ với số hotline nơi Campus bạn đăng ký để bộ phận Tư vấn viên có thể phản hồi kết quả sớm nhất nhé !
+
 
 50 Câu hỏi - Đáp án Tư vấn Tuyển sinh Đại học FPT 2025
 
@@ -98,9 +121,32 @@ THÔNG TIN CHUNG VỀ TRƯỜNG
 5. Chương trình thực tập của trường như thế nào? 100% sinh viên thực tập tại doanh nghiệp từ năm 3, giúp tích lũy kinh nghiệm thực tế và làm thật trong môi trường doanh nghiệp.
 CÁC NGÀNH ĐÀO TẠO
 6. Trường Đại học FPT có những ngành học nào năm 2025? Các ngành đào tạo năm 2025 gồm: Công Nghệ Thông Tin, Quản Trị Kinh Doanh, Công nghệ Truyền thông, Ngôn Ngữ Anh, Ngôn Ngữ Nhật, Ngôn Ngữ Hàn Quốc, Ngôn ngữ Trung Quốc, Luật.
-7. Ngành Công nghệ Thông tin có những chuyên ngành nào? Ngành Công nghệ Thông tin có các chuyên ngành: Kỹ thuật phần mềm, An toàn thông tin, Trí tuệ nhân tạo, Khoa học dữ liệu, và Thiết kế Mỹ thuật số.
+7. Ngành Công nghệ Thông tin có những chuyên ngành nào? Ngành Công nghệ Thông tin có các chuyên ngành: Công nghệ thông tin
+An toàn thông tin
+Công nghệ ô tô số
+Hệ thống thông tin
+Kỹ thuật phần mềm
+Thiết kế mỹ thuật số
+Thiết kế vi mạch bán dẫn
+Trí tuệ nhân tạo
 8. Ngành Công nghệ Truyền thông đào tạo những gì? Ngành Công nghệ Truyền thông đào tạo sinh viên trở thành chuyên gia trong lĩnh vực truyền thông số, trang bị kiến thức và kỹ năng để xác định mục tiêu, lập kế hoạch và quản trị hiệu quả các hoạt động truyền thông.
-9. Ngành Quản trị Kinh doanh có đặc điểm gì? Ngành Quản trị Kinh doanh được thiết kế với tư duy hướng chuẩn đầu ra đáp ứng nhu cầu thị trường lao động và tạo nền tảng phát triển sự nghiệp lâu dài cho người học.
+9. Ngành Quản trị Kinh doanh có đặc điểm gì? Ngành Quản trị Kinh doanh được thiết kế với tư duy hướng chuẩn đầu ra đáp ứng nhu cầu thị trường lao động và tạo nền tảng phát triển sự nghiệp lâu dài cho người học, bao gồm: Quản Trị Kinh Doanh
+Tài chính đầu tư
+Công nghệ tài chính (Fintech)
+Digital Marketing
+Kinh doanh quốc tế
+Logistics và quản lý chuỗi cung ứng toàn cầu
+Quản trị dịch vụ du lịch & lữ hành
+Quản trị khách sạn
+Tài chính doanh nghiệp
+Ngân hàng số – Tài chính (Digital Banking and Finance)
+Ngành Luật có đặc điểm gì?
+Trọng tâm đổi mới phương thức dạy và học, đánh trọng tâm thực hành vào thực tiễn, ngành Luật mang đến cơ hội làm việc toàn cầu với
+các chuyên ngành mới nhất của đại học FPT: 
+ Luật kinh doanh
+ Luật kinh tế
+ Luật thương mại quốc tế
+ (vừa được mở mới vào đầu năm 2025) 
 10. Trường có đào tạo các ngành ngôn ngữ nước ngoài không? Có, trường đào tạo 4 ngành ngôn ngữ: Ngôn Ngữ Anh (có chuyên ngành Quản trị khách sạn), Ngôn Ngữ Nhật, Ngôn Ngữ Hàn Quốc, và Ngôn ngữ Trung Quốc.
 PHƯƠNG THỨC TUYỂN SINH
 11. Trường Đại học FPT có bao nhiêu phương thức tuyển sinh năm 2025? 
