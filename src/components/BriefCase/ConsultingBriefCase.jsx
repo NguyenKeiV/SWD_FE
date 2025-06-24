@@ -23,6 +23,9 @@ const ConsultingBriefCase = () => {
     const [activeTab, setActiveTab] = useState("view"); // 'view' hoặc 'process'
 
 
+    const [processSearch, setProcessSearch] = useState(""); // Thêm state riêng cho tab process
+
+
 
     // MÀU SẮC CHO TỪNG TRẠNG THÁI HỒ SƠ
     const StatusBadge = ({ status }) => {
@@ -40,29 +43,66 @@ const ConsultingBriefCase = () => {
 
         const displayText =
 
-            status === 'Waiting' ? 'Chờ xử lý' :
+            status === 'Waiting' ? 'Đang Chờ Xử Lý' :
                 status === 'InProgress'
-                    ? 'Đang Trong Quá Trình Tư Vấn'
-                    : status;
+                    ? 'Đang Trong Quá Trình Tư Vấn' :
+                    status === 'Approved' ? 'Đã Hoàn Thành'
+                        : 'Loại Bỏ';
 
         return <span className={`${base} ${color}`}>{displayText}</span>;
     };
 
 
-    const fetchBriefcases = async (page = 1) => {
+    const fetchBriefcases = async (searchValue = "", page = 1) => {
         setLoading(true);
         setError("");
         try {
-            const res = await axios.get("http://localhost:8080/bookings/get-all-bookings?status=Waiting", {
-                params: {
-                    pageIndex: page,
-                    pageSize: PAGE_SIZE,
-                },
-            });
-            // Lấy đúng mảng items
+            let params = {
+                pageIndex: page,
+                pageSize: PAGE_SIZE,
+                status: "Waiting",
+            };
+
+            const removeVietnameseTones = (str) => {
+                return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+            }
+
+            const majors = [
+                'Kỹ thuật phần mềm', 'An toàn thông tin', 'Trí tuệ nhân tạo', 'Vi mạch bán dẫn',
+                'Thiết kế mỹ thuật số', 'Truyền thông đa phương tiện', 'Digital Marketing',
+                'Luật kinh tế', 'Kinh doanh quốc tế', 'Ngôn ngữ Anh', 'Ngôn ngữ Nhật', 'Ngôn ngữ Hàn', 'Ngôn ngữ Trung Quốc',
+            ];
+
+            const campuses = [
+                'Hà Nội',
+                'TP. Hồ Chí Minh',
+                'Đà Nẵng',
+                'Quy Nhơn',
+                'Cần Thơ',
+            ];
+
+            // Nếu searchValue là số hoặc uuid thì tìm theo id, còn lại tìm theo tên/email/sđt
+            if (searchValue) {
+                const normalized = removeVietnameseTones(searchValue).toLowerCase();
+
+                if (/^[0-9a-fA-F-]{36}$/.test(searchValue)) {
+                    params.id = searchValue.trim();
+                } else if (/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/.test(searchValue)) {
+                    params.userPhoneNumber = searchValue.trim();
+                } else if (searchValue.includes("@")) {
+                    params.userEmail = searchValue.trim();
+                } else if (majors.some(m => removeVietnameseTones(m).toLowerCase() === normalized)) {
+                    params.interestedSpecialization = searchValue;
+                } else if (campuses.some(c => removeVietnameseTones(c).toLowerCase() === normalized)) {
+                    params.interestedCampus = searchValue.trim();
+                } else {
+                    params.userFullName = searchValue.trim();
+                }
+            }
+            const res = await axios.get("http://localhost:8080/bookings/get-all-bookings", { params });
             const items = res.data?.data?.items || [];
             setApplicants(items);
-            setTotalPages(res.data?.data?.totalPages || 1); // hoặc totalCount/pageSize nếu API trả về
+            setTotalPages(res.data?.data?.totalPages || 1);
 
         } catch (error) {
             setError("Không thể tải danh sách hồ sơ.");
@@ -71,10 +111,9 @@ const ConsultingBriefCase = () => {
         setLoading(false);
     };
 
-
     useEffect(() => {
-        fetchBriefcases(currentPage);
-    }, [currentPage]);
+        fetchBriefcases(search, currentPage);
+    }, [search, currentPage]);
 
 
     const handleShowList = async () => {
@@ -159,9 +198,9 @@ const ConsultingBriefCase = () => {
         }
     };
 
-    const fetchClaimedBookings = async () => {
+    const fetchClaimedBookings = async (searchValue = "") => {
         const token = localStorage.getItem("token");
-        const consultantId = getSubFromToken(); // 👈 Lấy ID riêng của Consultant
+        const consultantId = getSubFromToken();
 
         if (!consultantId) {
             console.error("Không thể lấy Consultant ID từ token.");
@@ -171,18 +210,61 @@ const ConsultingBriefCase = () => {
         setLoading(true);
         setError("");
 
+        // Xác định query param phù hợp
+        let params = {
+
+            claimedByConsultantId: consultantId,
+            status: "",
+            pageIndex: 1,
+            pageSize: PAGE_SIZE,
+        };
+
+        const removeVietnameseTones = (str) => {
+            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+        }
+
+        const majors = [
+            'Kỹ thuật phần mềm', 'An toàn thông tin', 'Trí tuệ nhân tạo', 'Vi mạch bán dẫn',
+            'Thiết kế mỹ thuật số', 'Truyền thông đa phương tiện', 'Digital Marketing',
+            'Luật kinh tế', 'Kinh doanh quốc tế', 'Ngôn ngữ Anh', 'Ngôn ngữ Nhật', 'Ngôn ngữ Hàn', 'Ngôn ngữ Trung Quốc',
+        ];
+
+        const campuses = [
+            'Hà Nội',
+            'TP. Hồ Chí Minh',
+            'Đà Nẵng',
+            'Quy Nhơn',
+            'Cần Thơ',
+        ];
+
+        // Nếu searchValue là số hoặc uuid thì tìm theo id, còn lại tìm theo tên/email/sđt
+        if (searchValue) {
+            const normalized = removeVietnameseTones(searchValue).toLowerCase();
+
+            if (/^[0-9a-fA-F-]{36}$/.test(searchValue)) {
+                params.id = searchValue.trim();
+            } else if (/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/.test(searchValue)) {
+                params.userPhoneNumber = searchValue.trim();
+            } else if (searchValue.includes("@")) {
+                params.userEmail = searchValue.trim();
+            } else if (majors.some(m => removeVietnameseTones(m).toLowerCase() === normalized)) {
+                params.interestedSpecialization = searchValue;
+            } else if (campuses.some(c => removeVietnameseTones(c).toLowerCase() === normalized)) {
+                params.interestedCampus = searchValue.trim();
+            } else {
+                params.userFullName = searchValue.trim();
+            }
+        }
+
         try {
-            const response = await axios.get("http://localhost:8080/bookings/get-all-bookings?status=InProgress", {
-                params: {
-                    claimedByConsultantId: consultantId, // ✅ truyền ID vào query param
-                },
+            const response = await axios.get("http://localhost:8080/bookings/get-all-bookings", {
+                params,
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
 
             const claimedInProgress = (response.data?.data?.items || []);
-
             setClaimedBookings(claimedInProgress);
         } catch (error) {
             console.error("Lỗi khi tải danh sách xử lý:", error);
@@ -252,7 +334,13 @@ const ConsultingBriefCase = () => {
                     <h2 className="text-3xl font-bold mb-6 text-orange-600">Danh Sách Hồ Sơ Đăng Ký Tư Vấn</h2>
 
                     {/* Search */}
-                    <form className="mb-4 flex items-center gap-2">
+                    <form className="mb-4 flex items-center gap-2"
+                        onSubmit={e => {
+                            e.preventDefault();
+                            setCurrentPage(1);
+                            fetchBriefcases(search, 1);
+                        }}
+                    >
                         <input
                             type="text"
                             placeholder="Tìm kiếm theo tên, email, số điện thoại..."
@@ -284,7 +372,7 @@ const ConsultingBriefCase = () => {
                                     <th className="p-3 text-left">Tỉnh/Thành Phố</th>
                                     <th className="p-3 text-left">Ngành Học</th>
                                     <th className="p-3 text-left">Campus</th>
-                                    <th className="p-3 text-left">Lý Do Đăng Ký</th>
+                                    <th className="p-3 text-left">Thắc Mắc</th>
                                     <th className="p-3 text-left">Trạng Thái Hồ Sơ</th>
 
                                     <th className="p-3 text-left">Xử Lý Hồ Sơ</th>
@@ -323,7 +411,7 @@ const ConsultingBriefCase = () => {
                                             <td className="p-3">{applicant.location}</td>
                                             <td className="p-3">{applicant.interestedSpecialization}</td>
                                             <td className="p-3">{applicant.interestedCampus}</td>
-                                            <td className="p-3">{applicant.reason}</td>
+                                            <td className="p-3 text-wrap">{applicant.reason}</td>
                                             <td className="p-3"><StatusBadge status={applicant.status} /></td>
 
                                             <td className="p-3">
@@ -372,9 +460,32 @@ const ConsultingBriefCase = () => {
                 </main>
             )}
 
+
+
             {activeTab === "process" && (
                 <main className="flex-1 bg-gray-50 p-8">
                     <h2 className="text-2xl font-bold mb-6 text-orange-600">Danh Sách Hồ Sơ Đã Xác Nhận</h2>
+                    <form
+                        className="mb-4 flex items-center gap-2"
+                        onSubmit={e => {
+                            e.preventDefault();
+                            fetchClaimedBookings(processSearch);
+                        }}
+                    >
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm theo tên, email, số điện thoại, mã hồ sơ..."
+                            value={processSearch}
+                            onChange={e => setProcessSearch(e.target.value)}
+                            className="border border-gray-300 rounded-lg px-4 py-2 w-full max-w-xs"
+                        />
+                        <button
+                            type="submit"
+                            className="bg-orange-500 text-white px-4 py-2 rounded-lg flex items-center gap-1 hover:bg-orange-600"
+                        >
+                            <Search size={18} /> Tìm kiếm
+                        </button>
+                    </form>
                     <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
                         <table className="min-w-full text-sm">
                             <thead>
@@ -384,7 +495,9 @@ const ConsultingBriefCase = () => {
                                     <th className="p-3 text-left">Mã Tư vấn viên</th>
                                     <th className="p-3 text-left">Họ tên</th>
                                     <th className="p-3 text-left">Email</th>
-                                    <th className="p-3 text-left">Ngành</th>
+                                    <th className="p-3 text-left">Ngành Học</th>
+                                    <th className="p-3 text-left">Campus Đăng Ký</th>
+                                    <th className="p-3 text-left">Thắc Mắc</th>
                                     <th className="p-3 text-left">Trạng thái</th>
                                     <th className="p-3 text-left">Hành Động</th>
                                 </tr>
@@ -405,6 +518,8 @@ const ConsultingBriefCase = () => {
                                             <td className="p-3">{booking.userFullName}</td>
                                             <td className="p-3">{booking.userEmail}</td>
                                             <td className="p-3">{booking.interestedSpecialization}</td>
+                                            <td className="p-3">{booking.interestedCampus}</td>
+                                            <td className="p-3 text-wrap">{booking.reason}</td>
                                             <td className="p-3">
                                                 <StatusBadge status={booking.status} />
                                             </td>
@@ -449,7 +564,7 @@ const ConsultingBriefCase = () => {
                             <div><span className="font-semibold font-mono">Tỉnh/Thành Phố:</span> {selectedApplicant.location}</div>
                             <div><span className="font-semibold font-mono">Ngành Học Quan Tâm:</span> {selectedApplicant.interestedSpecialization}</div>
                             <div><span className="font-semibold font-mono">Campus Đăng Ký:</span> {selectedApplicant.interestedCampus}</div>
-                            <div className="md:col-span-2"><span className="font-semibold">Lý Do Đăng Ký:</span> {selectedApplicant.reason}</div>
+                            <div className="md:col-span-2"><span className="font-semibold">Thắc Mắc:</span> {selectedApplicant.reason}</div>
                             <div className="md:col-span-2"><span className="font-semibold">
                                 Trạng Thái Hồ Sơ:</span> <StatusBadge status={selectedApplicant.status} /></div>
 
