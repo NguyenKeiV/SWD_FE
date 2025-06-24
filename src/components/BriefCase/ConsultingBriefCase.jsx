@@ -46,8 +46,8 @@ const ConsultingBriefCase = () => {
             status === 'Waiting' ? 'Đang Chờ Xử Lý' :
                 status === 'InProgress'
                     ? 'Đang Trong Quá Trình Tư Vấn' :
-                    status === 'Approved' ? 'Đã Hoàn Thành'
-                        : 'Loại Bỏ';
+                    status === 'Completed' ? 'Đã Hoàn Thành'
+                        : 'Bị Loại Bỏ';
 
         return <span className={`${base} ${color}`}>{displayText}</span>;
     };
