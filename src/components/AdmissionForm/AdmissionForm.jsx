@@ -14,7 +14,7 @@ const AdmissionForm = () => {
 
 
     const navigate = useNavigate();
-    
+
     const majors = [
         'Kỹ thuật phần mềm', 'An toàn thông tin', 'Trí tuệ nhân tạo', 'Vi mạch bán dẫn',
         'Thiết kế mỹ thuật số', 'Truyền thông đa phương tiện', 'Digital Marketing',
@@ -127,7 +127,6 @@ const AdmissionForm = () => {
         // --- Validate Personal Info (nếu muốn kiểm tra lại) ---
         Object.assign(newErrors, validatePersonalInfo());
 
-
         // School Validation
         if (!school.trim()) {
             newErrors.school = "Please fill out your High-school";
@@ -188,33 +187,45 @@ const AdmissionForm = () => {
         setShowError(false);
         setShowSuccess(false);
 
-
         try {
-            // Thay thế URL và payload phù hợp với API của bạn
-            await axios.post('/api/admission', {
-                fullName, phone, email, birthDate, gender, province, address,
-                school, major, campus, graduationYear,
-                mathScore, literatureScore, englishScore, notes
-            });
+            await axios.post(
+                'http://localhost:8080/applicationbooking/create-application-booking',
+                {
+                    userFullName: fullName,
+                    userEmail: email,
+                    userPhoneNumber: phone,
+                    birthDate,
+                    gender,
+                    province,
+                    address,
+                    school,
+                    graduationYear,
+                    campus,
+                    interestedAcademicField: major,
+                    mathScore,
+                    literatureScore,
+                    englishScore
+                }
+            );
 
             setShowSuccess(true);
+            setTimeout(() => {
+                setShowSuccess(false);
+                navigate('/');
+            }, 1500);
             setShowError(false);
-            // Reset form nếu muốn
-            // setFullName(''); setPhone(''); ...
+
         } catch (error) {
             console.error('Booking error:', error);
-            // Show error toast
             setErrorMessage(error.response?.data?.message || "Đăng ký xét tuyển thất bại. Vui lòng thử lại.");
             setShowError(true);
             setTimeout(() => {
                 setShowError(false);
                 navigate('/');
-            }, 2000);
+            }, 1500);
         } finally {
             setIsLoading(false);
         }
-
-        // Rest of your submission logic
     };
 
     const handleNextTab = (e) => {
@@ -681,71 +692,71 @@ const AdmissionForm = () => {
                                         >
                                             Đăng ký ngay
                                         </button>
-                                        {showSuccess && (
-                                            <div className="fixed top-6 right-6 z-50 flex items-start">
-                                                <div
-                                                    className="flex bg-white rounded-lg shadow-lg border-l-4 border-green-500 p-4 min-w-[320px] transition-transform duration-500 ease-out transform"
-                                                    style={{
-                                                        transform: showSuccess ? 'translateX(0)' : 'translateX(100%)'
-                                                    }}
+                                    </div>
+                                </div>
+                            )}
+                            {showSuccess && (
+                                <div className="fixed top-6 right-6 z-50 flex items-start">
+                                    <div
+                                        className="flex bg-white rounded-lg shadow-lg border-l-4 border-green-500 p-4 min-w-[320px] transition-transform duration-500 ease-out transform"
+                                        style={{
+                                            transform: showSuccess ? 'translateX(0)' : 'translateX(100%)'
+                                        }}
+                                    >
+                                        <div className="flex-shrink-0">
+                                            <div className="h-8 w-8 rounded-full bg-green-400 flex items-center justify-center">
+                                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div className="ml-4 flex-1">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <div className="font-bold text-lg text-gray-900">Thành công</div>
+                                                    <div className="text-gray-500 text-base">Bạn đã đăng ký xét tuyển thành công !</div>
+                                                </div>
+                                                <button
+                                                    onClick={() => setShowSuccess(false)}
+                                                    className="text-gray-400 hover:text-gray-700 ml-4"
                                                 >
-                                                    <div className="flex-shrink-0">
-                                                        <div className="h-8 w-8 rounded-full bg-green-400 flex items-center justify-center">
-                                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-                                                    <div className="ml-4 flex-1">
-                                                        <div className="flex justify-between items-start">
-                                                            <div>
-                                                                <div className="font-bold text-lg text-gray-900">Thành công</div>
-                                                                <div className="text-gray-500 text-base">Bạn đã đăng ký xét tuyển thành công !</div>
-                                                            </div>
-                                                            <button
-                                                                onClick={() => setShowSuccess(false)}
-                                                                className="text-gray-400 hover:text-gray-700 ml-4"
-                                                            >
-                                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                                </svg>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
                                             </div>
-                                        )}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
-                                        {showError && (
-                                            <div className="fixed top-6 right-6 z-50 flex items-start">
-                                                <div className="flex bg-white rounded-lg shadow-lg border-l-4 border-red-500 p-4 min-w-[320px] transition-transform duration-500 ease-out transform scale-105"
-                                                    style={{ transform: showError ? 'translateX(0)' : 'translateX(100%)' }}>
-                                                    <div className="flex-shrink-0">
-                                                        <div className="h-8 w-8 rounded-full bg-red-400 flex items-center justify-center">
-                                                            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                            </svg>
-                                                        </div>
-                                                    </div>
-                                                    <div className="ml-4 flex-1">
-                                                        <div className="flex justify-between items-start">
-                                                            <div>
-                                                                <div className="font-bold text-lg text-gray-900">Thất bại</div>
-                                                                <div className="text-gray-500 text-base">{errorMessage}</div>
-                                                            </div>
-                                                            <button
-                                                                onClick={() => setShowError(false)}
-                                                                className="text-gray-400 hover:text-gray-700 ml-4"
-                                                            >
-                                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                                </svg>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                            {showError && (
+                                <div className="fixed top-6 right-6 z-50 flex items-start">
+                                    <div className="flex bg-white rounded-lg shadow-lg border-l-4 border-red-500 p-4 min-w-[320px] transition-transform duration-500 ease-out transform scale-105"
+                                        style={{ transform: showError ? 'translateX(0)' : 'translateX(100%)' }}>
+                                        <div className="flex-shrink-0">
+                                            <div className="h-8 w-8 rounded-full bg-red-400 flex items-center justify-center">
+                                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
                                             </div>
-                                        )}
+                                        </div>
+                                        <div className="ml-4 flex-1">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <div className="font-bold text-lg text-gray-900">Thất bại</div>
+                                                    <div className="text-gray-500 text-base">{errorMessage}</div>
+                                                </div>
+                                                <button
+                                                    onClick={() => setShowError(false)}
+                                                    className="text-gray-400 hover:text-gray-700 ml-4"
+                                                >
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             )}

@@ -29,50 +29,14 @@ HỌC PHÍ THAM KHẢO (CÓ THỂ THAY ĐỔI THEO NĂM HỌC)
 
 Campus       | Học phí Đại học (VNĐ/năm) | Ghi chú
 ------------------------------------------------------------
-Hà Nội       | ~ 27 – 35.5 triệu/kỳ        | 3 kỳ/năm
-TP.HCM       | ~ 27.3 – 35.5 triệu/kỳ        | Có chương trình tiếng Nhật
+Hà Nội       | ~ 27 – 32.5 triệu/kỳ        | 3 kỳ/năm
+TP.HCM       | ~ 27.3 – 32.5 triệu/kỳ        | Có chương trình tiếng Nhật
 Đà Nẵng      | ~ 25 – 28 triệu/kỳ        |
 Cần Thơ      | ~ 23 – 26 triệu/kỳ        |
 Quy Nhơn     | ~ 20 – 24 triệu/kỳ        | Chuyên về AI
 
-*Lưu ý: Chưa bao gồm học phí học kỳ tiếng Anh dự bị (~30 triệu đồng/kỳ nếu cần).
+*Lưu ý: Chưa bao gồm học phí học kỳ tiếng Anh dự bị (~30 triệu đồng/kỳ cập nhật vào tháng 12/2024).
 
-CÁC NGÀNH ĐÀO TẠO TẠI ĐẠI HỌC FPT
-
-1. Công nghệ thông tin
-   - Kỹ thuật phần mềm
-   - Trí tuệ nhân tạo
-   - An toàn thông tin
-   - Thiết kế mỹ thuật số
-   - IoT
-
-2. Quản trị kinh doanh
-   - Digital Marketing
-   - Quản trị khách sạn
-   - Tài chính doanh nghiệp
-   - Kinh doanh quốc tế
-
-3. Ngôn ngữ
-   - Ngôn ngữ Anh
-   - Ngôn ngữ Nhật
-   - Ngôn ngữ Hàn
-
-4. Thiết kế đồ họa
-   - Mỹ thuật đa phương tiện
-
-5. Truyền thông đa phương tiện
-   - Báo chí truyền thông số
-
-6. Tâm lý học
-   - Tâm lý học tham vấn
-
-7. Ngành mới (tùy campus):
-   - Logistics và Quản lý chuỗi cung ứng
-   - Luật kinh doanh
-   - Công nghệ tài chính (FinTech)
-   - Khoa học dữ liệu
-   - Luật kinh tế
-   - Luật thương mại quốc tế
 
 HƯỚNG DẪN ĐĂNG KÝ TƯ VẤN TUYỂN SINH
 

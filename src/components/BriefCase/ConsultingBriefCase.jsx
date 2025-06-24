@@ -38,7 +38,14 @@ const ConsultingBriefCase = () => {
                             ? "bg-green-600 text-white"
                             : "bg-gray-300 text-black";
 
-        return <span className={`${base} ${color}`}>{status}</span>;
+        const displayText =
+
+            status === 'Waiting' ? 'Chờ xử lý' :
+                status === 'InProgress'
+                    ? 'Đang Trong Quá Trình Tư Vấn'
+                    : status;
+
+        return <span className={`${base} ${color}`}>{displayText}</span>;
     };
 
 
@@ -374,7 +381,7 @@ const ConsultingBriefCase = () => {
                                 <tr className="bg-orange-100 text-gray-700">
                                     <th className="p-3 text-left">STT</th>
                                     <th className="p-3 text-left">Mã Hồ Sơ</th>
-                                    <th className="p-3 text-left">Mã Tư vấn</th>
+                                    <th className="p-3 text-left">Mã Tư vấn viên</th>
                                     <th className="p-3 text-left">Họ tên</th>
                                     <th className="p-3 text-left">Email</th>
                                     <th className="p-3 text-left">Ngành</th>
