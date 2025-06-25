@@ -28,10 +28,17 @@ const ConsultingApplicationForm = () => {
         userFullName: '',
         userEmail: '',
         userPhoneNumber: '',
-        location: '',
-        interestedSpecialization: '',
-        interestedCampus: '',
-        reason: '',
+        birthDate: '',
+        gender: '',
+        province: '',
+        address: '',
+        school: '',
+        graduationYear: '',
+        campus: '',
+        interestedAcademicField: '',
+        mathScore: '',
+        literatureScore: '',
+        englishScore: '',
     });
     const [deleteId, setDeleteId] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -58,8 +65,9 @@ const ConsultingApplicationForm = () => {
         setLoading(true);
         setError("");
         try {
-            const res = await axios.get("http://localhost:8080/bookings/get-all-bookings?status=Waiting", {
+            const res = await axios.get("http://localhost:8080/applicationbooking/get-all-applications", {
                 params: {
+                    status: 'Waiting',
                     pageIndex: page,
                     pageSize: PAGE_SIZE,
                 },
@@ -106,7 +114,7 @@ const ConsultingApplicationForm = () => {
 
 
 
-    const ResolveBriefcase = async (bookingId) => {
+    const claimApplication = async (applicationId) => {
         const token = localStorage.getItem("token");
         const userRole = localStorage.getItem("role");
         if (userRole != 'Consultant') {
@@ -116,9 +124,9 @@ const ConsultingApplicationForm = () => {
 
         try {
             const response = await axios.post(
-                "http://localhost:8080/bookings/claim-consult-booking",
+                "http://localhost:8080/applicationbooking/claim-application-booking",
                 {
-                    bookingId: bookingId,
+                    applicationId: applicationId,
 
                 },
                 {
@@ -177,8 +185,9 @@ const ConsultingApplicationForm = () => {
         setError("");
 
         try {
-            const response = await axios.get("http://localhost:8080/bookings/get-all-bookings?status=InProgress", {
+            const response = await axios.get("http://localhost:8080/applicationbooking/get-all-applications", {
                 params: {
+                    status: 'InProgress',
                     claimedByConsultantId: consultantId, // ✅ truyền ID vào query param
                 },
                 headers: {
@@ -209,10 +218,17 @@ const ConsultingApplicationForm = () => {
             userFullName: '',
             userEmail: '',
             userPhoneNumber: '',
-            location: '',
-            interestedSpecialization: '',
-            interestedCampus: '',
-            reason: '',
+            birthDate: '',
+            gender: '',
+            province: '',
+            address: '',
+            school: '',
+            graduationYear: '',
+            campus: '',
+            interestedAcademicField: '',
+            mathScore: '',
+            literatureScore: '',
+            englishScore: '',
         });
         setShowModal(true);
     };
@@ -398,13 +414,18 @@ const ConsultingApplicationForm = () => {
                                             <td className="p-3">{applicant.userFullName}</td>
                                             <td className="p-3">{applicant.userEmail}</td>
                                             <td className="p-3">{applicant.userPhoneNumber}</td>
-                                            <td className="p-3">{applicant.location}</td>
-                                            <td className="p-3">{applicant.interestedSpecialization}</td>
-                                            <td className="p-3">{applicant.interestedCampus}</td>
-                                            <td className="p-3">{applicant.reason}</td>
+                                            <td className="p-3">{applicant.province}</td>
+                                            <td className="p-3">{applicant.interestedAcademicField}</td>
+                                            <td className="p-3">{applicant.campus}</td>
                                             <td className="p-3"><StatusBadge status={applicant.status} /></td>
 
                                             <td className="p-3 flex gap-2">
+                                                <button
+                                                    onClick={() => claimApplication(applicant.id)}
+                                                    className="bg-green-500 hover:bg-green-600 transition text-white px-3 py-1 rounded flex items-center gap-1"
+                                                >
+                                                    <CheckCircle size={16} /> Nhận
+                                                </button>
                                                 <button
                                                     onClick={() => openEditModal(applicant)}
                                                     className="bg-blue-500 hover:bg-blue-600 transition text-white px-3 py-1 rounded flex items-center gap-1"
@@ -488,7 +509,7 @@ const ConsultingApplicationForm = () => {
                                             <td className="p-3">{booking.claimedByConsultantId}</td>
                                             <td className="p-3">{booking.userFullName}</td>
                                             <td className="p-3">{booking.userEmail}</td>
-                                            <td className="p-3">{booking.interestedSpecialization}</td>
+                                            <td className="p-3">{booking.interestedAcademicField}</td>
                                             <td className="p-3">
                                                 <StatusBadge status={booking.status} />
                                             </td>
@@ -521,34 +542,20 @@ const ConsultingApplicationForm = () => {
                                     {modalMode === 'add' ? 'Thêm Hồ Sơ Mới' : 'Chỉnh Sửa Hồ Sơ'}
                                 </h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-800">
-                                    <div>
-                                        <label className="font-semibold">Họ và Tên:</label>
-                                        <input type="text" className="border rounded w-full px-2 py-1" value={formData.userFullName} onChange={e => setFormData({ ...formData, userFullName: e.target.value })} required />
-                                    </div>
-                                    <div>
-                                        <label className="font-semibold">Email:</label>
-                                        <input type="email" className="border rounded w-full px-2 py-1" value={formData.userEmail} onChange={e => setFormData({ ...formData, userEmail: e.target.value })} required />
-                                    </div>
-                                    <div>
-                                        <label className="font-semibold">Số Điện Thoại:</label>
-                                        <input type="text" className="border rounded w-full px-2 py-1" value={formData.userPhoneNumber} onChange={e => setFormData({ ...formData, userPhoneNumber: e.target.value })} required />
-                                    </div>
-                                    <div>
-                                        <label className="font-semibold">Tỉnh/Thành Phố:</label>
-                                        <input type="text" className="border rounded w-full px-2 py-1" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} required />
-                                    </div>
-                                    <div>
-                                        <label className="font-semibold">Ngành Học Quan Tâm:</label>
-                                        <input type="text" className="border rounded w-full px-2 py-1" value={formData.interestedSpecialization} onChange={e => setFormData({ ...formData, interestedSpecialization: e.target.value })} required />
-                                    </div>
-                                    <div>
-                                        <label className="font-semibold">Campus Đăng Ký:</label>
-                                        <input type="text" className="border rounded w-full px-2 py-1" value={formData.interestedCampus} onChange={e => setFormData({ ...formData, interestedCampus: e.target.value })} required />
-                                    </div>
-                                    <div className="md:col-span-2">
-                                        <label className="font-semibold">Lý Do Đăng Ký:</label>
-                                        <textarea className="border rounded w-full px-2 py-1" value={formData.reason} onChange={e => setFormData({ ...formData, reason: e.target.value })} required />
-                                    </div>
+                                    <div><label className="font-semibold">Họ và Tên:</label><input type="text" className="border rounded w-full px-2 py-1" value={formData.userFullName} onChange={e => setFormData({ ...formData, userFullName: e.target.value })} required /></div>
+                                    <div><label className="font-semibold">Email:</label><input type="email" className="border rounded w-full px-2 py-1" value={formData.userEmail} onChange={e => setFormData({ ...formData, userEmail: e.target.value })} required /></div>
+                                    <div><label className="font-semibold">Số Điện Thoại:</label><input type="text" className="border rounded w-full px-2 py-1" value={formData.userPhoneNumber} onChange={e => setFormData({ ...formData, userPhoneNumber: e.target.value })} required /></div>
+                                    <div><label className="font-semibold">Ngày sinh:</label><input type="date" className="border rounded w-full px-2 py-1" value={formData.birthDate} onChange={e => setFormData({ ...formData, birthDate: e.target.value })} required /></div>
+                                    <div><label className="font-semibold">Giới tính:</label><input type="text" className="border rounded w-full px-2 py-1" value={formData.gender} onChange={e => setFormData({ ...formData, gender: e.target.value })} required /></div>
+                                    <div><label className="font-semibold">Tỉnh/Thành Phố:</label><input type="text" className="border rounded w-full px-2 py-1" value={formData.province} onChange={e => setFormData({ ...formData, province: e.target.value })} required /></div>
+                                    <div className="md:col-span-2"><label className="font-semibold">Địa chỉ:</label><input type="text" className="border rounded w-full px-2 py-1" value={formData.address} onChange={e => setFormData({ ...formData, address: e.target.value })} required /></div>
+                                    <div><label className="font-semibold">Trường:</label><input type="text" className="border rounded w-full px-2 py-1" value={formData.school} onChange={e => setFormData({ ...formData, school: e.target.value })} required /></div>
+                                    <div><label className="font-semibold">Năm tốt nghiệp:</label><input type="text" className="border rounded w-full px-2 py-1" value={formData.graduationYear} onChange={e => setFormData({ ...formData, graduationYear: e.target.value })} required /></div>
+                                    <div><label className="font-semibold">Campus:</label><input type="text" className="border rounded w-full px-2 py-1" value={formData.campus} onChange={e => setFormData({ ...formData, campus: e.target.value })} required /></div>
+                                    <div><label className="font-semibold">Ngành học:</label><input type="text" className="border rounded w-full px-2 py-1" value={formData.interestedAcademicField} onChange={e => setFormData({ ...formData, interestedAcademicField: e.target.value })} required /></div>
+                                    <div><label className="font-semibold">Điểm Toán:</label><input type="number" className="border rounded w-full px-2 py-1" value={formData.mathScore} onChange={e => setFormData({ ...formData, mathScore: e.target.value })} required /></div>
+                                    <div><label className="font-semibold">Điểm Văn:</label><input type="number" className="border rounded w-full px-2 py-1" value={formData.literatureScore} onChange={e => setFormData({ ...formData, literatureScore: e.target.value })} required /></div>
+                                    <div><label className="font-semibold">Điểm Anh:</label><input type="number" className="border rounded w-full px-2 py-1" value={formData.englishScore} onChange={e => setFormData({ ...formData, englishScore: e.target.value })} required /></div>
                                 </div>
                                 <div className="mt-8 text-right flex gap-2 justify-end">
                                     <button type="button" onClick={closeModal} className="px-5 py-2 rounded-xl bg-gray-300 text-gray-700 hover:bg-gray-400 transition duration-300">Hủy</button>
