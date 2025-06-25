@@ -15,7 +15,7 @@ import Contact from "../components/Contact/Contact";
 import Majors from "../components/Majors/Majors";
 import ConsultantHomePage from "../pages/ConsultantPage";
 import ConsultingBriefCase from "../components/BriefCase/ConsultingBriefCase";
-
+import ConsultingApplicationForm from "../components/BriefCase/ConsultingApplicationForm"
 
 const AppRouter = createBrowserRouter([
   { path: "/", element: <HomePage /> },
@@ -27,6 +27,9 @@ const AppRouter = createBrowserRouter([
 
   { path: "/consultant", element: <ConsultantHomePage /> },
   { path: "/consultingBriefCase", element: <ConsultingBriefCase /> },
+  { path: "/admissionBriefCase", element: <ConsultingApplicationForm /> },
+
+
   {
     path: "/admin",
     element: <AdminPage />,
