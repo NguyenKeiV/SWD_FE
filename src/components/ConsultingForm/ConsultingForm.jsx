@@ -15,6 +15,19 @@ const ConsultingForm = () => {
 
     const sortedProvinces = [...provinces].sort((a, b) => a.localeCompare(b, 'vi'));
 
+    const majors = [
+        'Kỹ thuật phần mềm', 'An toàn thông tin', 'Trí tuệ nhân tạo', 'Vi mạch bán dẫn',
+        'Thiết kế mỹ thuật số', 'Truyền thông đa phương tiện', 'Digital Marketing',
+        'Luật kinh tế', 'Kinh doanh quốc tế', 'Ngôn ngữ Anh', 'Ngôn ngữ Nhật', 'Ngôn ngữ Hàn', 'Ngôn ngữ Trung Quốc',
+    ];
+
+    const campuses = [
+        'Hà Nội',
+        'TP. Hồ Chí Minh',
+        'Đà Nẵng',
+        'Quy Nhơn',
+        'Cần Thơ'
+    ];
 
     const [isLoadingPage, setIsLoadingPage] = useState(false);
 
@@ -22,13 +35,15 @@ const ConsultingForm = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [province, setProvince] = useState('');
+    const [major, setMajor] = useState('');
+    const [campus, setCampus] = useState('');
     const [reason, setReason] = useState('');
 
     // Error states
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
-
     const [showError, setShowError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -68,6 +83,21 @@ const ConsultingForm = () => {
             newErrors.phoneNumber = "Please enter a valid Vietnamese phone number with 10 characters (e.g. 0912345678 or +84912345678)";
         }
 
+        if (!province) {
+            newErrors.province = "Please select your province";
+        }
+
+        // Major Validation
+        if (!major) {
+            newErrors.major = "Please select your major";
+        }
+
+        // Campus Validation
+        if (!campus) {
+            newErrors.campus = "Please select your campus";
+        }
+
+
         if (!reason) {
             newErrors.reason = "Please fill out this field";
         }
@@ -89,6 +119,9 @@ const ConsultingForm = () => {
                     userFullName: name,
                     userEmail: email,
                     userPhoneNumber: phoneNumber,
+                    interestedCampus: campus,
+                    interestedSpecialization: major,
+                    location: province,
                     reason: reason,
                 },
                 {
@@ -108,7 +141,7 @@ const ConsultingForm = () => {
 
                     setIsLoadingPage(false);
                     navigate('/');
-                }, 2000);
+                }, 1500);
             }
         } catch (error) {
             console.error('Booking error:', error);
@@ -189,12 +222,12 @@ const ConsultingForm = () => {
                             </div>
                         )}
                     </div>
-                    {/* <div>
+                    <div>
                         <label className="block text-gray-700 font-medium mb-1">Tỉnh/Thành phố <span className="text-red-500">*</span></label>
                         <select
                             name="province"
-                            value={form.province}
-                            onChange={handleChange}
+                            value={province}
+                            onChange={(e) => setProvince(e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none bg-gray-50"
                         >
                             <option value="">-- Chọn tỉnh/thành phố --</option>
@@ -202,7 +235,57 @@ const ConsultingForm = () => {
                                 <option key={p} value={p}>{p}</option>
                             ))}
                         </select>
-                    </div> */}
+                        {errors.province && (
+                            <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                <AlertCircle size={12} className="mr-1" />
+                                {errors.province}
+                            </div>
+                        )}
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Ngành học <span className="text-red-500">*</span>
+                        </label>
+                        <select
+                            value={major}
+                            onChange={(e) => setMajor(e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        >
+                            <option value="">Chọn ngành học</option>
+                            {majors.map((major) => (
+                                <option key={major} value={major}>{major}</option>
+                            ))}
+                        </select>
+                        {errors.major && (
+                            <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                <AlertCircle size={12} className="mr-1" />
+                                {errors.major}
+                            </div>
+                        )}
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Cơ sở đào tạo <span className="text-red-500">*</span>
+                        </label>
+                        <select
+                            value={campus}
+                            onChange={(e) => setCampus(e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                        >
+                            <option value="">Chọn cơ sở</option>
+                            {campuses.map((campus) => (
+                                <option key={campus} value={campus}>{campus}</option>
+                            ))}
+                        </select>
+                        {errors.campus && (
+                            <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
+                                <AlertCircle size={12} className="mr-1" />
+                                {errors.campus}
+                            </div>
+                        )}
+                    </div>
+
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">Ghi chú <span className="text-red-500">*</span></label>
                         <input

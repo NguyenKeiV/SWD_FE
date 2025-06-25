@@ -6,13 +6,17 @@ import AdmissionForm from "../components/AdmissionForm/AdmissionForm";
 import ProfileResearch from "../components/ProfileResearch/ProfileResearch";
 import ConsultingForm from "../components/ConsultingForm/ConsultingForm";
 import AdminPage from "../pages/AdminPage";
-import Dashboard from "../components/Admin/Dashboard";
+import Dashboard from "../components/Admin/Dashboard/Dashboard";
 import { Users } from "lucide-react";
 import Admissions from "../components/Admin/Admissions";
 import Introduction from "../components/Introduction/Introduction";
 import News from "../components/News/News";
 import Contact from "../components/Contact/Contact";
 import Majors from "../components/Majors/Majors";
+import ConsultantHomePage from "../pages/ConsultantPage";
+import ConsultingBriefCase from "../components/BriefCase/ConsultingBriefCase";
+import User from "../components/Admin/Dashboard/ManageUser/User";
+
 const AppRouter = createBrowserRouter([
   { path: "/", element: <HomePage /> },
   { path: "/login", element: <LoginPage /> },
@@ -21,12 +25,14 @@ const AppRouter = createBrowserRouter([
   { path: "/lookup-profile", element: <ProfileResearch /> },
   { path: "/consulting", element: <ConsultingForm /> },
 
+  { path: "/consultant", element: <ConsultantHomePage /> },
+  { path: "/consultingBriefCase", element: <ConsultingBriefCase /> },
   {
     path: "/admin",
     element: <AdminPage />,
     children: [
       { path: "dashboard", element: <Dashboard /> },
-      { path: "users", element: <Users /> },
+      { path: "users", element: <User /> },
       { path: "admissions", element: <Admissions /> },
     ],
   },
