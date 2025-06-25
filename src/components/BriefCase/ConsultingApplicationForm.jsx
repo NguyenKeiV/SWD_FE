@@ -288,7 +288,7 @@ const ConsultingApplicationForm = () => {
             <aside className="w-64 bg-orange-600 text-white flex flex-col py-6 px-10">
                 <div className="mb-10">
                     <div className="text-2xl font-bold mb-2 flex items-center gap-2">
-                        <Briefcase size={32} className="inline" /> Quản Lý Hồ Sơ Đăng Ký Tư Vấn
+                        <Briefcase size={32} className="inline" /> Quản Lý Hồ Sơ Đăng Ký Xét Tuyển
                     </div>
                 </div>
                 <button
@@ -333,7 +333,7 @@ const ConsultingApplicationForm = () => {
             {/* Main Content */}
             {selectedApplicant && activeTab === "view" && (
                 <main className="flex-1 bg-gray-50 p-8">
-                    <h2 className="text-3xl font-bold mb-6 text-orange-600">Danh Sách Hồ Sơ Đăng Ký Tư Vấn</h2>
+                    <h2 className="text-3xl font-bold mb-6 text-orange-600">Danh Sách Hồ Sơ Đăng Ký Xét Tuyển</h2>
 
                     {/* Search */}
                     <form className="mb-4 flex items-center gap-2">
@@ -375,12 +375,18 @@ const ConsultingApplicationForm = () => {
                                     <th className="p-3 text-left">Họ và Tên</th>
                                     <th className="p-3 text-left">Email</th>
                                     <th className="p-3 text-left">Số Điện Thoại</th>
+                                    <th className="p-3 text-left">Ngày sinh</th>
+                                    <th className="p-3 text-left">Giới tính</th>
                                     <th className="p-3 text-left">Tỉnh/Thành Phố</th>
-                                    <th className="p-3 text-left">Ngành Học</th>
+                                    <th className="p-3 text-left">Địa chỉ</th>
+                                    <th className="p-3 text-left">Trường</th>
+                                    <th className="p-3 text-left">Năm tốt nghiệp</th>
                                     <th className="p-3 text-left">Campus</th>
-                                    <th className="p-3 text-left">Lý Do Đăng Ký</th>
+                                    <th className="p-3 text-left">Ngành học</th>
+                                    <th className="p-3 text-left">Điểm Toán</th>
+                                    <th className="p-3 text-left">Điểm Văn</th>
+                                    <th className="p-3 text-left">Điểm Anh</th>
                                     <th className="p-3 text-left">Trạng Thái Hồ Sơ</th>
-
                                     <th className="p-3 text-left">Xử Lý Hồ Sơ</th>
                                 </tr>
                             </thead>
@@ -388,13 +394,13 @@ const ConsultingApplicationForm = () => {
                             <tbody>
                                 {loading ? (
                                     <tr>
-                                        <td colSpan={6} className="text-center py-8">
+                                        <td colSpan={19} className="text-center py-8">
                                             <Loader2 className="animate-spin inline mr-2" /> Đang tải...
                                         </td>
                                     </tr>
                                 ) : applicants.length === 0 ? (
                                     <tr>
-                                        <td colSpan={6} className="text-center py-8 text-gray-500">
+                                        <td colSpan={19} className="text-center py-8 text-gray-500">
                                             Không có hồ sơ nào.
                                         </td>
                                     </tr>
@@ -414,11 +420,18 @@ const ConsultingApplicationForm = () => {
                                             <td className="p-3">{applicant.userFullName}</td>
                                             <td className="p-3">{applicant.userEmail}</td>
                                             <td className="p-3">{applicant.userPhoneNumber}</td>
+                                            <td className="p-3">{applicant.birthDate}</td>
+                                            <td className="p-3">{applicant.gender}</td>
                                             <td className="p-3">{applicant.province}</td>
-                                            <td className="p-3">{applicant.interestedAcademicField}</td>
+                                            <td className="p-3">{applicant.address}</td>
+                                            <td className="p-3">{applicant.school}</td>
+                                            <td className="p-3">{applicant.graduationYear}</td>
                                             <td className="p-3">{applicant.campus}</td>
+                                            <td className="p-3">{applicant.interestedAcademicField}</td>
+                                            <td className="p-3">{applicant.mathScore}</td>
+                                            <td className="p-3">{applicant.literatureScore}</td>
+                                            <td className="p-3">{applicant.englishScore}</td>
                                             <td className="p-3"><StatusBadge status={applicant.status} /></td>
-
                                             <td className="p-3 flex gap-2">
                                                 <button
                                                     onClick={() => claimApplication(applicant.id)}
@@ -580,10 +593,17 @@ const ConsultingApplicationForm = () => {
                                     <div><span className="font-semibold font-mono">Họ và Tên:</span> {selectedApplicant.userFullName}</div>
                                     <div><span className="font-semibold font-mono">Email:</span> {selectedApplicant.userEmail}</div>
                                     <div><span className="font-semibold font-mono">Số Điện Thoại:</span> {selectedApplicant.userPhoneNumber}</div>
-                                    <div><span className="font-semibold font-mono">Tỉnh/Thành Phố:</span> {selectedApplicant.location}</div>
-                                    <div><span className="font-semibold font-mono">Ngành Học Quan Tâm:</span> {selectedApplicant.interestedSpecialization}</div>
-                                    <div><span className="font-semibold font-mono">Campus Đăng Ký:</span> {selectedApplicant.interestedCampus}</div>
-                                    <div className="md:col-span-2"><span className="font-semibold">Lý Do Đăng Ký:</span> {selectedApplicant.reason}</div>
+                                    <div><span className="font-semibold font-mono">Ngày sinh:</span> {selectedApplicant.birthDate}</div>
+                                    <div><span className="font-semibold font-mono">Giới tính:</span> {selectedApplicant.gender}</div>
+                                    <div><span className="font-semibold font-mono">Tỉnh/Thành Phố:</span> {selectedApplicant.province}</div>
+                                    <div><span className="font-semibold font-mono">Địa chỉ:</span> {selectedApplicant.address}</div>
+                                    <div><span className="font-semibold font-mono">Trường:</span> {selectedApplicant.school}</div>
+                                    <div><span className="font-semibold font-mono">Năm tốt nghiệp:</span> {selectedApplicant.graduationYear}</div>
+                                    <div><span className="font-semibold font-mono">Campus:</span> {selectedApplicant.campus}</div>
+                                    <div><span className="font-semibold font-mono">Ngành học:</span> {selectedApplicant.interestedAcademicField}</div>
+                                    <div><span className="font-semibold font-mono">Điểm Toán:</span> {selectedApplicant.mathScore}</div>
+                                    <div><span className="font-semibold font-mono">Điểm Văn:</span> {selectedApplicant.literatureScore}</div>
+                                    <div><span className="font-semibold font-mono">Điểm Anh:</span> {selectedApplicant.englishScore}</div>
                                     <div className="md:col-span-2"><span className="font-semibold">Trạng Thái Hồ Sơ:</span> <StatusBadge status={selectedApplicant.status} /></div>
                                 </div>
                                 <div className="mt-8 text-right">
