@@ -273,7 +273,31 @@ const ConsultingBriefCase = () => {
         }
 
 
-            setClaimedBookings(claimedInProgress);
+        // Lấy InProgress
+        const paramsInProgress = { ...baseParams, status: "InProgress" };
+        // Lấy Completed
+        const paramsCompleted = { ...baseParams, status: "Completed" };
+
+        try {
+            const [resInProgress, resCompleted] = await Promise.all([
+                axios.get("http://localhost:8080/bookings/get-all-bookings", {
+                    params: paramsInProgress,
+                    headers: { Authorization: `Bearer ${token}` },
+                }),
+                axios.get("http://localhost:8080/bookings/get-all-bookings", {
+                    params: paramsCompleted,
+                    headers: { Authorization: `Bearer ${token}` },
+                }),
+            ]);
+
+            // Gộp kết quả
+            const itemsInProgress = resInProgress.data?.data?.items || [];
+            const itemsCompleted = resCompleted.data?.data?.items || [];
+            let allItems = [...itemsInProgress, ...itemsCompleted];
+
+            setClaimedBookings(allItems);
+
+            setTotalPages(
                 resInProgress.data?.data?.totalPages || 1,
                 resCompleted.data?.data?.totalPages || 1,
             );
