@@ -6,7 +6,7 @@ import AdmissionForm from "../components/AdmissionForm/AdmissionForm";
 import ProfileResearch from "../components/ProfileResearch/ProfileResearch";
 import ConsultingForm from "../components/ConsultingForm/ConsultingForm";
 import AdminPage from "../pages/AdminPage";
-import Dashboard from "../components/Admin/Dashboard";
+import Dashboard from "../components/Admin/Dashboard/Dashboard";
 import { Users } from "lucide-react";
 import Admissions from "../components/Admin/Admissions";
 import Introduction from "../components/Introduction/Introduction";
@@ -15,6 +15,7 @@ import Contact from "../components/Contact/Contact";
 import Majors from "../components/Majors/Majors";
 import ConsultantHomePage from "../pages/ConsultantPage";
 import ConsultingBriefCase from "../components/BriefCase/ConsultingBriefCase";
+import User from "../components/Admin/Dashboard/ManageUser/User";
 import ConsultingApplicationForm from "../components/BriefCase/ConsultingApplicationForm"
 
 const AppRouter = createBrowserRouter([
@@ -35,7 +36,7 @@ const AppRouter = createBrowserRouter([
     element: <AdminPage />,
     children: [
       { path: "dashboard", element: <Dashboard /> },
-      { path: "users", element: <Users /> },
+      { path: "users", element: <User /> },
       { path: "admissions", element: <Admissions /> },
     ],
   },
