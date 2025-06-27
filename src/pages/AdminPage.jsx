@@ -1,11 +1,18 @@
 // File: src/layouts/AdminLayout.jsx
 import { useState } from "react";
-import { Link, Outlet, useLocation, Navigate } from "react-router-dom";
+import {
+  Link,
+  Outlet,
+  useLocation,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import {
   HomeIcon,
   UsersIcon,
   FileTextIcon,
   LayoutDashboardIcon,
+  LogOutIcon,
 } from "lucide-react";
 
 const sidebarItems = [
@@ -25,6 +32,12 @@ const sidebarItems = [
 export default function AdminPage() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   if (location.pathname === "/admin") {
     return <Navigate to="/admin/dashboard" replace />;
@@ -46,6 +59,7 @@ export default function AdminPage() {
             <span className="text-white">☰</span>
           </button>
         </div>
+
         <nav className="flex-1">
           {sidebarItems.map((item) => (
             <Link
@@ -60,6 +74,17 @@ export default function AdminPage() {
             </Link>
           ))}
         </nav>
+
+        {/* Logout button */}
+        <div className="p-4 border-t border-orange-400">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 w-full hover:bg-orange-600 px-4 py-3"
+          >
+            <LogOutIcon />
+            {!collapsed && <span>Logout</span>}
+          </button>
+        </div>
       </div>
 
       {/* Main content */}
