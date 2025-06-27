@@ -19,6 +19,11 @@ const ConsultingApplicationForm = () => {
     const [claimedBookings, setClaimedBookings] = useState([]);
     const [showModal, setShowModal] = useState(false);
 
+    const handleStatusChange = (bookingId, value) => {
+        setUpdateStatus(prev => ({ ...prev, [bookingId]: value }));
+    };
+
+    const [discardedBookings, setDiscardedBookings] = useState([]);
 
     const [updateStatus, setUpdateStatus] = useState({}); // { [bookingId]: "Completed" | "Discarded" }
     const [updatingId, setUpdatingId] = useState(null); // Để disable nút khi đang cập nhật
@@ -74,7 +79,7 @@ const ConsultingApplicationForm = () => {
             status === 'Waiting' ? 'Đang Chờ Xử Lý' :
                 status === 'InProgress'
                     ? 'Đang Trong Quá Trình Xét Tuyển' :
-                    status === 'Completed' ? 'Đã Phê Duyệt Thành Công'
+                    status === 'Approved' ? 'Đã Phê Duyệt Thành Công'
                         : 'Hồ Sơ Bị Loại Bỏ';
 
         return <span className={`${base} ${color}`}>{displayText}</span>;
@@ -169,7 +174,7 @@ const ConsultingApplicationForm = () => {
 
     };
 
-
+    // XỬ LÝ HỒ SƠ
     const claimApplication = async (bookingId) => {
         const token = localStorage.getItem("token");
         const userRole = localStorage.getItem("role");
@@ -182,7 +187,7 @@ const ConsultingApplicationForm = () => {
             const response = await axios.post(
                 "http://localhost:8080/applicationbooking/claim-application-booking",
                 {
-                    bookingId: bookingId,
+                    applicationId: bookingId,
 
                 },
                 {
@@ -341,6 +346,64 @@ const ConsultingApplicationForm = () => {
     }, [processSearch, processPage, activeTab]);
 
 
+
+    // CẬP NHẬT HỒ SƠ
+    const handleUpdateStatus = async (bookingId) => {
+        const status = updateStatus[bookingId];
+        if (!status) {
+            alert("Vui lòng chọn trạng thái!");
+            return;
+        }
+        setUpdatingId(bookingId);
+        try {
+            await axios.put(
+                "http://localhost:8080/applicationbooking/update-status",
+                {},
+                {
+                    params: { Id: bookingId, Status: status },
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
+                }
+            );
+            alert("Cập nhật trạng thái thành công!");
+            fetchClaimedBookings(); // Refresh lại danh sách
+        } catch (error) {
+            alert("Cập nhật thất bại!");
+        }
+        setUpdatingId(null);
+    };
+
+    // DANH SÁCH HỒ SƠ "BỊ LOẠI BỎ"
+    const fetchDiscardedBookings = async (searchValue = "", page = 1) => {
+        const token = localStorage.getItem("token");
+        const consultantId = getSubFromToken();
+
+        if (!consultantId) return;
+
+        setLoading(true);
+        setError("");
+
+        let params = {
+            claimedByConsultantId: consultantId,
+            status: "Rejected",
+            pageIndex: page,
+            pageSize: PAGE_SIZE,
+        };
+
+        // ...xử lý searchValue như cũ...
+
+        try {
+            const response = await axios.get("http://localhost:8080/applicationbooking/get-all-applications", {
+                params,
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setDiscardedBookings(response.data?.data?.items || []);
+            setTotalPages(response.data?.data?.totalPages || 1);
+        } catch (error) {
+            setError("Không thể tải danh sách hồ sơ bị loại bỏ.");
+        }
+        setLoading(false);
+    };
+
     const handleShowViewTab = () => {
         setSelectedApplicant(true);
         setActiveTab("view");
@@ -455,7 +518,12 @@ const ConsultingApplicationForm = () => {
                     </div>
                 </button>
 
-                <button className="flex flex-col gap-2 mt-2">
+                <button className="flex flex-col gap-2 mt-2"
+                    onClick={() => {
+                        setActiveTab("deleted");
+                        fetchDiscardedBookings();
+                    }}
+                >
                     <div className="bg-orange-500 rounded px-3 py-2 font-semibold flex items-center gap-2 text-nowrap">
                         <Delete size={20} /> Xóa hồ sơ
                     </div>
@@ -657,14 +725,24 @@ const ConsultingApplicationForm = () => {
                         <table className="min-w-full text-sm">
                             <thead>
                                 <tr className="bg-orange-100 text-gray-700">
-                                    <th className="p-3 text-left">STT</th>
+                                    <th className="p-3 text-left">ID</th>
                                     <th className="p-3 text-left">Mã Hồ Sơ</th>
-                                    <th className="p-3 text-left">Mã Tư Vấn Viên</th>
-                                    <th className="p-3 text-left">Họ tên</th>
+                                    <th className="p-3 text-left">Trạng Thái Hồ Sơ</th>
+                                    <th className="p-3 text-left">Họ và Tên</th>
                                     <th className="p-3 text-left">Email</th>
-                                    <th className="p-3 text-left">Ngành</th>
-                                    <th className="p-3 text-left">Trạng thái</th>
-                                    <th className="p-3 text-left">Hành Động</th>
+                                    <th className="p-3 text-left">Số Điện Thoại</th>
+                                    <th className="p-3 text-left">Ngày sinh</th>
+                                    <th className="p-3 text-left">Giới tính</th>
+                                    <th className="p-3 text-left">Tỉnh/Thành Phố</th>
+                                    <th className="p-3 text-left">Địa chỉ</th>
+                                    <th className="p-3 text-left">Trường</th>
+                                    <th className="p-3 text-left">Năm tốt nghiệp</th>
+                                    <th className="p-3 text-left">Campus</th>
+                                    <th className="p-3 text-left">Ngành học</th>
+                                    <th className="p-3 text-left">Điểm Toán</th>
+                                    <th className="p-3 text-left">Điểm Văn</th>
+                                    <th className="p-3 text-left">Điểm Anh</th>
+                                    <th className="p-3 text-left">Xử Lý Hồ Sơ</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -679,20 +757,46 @@ const ConsultingApplicationForm = () => {
                                         <tr key={booking.id} className="border-b hover:bg-orange-50 transition">
                                             <td className="p-3">{(processPage - 1) * PAGE_SIZE + idx + 1}</td>
                                             <td className="p-3">{booking.id}</td>
-                                            <td className="p-3">{booking.ClaimedByConsultantId}</td>
+                                            <td className="p-3"><StatusBadge status={booking.status} /></td>
+                                            {/* <td className="p-3">{booking.ClaimedByConsultantId}</td> */}
                                             <td className="p-3">{booking.userFullName}</td>
                                             <td className="p-3">{booking.userEmail}</td>
+                                            <td className="p-3">{booking.userPhoneNumber}</td>
+                                            <td className="p-3">{booking.birthDate}</td>
+                                            <td className="p-3">{booking.gender}</td>
+                                            <td className="p-3">{booking.province}</td>
+                                            <td className="p-3">{booking.address}</td>
+                                            <td className="p-3">{booking.school}</td>
+                                            <td className="p-3">{booking.graduationYear}</td>
+                                            <td className="p-3">{booking.campus}</td>
                                             <td className="p-3">{booking.interestedAcademicField}</td>
-                                            <td className="p-3">
-                                                <StatusBadge status={booking.status} />
-                                            </td>
-                                            <td className="p-3">
-                                                {/* Thêm nút cập nhật hoặc thao tác khác nếu muốn */}
-                                                <button
-                                                    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded transition"
-                                                // onClick={() => ...}
+                                            <td className="p-3">{booking.mathScore}</td>
+                                            <td className="p-3">{booking.literatureScore}</td>
+                                            <td className="p-3">{booking.englishScore}</td>
+
+                                            <td className="p-3 flex items-center gap-2">
+                                                <select
+                                                    className="border rounded px-2 py-1"
+                                                    value={updateStatus[booking.id] || ""}
+                                                    onChange={e => handleStatusChange(booking.id, e.target.value)}
+                                                    disabled={booking.status === "Approved" || booking.status === "Rejected"}
                                                 >
-                                                    Cập nhật
+                                                    <option value="">Chọn trạng thái</option>
+                                                    <option value="Approved">Đã Phê Duyệt Thành Công</option>
+                                                    <option value="Rejected">Hồ Sơ Bị Loại Bỏ</option>
+                                                </select>
+                                                <button
+                                                    className={`bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded transition
+                                                         ${booking.status === "Approved" || booking.status === "Rejected" ? "opacity-35 cursor-not-allowed" : ""}`}
+                                                    disabled={
+                                                        !updateStatus[booking.id] ||
+                                                        updatingId === booking.id ||
+                                                        booking.status === "Approved" ||
+                                                        booking.status === "Rejected"
+                                                    }
+                                                    onClick={() => handleUpdateStatus(booking.id)}
+                                                >
+                                                    {updatingId === booking.id ? "Đang cập nhật..." : "Cập nhật"}
                                                 </button>
                                             </td>
                                         </tr>
@@ -703,6 +807,72 @@ const ConsultingApplicationForm = () => {
                     </div>
                 </main>
             )}
+
+            {activeTab === "deleted" && (
+                <main className="flex-1 bg-gray-50 p-8">
+                    <h2 className="text-2xl font-bold mb-6 text-orange-600">Danh Sách Hồ Sơ Bị Loại Bỏ</h2>
+                    <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
+                        <table className="min-w-full text-sm">
+
+                            <thead>
+                                <tr className="bg-orange-100 text-gray-700">
+                                    <th className="p-3 text-left">ID</th>
+                                    <th className="p-3 text-left">Mã Hồ Sơ</th>
+                                    <th className="p-3 text-left">Trạng Thái Hồ Sơ</th>
+                                    <th className="p-3 text-left">Họ và Tên</th>
+                                    <th className="p-3 text-left">Email</th>
+                                    <th className="p-3 text-left">Số Điện Thoại</th>
+                                    <th className="p-3 text-left">Ngày sinh</th>
+                                    <th className="p-3 text-left">Giới tính</th>
+                                    <th className="p-3 text-left">Tỉnh/Thành Phố</th>
+                                    <th className="p-3 text-left">Địa chỉ</th>
+                                    <th className="p-3 text-left">Trường</th>
+                                    <th className="p-3 text-left">Năm tốt nghiệp</th>
+                                    <th className="p-3 text-left">Campus</th>
+                                    <th className="p-3 text-left">Ngành học</th>
+                                    <th className="p-3 text-left">Điểm Toán</th>
+                                    <th className="p-3 text-left">Điểm Văn</th>
+                                    <th className="p-3 text-left">Điểm Anh</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {discardedBookings.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={7} className="text-center py-8 text-gray-500">
+                                            Không có hồ sơ nào bị loại bỏ.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    discardedBookings.map((booking, idx) => (
+                                        <tr key={booking.id} className="border-b hover:bg-orange-50 transition">
+                                            <td className="p-3">{(processPage - 1) * PAGE_SIZE + idx + 1}</td>
+                                            <td className="p-3">{booking.id}</td>
+                                            <td className="p-3"><StatusBadge status={booking.status} /></td>
+                                            {/* <td className="p-3">{booking.ClaimedByConsultantId}</td> */}
+                                            <td className="p-3">{booking.userFullName}</td>
+                                            <td className="p-3">{booking.userEmail}</td>
+                                            <td className="p-3">{booking.userPhoneNumber}</td>
+                                            <td className="p-3">{booking.birthDate}</td>
+                                            <td className="p-3">{booking.gender}</td>
+                                            <td className="p-3">{booking.province}</td>
+                                            <td className="p-3">{booking.address}</td>
+                                            <td className="p-3">{booking.school}</td>
+                                            <td className="p-3">{booking.graduationYear}</td>
+                                            <td className="p-3">{booking.campus}</td>
+                                            <td className="p-3">{booking.interestedAcademicField}</td>
+                                            <td className="p-3">{booking.mathScore}</td>
+                                            <td className="p-3">{booking.literatureScore}</td>
+                                            <td className="p-3">{booking.englishScore}</td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </main>
+            )}
+
 
 
             {/* XEM CHI TIẾT HỒ SƠ */}
@@ -780,19 +950,6 @@ const ConsultingApplicationForm = () => {
                 </div>
             )}
 
-            {/* Delete Confirmation Modal */}
-            {showDeleteConfirm && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 border-t-8 border-red-500 animate-fade-in-up">
-                        <h2 className="text-xl font-bold mb-4 text-red-600 text-center">Xác nhận xóa hồ sơ</h2>
-                        <p className="mb-6 text-center">Bạn có chắc chắn muốn xóa hồ sơ này không?</p>
-                        <div className="flex justify-end gap-2">
-                            <button onClick={cancelDelete} className="px-4 py-2 rounded bg-gray-300 text-gray-700 hover:bg-gray-400">Hủy</button>
-                            <button onClick={confirmDelete} className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600">Xóa</button>
-                        </div>
-                    </div>
-                </div>
-            )}
 
         </div >
     );
