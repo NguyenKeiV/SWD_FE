@@ -366,7 +366,7 @@ const ConsultingBriefCase = () => {
     const handleShowViewTab = () => {
         setSelectedApplicant(true);
         setActiveTab("view");
-        fetchBriefcases(search, 1);
+        fetchBriefcases(search, 1); 
     }
 
     const handleShowProcessTab = () => {

@@ -114,6 +114,13 @@ const AdmissionForm = () => {
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Hàm chuyển đổi từ YYYY-MM-DD sang dd-MM-yyyy
+  const formatDateForBackend = (dateString) => {
+    if (!dateString) return "";
+    const [year, month, day] = dateString.split('-');
+    return `${day}-${month}-${year}`;
+  };
+
   const validatePersonalInfo = () => {
     let newErrors = {};
     const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -173,6 +180,7 @@ const AdmissionForm = () => {
     }
     return newErrors;
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -247,6 +255,10 @@ const AdmissionForm = () => {
       setErrors(newErrors);
       return;
     }
+
+    // *** CHUYỂN ĐỔI FORMAT NGÀY TRƯỚC KHI GỬI LÊN BACKEND ***
+    const formattedBirthDate = formatDateForBackend(birthDate);
+
     setIsLoading(true);
     setErrors(newErrors);
     setShowError(false);
@@ -259,7 +271,7 @@ const AdmissionForm = () => {
           userFullName: fullName,
           userEmail: email,
           userPhoneNumber: phone,
-          birthDate,
+          birthDate: formattedBirthDate,
           gender,
           province,
           address,
@@ -283,13 +295,13 @@ const AdmissionForm = () => {
       console.error("Booking error:", error);
       setErrorMessage(
         error.response?.data?.message ||
-          "Đăng ký xét tuyển thất bại. Vui lòng thử lại."
+        "Đăng ký xét tuyển thất bại. Vui lòng thử lại."
       );
       setShowError(true);
       setTimeout(() => {
         setShowError(false);
         navigate("/");
-      }, 1500);
+      }, 2000);
     } finally {
       setIsLoading(false);
     }
@@ -299,8 +311,8 @@ const AdmissionForm = () => {
     e.preventDefault();
     const newErrors = validatePersonalInfo();
     setErrors(newErrors);
+     // KHÔNG CÒN BẤT KỲ THÔNG BÁO LỖI NÀO NỮA
     if (Object.keys(newErrors).length === 0) {
-      // KHÔNG CÒN BẤT KỲ THÔNG BÁO LỖI NÀO NỮA
       setActiveTab("academic");
     }
   };
@@ -404,21 +416,19 @@ const AdmissionForm = () => {
               <div className="flex border-b mb-8">
                 <button
                   onClick={() => setActiveTab("personal")}
-                  className={`px-6 py-3 font-medium ${
-                    activeTab === "personal"
-                      ? "border-b-2 border-orange-500 text-orange-500"
-                      : "text-gray-600 hover:text-gray-800"
-                  }`}
+                  className={`px-6 py-3 font-medium ${activeTab === "personal"
+                    ? "border-b-2 border-orange-500 text-orange-500"
+                    : "text-gray-600 hover:text-gray-800"
+                    }`}
                 >
                   Thông tin cá nhân
                 </button>
                 <button
                   onClick={() => setActiveTab("academic")}
-                  className={`px-6 py-3 font-medium ${
-                    activeTab === "academic"
-                      ? "border-b-2 border-orange-500 text-orange-500"
-                      : "text-gray-600 hover:text-gray-800"
-                  }`}
+                  className={`px-6 py-3 font-medium ${activeTab === "academic"
+                    ? "border-b-2 border-orange-500 text-orange-500"
+                    : "text-gray-600 hover:text-gray-800"
+                    }`}
                 >
                   Thông tin học tập
                 </button>

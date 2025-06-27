@@ -472,19 +472,6 @@ const ConsultingApplicationForm = () => {
         }
     };
 
-    // 5. Add delete confirm handler
-    const handleDeleteClick = (id) => {
-        setDeleteId(id);
-        setShowDeleteConfirm(true);
-    };
-    const confirmDelete = () => {
-        deleteApplication(deleteId);
-    };
-    const cancelDelete = () => {
-        setShowDeleteConfirm(false);
-        setDeleteId(null);
-    };
-
     return (
         <div className="flex min-h-screen">
             {/* Sidebar */}
@@ -532,10 +519,9 @@ const ConsultingApplicationForm = () => {
 
             {/* Hiển thị hình ảnh khi chưa chọn chức năng nào */}
             {!selectedApplicant && (
-                <div className="flex-1 flex items-center justify-center bg-gray-50">
+                <div className="flex-1 flex items-center justify-center bg-gray-50 transition-all duration-500">
                     <img
-                        src=
-                        "https://upload.wikimedia.org/wikipedia/commons/6/68/Logo_FPT_Education.png"
+                        src="https://upload.wikimedia.org/wikipedia/commons/6/68/Logo_FPT_Education.png"
                         alt="Consultant illustration"
                         className="max-w-md w-full object-contain"
                     />
