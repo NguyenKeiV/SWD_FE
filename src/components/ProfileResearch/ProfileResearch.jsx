@@ -55,8 +55,9 @@ const ProfileResearch = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat py-10 contrast-125 saturate-150 brightness-90"
-            style={{ backgroundImage: "url('https://vinaconex25.com.vn/wp-content/uploads/2020/06/phoi-canh.jpg')" }}>
+        <div className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat py-10 contrast-125 saturate-200 brightness-95"
+            style={{ backgroundImage: 
+            "url('https://daihoc.fpt.edu.vn/wp-content/uploads/2022/08/dai-hoc-fpt-tp-hcm-1.jpeg')" }}>
 
             <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl p-8 relative overflow-hidden">
                 {/* Logo FPT */}
@@ -67,7 +68,7 @@ const ProfileResearch = () => {
                         className="h-16"
                     />
                 </div>
-                <h2 className="text-2xl font-bold text-center text-orange-600 mb-2 drop-shadow">Tra cứu hồ sơ xét tuyển</h2>
+                <h2 className="text-2xl font-bold text-center text-orange-600 mb-2 drop-shadow">Tra Cứu Hồ Sơ Xét Tuyển</h2>
                 <p className="text-center text-gray-500 mb-6">Vui lòng nhập thông tin để tra cứu trạng thái hồ sơ của bạn</p>
 
                 <form className="space-y-5" onSubmit={handleSubmit}>

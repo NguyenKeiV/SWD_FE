@@ -209,20 +209,20 @@ const AdmissionForm = () => {
             );
 
             setShowSuccess(true);
-            setTimeout(() => {
-                setShowSuccess(false);
-                navigate('/');
-            }, 1500);
+            // setTimeout(() => {
+            //     setShowSuccess(false);
+            //     navigate('/');
+            // }, 1500);
             setShowError(false);
 
         } catch (error) {
             console.error('Booking error:', error);
             setErrorMessage(error.response?.data?.message || "Đăng ký xét tuyển thất bại. Vui lòng thử lại.");
             setShowError(true);
-            setTimeout(() => {
-                setShowError(false);
-                navigate('/');
-            }, 1500);
+            // setTimeout(() => {
+            //     setShowError(false);
+            //     navigate('/');
+            // }, 1500);
         } finally {
             setIsLoading(false);
         }

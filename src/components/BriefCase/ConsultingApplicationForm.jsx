@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const ConsultingApplicationForm = () => {
     const PAGE_SIZE = 10;
-
+    const [processPage, setProcessPage] = useState(1);
     const [applicants, setApplicants] = useState([]);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
@@ -15,9 +15,21 @@ const ConsultingApplicationForm = () => {
     const [selectedApplicant, setSelectedApplicant] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-
+    const [processSearch, setProcessSearch] = useState(""); // Thêm state riêng cho tab process
     const [claimedBookings, setClaimedBookings] = useState([]);
     const [showModal, setShowModal] = useState(false);
+
+
+    const [updateStatus, setUpdateStatus] = useState({}); // { [bookingId]: "Completed" | "Discarded" }
+    const [updatingId, setUpdatingId] = useState(null); // Để disable nút khi đang cập nhật
+
+    const [toast, setToast] = useState("");
+
+
+    const showToast = (message) => {
+        setToast(message);
+        setTimeout(() => setToast(""), 2000);
+    };
 
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("view"); // 'view' hoặc 'process'
@@ -51,31 +63,86 @@ const ConsultingApplicationForm = () => {
                 ? "bg-yellow-400 text-white"
                 : status === 'InProgress'
                     ? "bg-blue-500 text-white"
-                    : status === 'Discarded'
+                    : status === 'Rejected'
                         ? "bg-red-500 text-white"
-                        : status === 'Completed'
+                        : status === 'Approved'
                             ? "bg-green-600 text-white"
                             : "bg-gray-300 text-black";
 
-        return <span className={`${base} ${color}`}>{status}</span>;
+        const displayText =
+
+            status === 'Waiting' ? 'Đang Chờ Xử Lý' :
+                status === 'InProgress'
+                    ? 'Đang Trong Quá Trình Xét Tuyển' :
+                    status === 'Completed' ? 'Đã Phê Duyệt Thành Công'
+                        : 'Hồ Sơ Bị Loại Bỏ';
+
+        return <span className={`${base} ${color}`}>{displayText}</span>;
     };
 
 
-    const fetchApplicationForm = async (page = 1) => {
+    const fetchApplicationForm = async (searchValue = "", page = 1) => {
         setLoading(true);
         setError("");
         try {
-            const res = await axios.get("http://localhost:8080/applicationbooking/get-all-applications", {
-                params: {
-                    status: 'Waiting',
-                    pageIndex: page,
-                    pageSize: PAGE_SIZE,
-                },
-            });
-            // Lấy đúng mảng items
+            let params = {
+                pageIndex: page,
+                pageSize: PAGE_SIZE,
+                status: "Waiting",
+            };
+
+            const removeVietnameseTones = (str) => {
+                return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+            }
+
+            const provinces = [
+                "Hà Nội", "Hải Phòng", "Huế", "Đà Nẵng",
+                "Cần Thơ", "TP. Hồ Chí Minh", "Lai Châu", "Điện Biên", "Sơn La", "Lạng Sơn", "Quảng Ninh",
+                "Thanh Hóa", "Nghệ An", "Hà Tĩnh", "Cao Bằng", "Tuyên Quang", "Lào Cai", "Thái Nguyên", "Phú Thọ",
+                "Bắc Ninh", "Hưng Yên", "Hải Dương", "Ninh Bình", "Quảng Trị", "Gia Lai", "Khánh Hòa", "Lâm Đồng", "Đắk Lắk", "Đồng Nai",
+                "Tây Ninh", "Vĩnh Long", "Đồng Tháp", "Cà Mau", "An Giang"
+            ];
+
+            const majors = [
+                'Kỹ thuật phần mềm', 'An toàn thông tin', 'Trí tuệ nhân tạo', 'Vi mạch bán dẫn',
+                'Thiết kế mỹ thuật số', 'Truyền thông đa phương tiện', 'Digital Marketing',
+                'Luật kinh tế', 'Kinh doanh quốc tế', 'Ngôn ngữ Anh', 'Ngôn ngữ Nhật', 'Ngôn ngữ Hàn', 'Ngôn ngữ Trung Quốc',
+            ];
+
+            const campuses = [
+                'Hà Nội',
+                'TP. Hồ Chí Minh',
+                'Đà Nẵng',
+                'Quy Nhơn',
+                'Cần Thơ',
+            ];
+
+            // Nếu searchValue là số hoặc uuid thì tìm theo id, còn lại tìm theo tên/email/sđt
+            if (searchValue) {
+                const normalized = removeVietnameseTones(searchValue).toLowerCase();
+
+                if (/^[0-9a-fA-F-]{36}$/.test(searchValue)) {
+                    params.id = searchValue.trim();
+                } else if (/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/.test(searchValue)) {
+                    params.userPhoneNumber = searchValue.trim();
+                } else if (searchValue.includes("@")) {
+                    params.userEmail = searchValue.trim();
+                }
+                else if (provinces.some(m => removeVietnameseTones(m).toLowerCase() === normalized)) {
+                    params.province = searchValue;
+                }
+                else if (majors.some(m => removeVietnameseTones(m).toLowerCase() === normalized)) {
+                    params.interestedAcademicField = searchValue;
+                } else if (campuses.some(c => removeVietnameseTones(c).toLowerCase() === normalized)) {
+                    params.interestedCampus = searchValue.trim();
+                } else {
+                    params.userFullName = searchValue.trim();
+                }
+            }
+            const res = await axios.get("http://localhost:8080/applicationbooking/get-all-applications", { params });
             const items = res.data?.data?.items || [];
             setApplicants(items);
-            setTotalPages(res.data?.data?.totalPages || 1); // hoặc totalCount/pageSize nếu API trả về
+            setTotalPages(res.data?.data?.totalPages || 1);
 
         } catch (error) {
             setError("Không thể tải danh sách hồ sơ.");
@@ -86,21 +153,11 @@ const ConsultingApplicationForm = () => {
 
 
     useEffect(() => {
-        fetchApplicationForm(currentPage);
-    }, [currentPage]);
-
-
-    const handleShowList = async () => {
-        setLoading(true);
-        setError("");
-        try {
-            await fetchApplicationForm(1); // lấy trang đầu tiên
-            setSelectedApplicant(true);
-        } catch (error) {
-            setError("Không thể tải danh sách hồ sơ.");
+        if (activeTab === "view") {
+            fetchApplicationForm(search, currentPage);
         }
-        setLoading(false);
-    };
+    }, [search, currentPage, activeTab]);
+
 
     const handleViewDetails = (applicant) => {
         setSelectedApplicant(applicant);
@@ -111,7 +168,6 @@ const ConsultingApplicationForm = () => {
         setShowModal(false);
 
     };
-
 
 
     const claimApplication = async (applicationId) => {
@@ -139,6 +195,7 @@ const ConsultingApplicationForm = () => {
 
             if (response.data?.code === "Success!") {
                 // Có thể cập nhật lại danh sách hoặc reload
+                showToast("Đã chuyển sang mục Xử lý hồ sơ");
                 fetchApplicationForm(); // gọi lại list
             } else {
                 alert("Không thể claim hồ sơ. Vui lòng thử lại.");
@@ -172,7 +229,7 @@ const ConsultingApplicationForm = () => {
         }
     };
 
-    const fetchClaimedBookings = async () => {
+    const fetchClaimedBookings = async (searchValue = "", page = 1) => {
         const token = localStorage.getItem("token");
         const consultantId = getSubFromToken(); // 👈 Lấy ID riêng của Consultant
 
@@ -184,20 +241,90 @@ const ConsultingApplicationForm = () => {
         setLoading(true);
         setError("");
 
+        // Xác định query param phù hợp
+        let params = {
+            ClaimedByConsultantId: consultantId,
+            pageIndex: page,
+            pageSize: PAGE_SIZE,
+        };
+
+        const removeVietnameseTones = (str) => {
+            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+        }
+
+        const provinces = [
+            "Hà Nội", "Hải Phòng", "Huế", "Đà Nẵng",
+            "Cần Thơ", "TP. Hồ Chí Minh", "Lai Châu", "Điện Biên", "Sơn La", "Lạng Sơn", "Quảng Ninh",
+            "Thanh Hóa", "Nghệ An", "Hà Tĩnh", "Cao Bằng", "Tuyên Quang", "Lào Cai", "Thái Nguyên", "Phú Thọ",
+            "Bắc Ninh", "Hưng Yên", "Hải Dương", "Ninh Bình", "Quảng Trị", "Gia Lai", "Khánh Hòa", "Lâm Đồng", "Đắk Lắk", "Đồng Nai",
+            "Tây Ninh", "Vĩnh Long", "Đồng Tháp", "Cà Mau", "An Giang"
+        ];
+
+        const majors = [
+            'Kỹ thuật phần mềm', 'An toàn thông tin', 'Trí tuệ nhân tạo', 'Vi mạch bán dẫn',
+            'Thiết kế mỹ thuật số', 'Truyền thông đa phương tiện', 'Digital Marketing',
+            'Luật kinh tế', 'Kinh doanh quốc tế', 'Ngôn ngữ Anh', 'Ngôn ngữ Nhật', 'Ngôn ngữ Hàn', 'Ngôn ngữ Trung Quốc',
+        ];
+
+        const campuses = [
+            'Hà Nội',
+            'TP. Hồ Chí Minh',
+            'Đà Nẵng',
+            'Quy Nhơn',
+            'Cần Thơ',
+        ];
+
+        // Nếu searchValue là số hoặc uuid thì tìm theo id, còn lại tìm theo tên/email/sđt
+        if (searchValue) {
+            const normalized = removeVietnameseTones(searchValue).toLowerCase();
+
+            if (/^[0-9a-fA-F-]{36}$/.test(searchValue)) {
+                params.id = searchValue.trim();
+            } else if (/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/.test(searchValue)) {
+                params.userPhoneNumber = searchValue.trim();
+            } else if (searchValue.includes("@")) {
+                params.userEmail = searchValue.trim();
+            }
+            else if (provinces.some(m => removeVietnameseTones(m).toLowerCase() === normalized)) {
+                params.province = searchValue;
+            }
+            else if (majors.some(m => removeVietnameseTones(m).toLowerCase() === normalized)) {
+                params.interestedAcademicField = searchValue;
+            } else if (campuses.some(c => removeVietnameseTones(c).toLowerCase() === normalized)) {
+                params.interestedCampus = searchValue.trim();
+            } else {
+                params.userFullName = searchValue.trim();
+            }
+        }
+
+        // Lấy InProgress
+        const paramsInProgress = { ...params, status: "InProgress" };
+        // Lấy Completed
+        const paramsCompleted = { ...params, status: "Approved" };
+
+
         try {
-            const response = await axios.get("http://localhost:8080/applicationbooking/get-all-applications", {
-                params: {
-                    status: 'InProgress',
-                    claimedByConsultantId: consultantId, // ✅ truyền ID vào query param
-                },
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const [resInProgress, resCompleted] = await Promise.all([
+                axios.get("http://localhost:8080/applicationbooking/get-all-applications", {
+                    params: paramsInProgress,
+                    headers: { Authorization: `Bearer ${token}` },
+                }),
+                axios.get("http://localhost:8080/applicationbooking/get-all-applications", {
+                    params: paramsCompleted,
+                    headers: { Authorization: `Bearer ${token}` },
+                }),
+            ]);
 
-            const claimedInProgress = (response.data?.data?.items || []);
+            // Gộp kết quả
+            const itemsInProgress = resInProgress.data?.data?.items || [];
+            const itemsCompleted = resCompleted.data?.data?.items || [];
+            let allItems = [...itemsInProgress, ...itemsCompleted];
 
-            setClaimedBookings(claimedInProgress);
+            setClaimedBookings(allItems);
+            setTotalPages(
+                resInProgress.data?.data?.totalPages || 1,
+                resCompleted.data?.data?.totalPages || 1,
+            );
         } catch (error) {
             console.error("Lỗi khi tải danh sách xử lý:", error);
             setError("Không thể tải danh sách hồ sơ đang xử lý.");
@@ -205,6 +332,20 @@ const ConsultingApplicationForm = () => {
 
         setLoading(false);
     };
+
+
+    useEffect(() => {
+        if (activeTab === "process") {
+            fetchClaimedBookings(processSearch, processPage);
+        }
+    }, [processSearch, processPage, activeTab]);
+
+
+    const handleShowViewTab = () => {
+        setSelectedApplicant(true);
+        setActiveTab("view");
+        fetchApplicationForm(search, 1);
+    }
 
     const handleShowProcessTab = () => {
         setActiveTab("process");
@@ -285,6 +426,13 @@ const ConsultingApplicationForm = () => {
         <div className="flex min-h-screen">
             {/* Sidebar */}
 
+            {toast && (
+                <div className="fixed top-6 right-6 z-50
+                 bg-green-500 text-white px-6 py-3 rounded shadow-lg animate-fade-in">
+                    {toast}
+                </div>
+            )}
+
             <aside className="w-64 bg-orange-600 text-white flex flex-col py-6 px-10">
                 <div className="mb-10">
                     <div className="text-2xl font-bold mb-2 flex items-center gap-2">
@@ -293,11 +441,7 @@ const ConsultingApplicationForm = () => {
                 </div>
                 <button
                     className="flex gap-2"
-                    onClick={() => {
-                        setSelectedApplicant(true);
-                        handleShowList();
-                        setActiveTab("view");
-                    }}
+                    onClick={handleShowViewTab}
                 >
                     <div className="bg-orange-500 rounded px-3 py-2 font-semibold flex items-center gap-2 whitespace-nowrap">
                         <View size={22} />
@@ -352,17 +496,6 @@ const ConsultingApplicationForm = () => {
                         </button>
                     </form>
 
-                    {/* Add New Button */}
-                    <div className="mb-4 flex justify-end">
-                        <button
-                            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-                            onClick={openAddModal}
-                        >
-                            + Thêm hồ sơ mới
-                        </button>
-                    </div>
-
-                    {/* Alerts */}
                     {/* ...table... */}
                     <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
                         <table className="min-w-full text-sm">
@@ -371,6 +504,7 @@ const ConsultingApplicationForm = () => {
                                 <tr className="bg-orange-100 text-gray-700">
                                     <th className="p-3 text-left">ID</th>
                                     <th className="p-3 text-left">Mã Hồ Sơ</th>
+                                    <th className="p-3 text-left">Ngày Tạo</th>
                                     <th className="p-3 text-left">Xem Chi Tiết</th>
                                     <th className="p-3 text-left">Họ và Tên</th>
                                     <th className="p-3 text-left">Email</th>
@@ -410,6 +544,9 @@ const ConsultingApplicationForm = () => {
                                             <td className="p-3">{(currentPage - 1) * PAGE_SIZE + idx + 1}</td>
                                             <td className="p-3">{applicant.id}</td>
                                             <td className="p-3">
+                                                {new Date(applicant.createdAt).toLocaleDateString('vi-VN')}
+                                            </td>
+                                            <td className="p-3">
                                                 <button
                                                     onClick={() => handleViewDetails(applicant)}
                                                     className="text-blue-600 hover:underline"
@@ -437,9 +574,9 @@ const ConsultingApplicationForm = () => {
                                                     onClick={() => claimApplication(applicant.id)}
                                                     className="bg-green-500 hover:bg-green-600 transition text-white px-3 py-1 rounded flex items-center gap-1"
                                                 >
-                                                    <CheckCircle size={16} /> Nhận
+                                                    <CheckCircle size={16} /> Nhận Hồ Sơ
                                                 </button>
-                                                <button
+                                                {/* <button
                                                     onClick={() => openEditModal(applicant)}
                                                     className="bg-blue-500 hover:bg-blue-600 transition text-white px-3 py-1 rounded flex items-center gap-1"
                                                 >
@@ -450,7 +587,7 @@ const ConsultingApplicationForm = () => {
                                                     className="bg-red-500 hover:bg-red-600 transition text-white px-3 py-1 rounded flex items-center gap-1"
                                                 >
                                                     <Trash2 size={16} /> Xóa
-                                                </button>
+                                                </button> */}
                                             </td>
                                         </tr>
                                     ))
@@ -493,13 +630,36 @@ const ConsultingApplicationForm = () => {
             {activeTab === "process" && (
                 <main className="flex-1 bg-gray-50 p-8">
                     <h2 className="text-2xl font-bold mb-6 text-orange-600">Danh Sách Hồ Sơ Đã Xác Nhận</h2>
+                    <form
+                        className="mb-4 flex items-center gap-2"
+                        onSubmit={e => {
+                            e.preventDefault();
+                            setCurrentPage(1); // reset về trang 1 khi tìm kiếm mới
+                            fetchClaimedBookings(processSearch, 1);
+                        }}
+                    >
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm theo tên, email, số điện thoại, mã hồ sơ..."
+                            value={processSearch}
+                            onChange={e => setProcessSearch(e.target.value)}
+                            className="border border-gray-300 rounded-lg px-4 py-2 w-full max-w-xs"
+                        />
+                        <button
+                            type="submit"
+                            className="bg-orange-500 text-white px-4 py-2
+                                                 rounded-lg flex items-center gap-1 hover:bg-orange-600"
+                        >
+                            <Search size={18} /> Tìm kiếm
+                        </button>
+                    </form>
                     <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
                         <table className="min-w-full text-sm">
                             <thead>
                                 <tr className="bg-orange-100 text-gray-700">
                                     <th className="p-3 text-left">STT</th>
                                     <th className="p-3 text-left">Mã Hồ Sơ</th>
-                                    <th className="p-3 text-left">Mã Tư vấn</th>
+                                    <th className="p-3 text-left">Mã Tư Vấn Viên</th>
                                     <th className="p-3 text-left">Họ tên</th>
                                     <th className="p-3 text-left">Email</th>
                                     <th className="p-3 text-left">Ngành</th>
@@ -517,9 +677,9 @@ const ConsultingApplicationForm = () => {
                                 ) : (
                                     claimedBookings.map((booking, idx) => (
                                         <tr key={booking.id} className="border-b hover:bg-orange-50 transition">
-                                            <td className="p-3">{idx + 1}</td>
+                                            <td className="p-3">{(processPage - 1) * PAGE_SIZE + idx + 1}</td>
                                             <td className="p-3">{booking.id}</td>
-                                            <td className="p-3">{booking.claimedByConsultantId}</td>
+                                            <td className="p-3">{booking.ClaimedByConsultantId}</td>
                                             <td className="p-3">{booking.userFullName}</td>
                                             <td className="p-3">{booking.userEmail}</td>
                                             <td className="p-3">{booking.interestedAcademicField}</td>

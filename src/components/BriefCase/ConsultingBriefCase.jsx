@@ -13,7 +13,7 @@ const ConsultingBriefCase = () => {
     const [loading, setLoading] = useState(false);
 
     const [error, setError] = useState("");
-    // const [success, setSuccess] = useState("");
+
     const [selectedApplicant, setSelectedApplicant] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -21,7 +21,6 @@ const ConsultingBriefCase = () => {
     const [claimedBookings, setClaimedBookings] = useState([]);
     const [showModal, setShowModal] = useState(false);
 
-    // const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("view"); // 'view' hoặc 'process'
 
 
@@ -130,21 +129,10 @@ const ConsultingBriefCase = () => {
     };
 
     useEffect(() => {
-        fetchBriefcases(search, currentPage);
-    }, [search, currentPage]);
-
-
-    const handleShowList = async () => {
-        setLoading(true);
-        setError("");
-        try {
-            await fetchBriefcases(1); // lấy trang đầu tiên
-            setSelectedApplicant(true);
-        } catch (error) {
-            setError("Không thể tải danh sách hồ sơ.");
+        if (activeTab === "view") {
+            fetchBriefcases(search, currentPage);
         }
-        setLoading(false);
-    };
+    }, [search, currentPage, activeTab]);
 
     const handleViewDetails = (applicant) => {
         setSelectedApplicant(applicant);
@@ -196,7 +184,7 @@ const ConsultingBriefCase = () => {
                 console.log("⏳ Không có phản hồi:", error.request);
                 alert("Không nhận được phản hồi từ server.");
             } else {
-                console.log("⚠️ Lỗi khác:", error.message);
+                console.log("Lỗi khác:", error.message);
                 alert("Lỗi không xác định.");
             }
         }
@@ -218,7 +206,7 @@ const ConsultingBriefCase = () => {
 
     const fetchClaimedBookings = async (searchValue = "", page = 1) => {
         const token = localStorage.getItem("token");
-        const consultantId = getSubFromToken();
+        const consultantId = getSubFromToken(); //Lấy ID riêng của Consultant
 
         if (!consultantId) {
             console.error("Không thể lấy Consultant ID từ token.");
@@ -317,11 +305,6 @@ const ConsultingBriefCase = () => {
 
 
 
-    const handleShowProcessTab = () => {
-        setActiveTab("process");
-        fetchClaimedBookings();
-    };
-
     const handleUpdateStatus = async (bookingId) => {
         const status = updateStatus[bookingId];
         if (!status) {
@@ -379,6 +362,17 @@ const ConsultingBriefCase = () => {
         setLoading(false);
     };
 
+    const handleShowViewTab = () => {
+        setSelectedApplicant(true);
+        setActiveTab("view");
+        fetchBriefcases(search, 1);
+    }
+
+    const handleShowProcessTab = () => {
+        setActiveTab("process");
+        fetchClaimedBookings();
+    };
+
     return (
 
         <div className="flex min-h-screen">
@@ -397,11 +391,7 @@ const ConsultingBriefCase = () => {
                 </div>
                 <button
                     className="flex gap-2"
-                    onClick={() => {
-                        setSelectedApplicant(true);
-                        handleShowList();
-                        setActiveTab("view");
-                    }}
+                    onClick={handleShowViewTab}
                 >
                     <div className="bg-orange-500 rounded px-3 py-2 font-semibold flex items-center gap-2 whitespace-nowrap
                       active:bg-orange-800 transition">
@@ -421,7 +411,8 @@ const ConsultingBriefCase = () => {
                     setActiveTab("deleted");
                     fetchDiscardedBookings();
                 }}>
-                    <div className="bg-orange-500 rounded px-3 py-2 font-semibold flex items-center gap-2 whitespace-nowrap hover:bg-orange-700 active:bg-orange-800 transition">
+                    <div className="bg-orange-500 rounded px-3 py-2 font-semibold flex items-center gap-2 whitespace-nowrap
+                     hover:bg-orange-700 active:bg-orange-800 transition">
                         <Delete size={20} /> Xóa hồ sơ
                     </div>
                 </button>
@@ -446,9 +437,9 @@ const ConsultingBriefCase = () => {
 
                     {/* Search */}
                     <form className="mb-4 flex items-center gap-2"
-                        onSubmit={(e) => {
+                        onSubmit={e => {
                             e.preventDefault();
-                            setCurrentPage(1);
+                            setCurrentPage(1); // reset về trang 1 khi tìm kiếm mới
                             fetchBriefcases(search, 1);
                         }}
                     >
@@ -593,7 +584,8 @@ const ConsultingBriefCase = () => {
                         />
                         <button
                             type="submit"
-                            className="bg-orange-500 text-white px-4 py-2 rounded-lg flex items-center gap-1 hover:bg-orange-600"
+                            className="bg-orange-500 text-white px-4 py-2
+                             rounded-lg flex items-center gap-1 hover:bg-orange-600"
                         >
                             <Search size={18} /> Tìm kiếm
                         </button>
@@ -602,16 +594,26 @@ const ConsultingBriefCase = () => {
                         <table className="min-w-full text-sm">
                             <thead>
                                 <tr className="bg-orange-100 text-gray-700">
-                                    <th className="p-3 text-left">STT</th>
+                                    <th className="p-3 text-left">ID</th>
                                     <th className="p-3 text-left">Mã Hồ Sơ</th>
-                                    <th className="p-3 text-left">Trạng Thái Hồ Sơ</th>
-                                    <th className="p-3 text-left">Mã Tư vấn viên</th>
-                                    <th className="p-3 text-left">Họ tên</th>
+                                    <th className="p-3 text-left">Ngày Tạo</th>
+                                    <th className="p-3 text-left">Xem Chi Tiết</th>
+                                    <th className="p-3 text-left">Họ và Tên</th>
                                     <th className="p-3 text-left">Email</th>
-                                    <th className="p-3 text-left">Ngành Học</th>
-                                    <th className="p-3 text-left">Campus Đăng Ký</th>
-                                    <th className="p-3 text-left">Thắc Mắc</th>
-                                    <th className="p-3 text-left">Hành Động</th>
+                                    <th className="p-3 text-left">Số Điện Thoại</th>
+                                    <th className="p-3 text-left">Ngày sinh</th>
+                                    <th className="p-3 text-left">Giới tính</th>
+                                    <th className="p-3 text-left">Tỉnh/Thành Phố</th>
+                                    <th className="p-3 text-left">Địa chỉ</th>
+                                    <th className="p-3 text-left">Trường</th>
+                                    <th className="p-3 text-left">Năm tốt nghiệp</th>
+                                    <th className="p-3 text-left">Campus</th>
+                                    <th className="p-3 text-left">Ngành học</th>
+                                    <th className="p-3 text-left">Điểm Toán</th>
+                                    <th className="p-3 text-left">Điểm Văn</th>
+                                    <th className="p-3 text-left">Điểm Anh</th>
+                                    <th className="p-3 text-left">Trạng Thái Hồ Sơ</th>
+                                    <th className="p-3 text-left">Xử Lý Hồ Sơ</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -667,6 +669,7 @@ const ConsultingBriefCase = () => {
                             </tbody>
                         </table>
                     </div>
+
                     {totalPages > 1 && (
                         <div className="flex justify-center mt-4 gap-2">
                             <button
