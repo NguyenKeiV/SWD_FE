@@ -13,13 +13,8 @@ const User = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const res = await axios.get(import.meta.env.VITE_GET_ALL_USERS, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setUsers(res.data.data || []);
+      const res = await axios.get(import.meta.env.VITE_GET_ALL_USERS);
+      setUsers(res.data.data.items || []);
     } catch (err) {
       console.error("Lỗi khi lấy danh sách người dùng:", err);
     } finally {
