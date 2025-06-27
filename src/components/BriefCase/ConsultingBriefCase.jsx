@@ -133,6 +133,7 @@ const ConsultingBriefCase = () => {
             fetchBriefcases(search, currentPage);
         }
     }, [search, currentPage, activeTab]);
+    
 
     const handleViewDetails = (applicant) => {
         setSelectedApplicant(applicant);
@@ -206,7 +207,7 @@ const ConsultingBriefCase = () => {
 
     const fetchClaimedBookings = async (searchValue = "", page = 1) => {
         const token = localStorage.getItem("token");
-        const consultantId = getSubFromToken(); //Lấy ID riêng của Consultant
+        const consultantId = getSubFromToken();
 
         if (!consultantId) {
             console.error("Không thể lấy Consultant ID từ token.");
@@ -594,26 +595,16 @@ const ConsultingBriefCase = () => {
                         <table className="min-w-full text-sm">
                             <thead>
                                 <tr className="bg-orange-100 text-gray-700">
-                                    <th className="p-3 text-left">ID</th>
+                                    <th className="p-3 text-left">STT</th>
                                     <th className="p-3 text-left">Mã Hồ Sơ</th>
-                                    <th className="p-3 text-left">Ngày Tạo</th>
-                                    <th className="p-3 text-left">Xem Chi Tiết</th>
-                                    <th className="p-3 text-left">Họ và Tên</th>
-                                    <th className="p-3 text-left">Email</th>
-                                    <th className="p-3 text-left">Số Điện Thoại</th>
-                                    <th className="p-3 text-left">Ngày sinh</th>
-                                    <th className="p-3 text-left">Giới tính</th>
-                                    <th className="p-3 text-left">Tỉnh/Thành Phố</th>
-                                    <th className="p-3 text-left">Địa chỉ</th>
-                                    <th className="p-3 text-left">Trường</th>
-                                    <th className="p-3 text-left">Năm tốt nghiệp</th>
-                                    <th className="p-3 text-left">Campus</th>
-                                    <th className="p-3 text-left">Ngành học</th>
-                                    <th className="p-3 text-left">Điểm Toán</th>
-                                    <th className="p-3 text-left">Điểm Văn</th>
-                                    <th className="p-3 text-left">Điểm Anh</th>
                                     <th className="p-3 text-left">Trạng Thái Hồ Sơ</th>
-                                    <th className="p-3 text-left">Xử Lý Hồ Sơ</th>
+                                    <th className="p-3 text-left">Mã Tư vấn viên</th>
+                                    <th className="p-3 text-left">Họ tên</th>
+                                    <th className="p-3 text-left">Email</th>
+                                    <th className="p-3 text-left">Ngành Học</th>
+                                    <th className="p-3 text-left">Campus Đăng Ký</th>
+                                    <th className="p-3 text-left">Thắc Mắc</th>
+                                    <th className="p-3 text-left">Hành Động</th>
                                 </tr>
                             </thead>
                             <tbody>

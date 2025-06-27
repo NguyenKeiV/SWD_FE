@@ -170,7 +170,7 @@ const ConsultingApplicationForm = () => {
     };
 
 
-    const claimApplication = async (applicationId) => {
+    const claimApplication = async (bookingId) => {
         const token = localStorage.getItem("token");
         const userRole = localStorage.getItem("role");
         if (userRole != 'Consultant') {
@@ -182,7 +182,7 @@ const ConsultingApplicationForm = () => {
             const response = await axios.post(
                 "http://localhost:8080/applicationbooking/claim-application-booking",
                 {
-                    applicationId: applicationId,
+                    bookingId: bookingId,
 
                 },
                 {
