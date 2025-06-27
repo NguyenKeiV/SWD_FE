@@ -259,10 +259,7 @@ const AdmissionForm = () => {
           userFullName: fullName,
           userEmail: email,
           userPhoneNumber: phone,
-          birthDate:
-            typeof birthDate === "string"
-              ? birthDate
-              : birthDate?.toISOString?.().slice(0, 10),
+          birthDate,
           gender,
           province,
           address,
@@ -504,7 +501,10 @@ const AdmissionForm = () => {
                         <input
                           type="date"
                           value={birthDate}
-                          onChange={(e) => setBirthDate(e.target.value)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setBirthDate(value); // value luôn là chuỗi dạng "YYYY-MM-DD"
+                          }}
                           className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                         />
                         {errors.birthDate && (
