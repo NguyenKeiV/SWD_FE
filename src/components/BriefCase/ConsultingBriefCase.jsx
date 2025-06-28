@@ -5,7 +5,7 @@ import { comment } from "postcss";
 
 
 const ConsultingBriefCase = () => {
-    const PAGE_SIZE = 10;
+    const PAGE_SIZE = 5;
     const [processPage, setProcessPage] = useState(1);
 
     const [applicants, setApplicants] = useState([]);
@@ -366,7 +366,7 @@ const ConsultingBriefCase = () => {
     const handleShowViewTab = () => {
         setSelectedApplicant(true);
         setActiveTab("view");
-        fetchBriefcases(search, 1); 
+        fetchBriefcases(search, 1);
     }
 
     const handleShowProcessTab = () => {

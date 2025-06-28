@@ -19,6 +19,7 @@ const ConsultingApplicationForm = () => {
     const [claimedBookings, setClaimedBookings] = useState([]);
     const [showModal, setShowModal] = useState(false);
 
+
     const handleStatusChange = (bookingId, value) => {
         setUpdateStatus(prev => ({ ...prev, [bookingId]: value }));
     };
@@ -156,12 +157,13 @@ const ConsultingApplicationForm = () => {
         setLoading(false);
     };
 
-
     useEffect(() => {
         if (activeTab === "view") {
             fetchApplicationForm(search, currentPage);
         }
     }, [search, currentPage, activeTab]);
+
+
 
 
     const handleViewDetails = (applicant) => {
@@ -472,6 +474,19 @@ const ConsultingApplicationForm = () => {
         }
     };
 
+    // 5. Add delete confirm handler
+    const handleDeleteClick = (id) => {
+        setDeleteId(id);
+        setShowDeleteConfirm(true);
+    };
+    const confirmDelete = () => {
+        deleteApplication(deleteId);
+    };
+    const cancelDelete = () => {
+        setShowDeleteConfirm(false);
+        setDeleteId(null);
+    };
+
     return (
         <div className="flex min-h-screen">
             {/* Sidebar */}
@@ -534,7 +549,13 @@ const ConsultingApplicationForm = () => {
                     <h2 className="text-3xl font-bold mb-6 text-orange-600">Danh Sách Hồ Sơ Đăng Ký Xét Tuyển</h2>
 
                     {/* Search */}
-                    <form className="mb-4 flex items-center gap-2">
+                    <form className="mb-4 flex items-center gap-2"
+                        onSubmit={e => {
+                            e.preventDefault();
+                            setCurrentPage(1); // reset về trang 1 khi tìm kiếm mới
+                            fetchApplicationForm(search, 1);
+                        }}
+                    >
                         <input
                             type="text"
                             placeholder="Tìm kiếm theo tên, email, số điện thoại..."
@@ -630,18 +651,6 @@ const ConsultingApplicationForm = () => {
                                                 >
                                                     <CheckCircle size={16} /> Nhận Hồ Sơ
                                                 </button>
-                                                {/* <button
-                                                    onClick={() => openEditModal(applicant)}
-                                                    className="bg-blue-500 hover:bg-blue-600 transition text-white px-3 py-1 rounded flex items-center gap-1"
-                                                >
-                                                    <Edit size={16} /> Sửa
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDeleteClick(applicant.id)}
-                                                    className="bg-red-500 hover:bg-red-600 transition text-white px-3 py-1 rounded flex items-center gap-1"
-                                                >
-                                                    <Trash2 size={16} /> Xóa
-                                                </button> */}
                                             </td>
                                         </tr>
                                     ))
