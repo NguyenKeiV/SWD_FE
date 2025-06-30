@@ -36,7 +36,7 @@ const Header = () => {
         <img src= {IMAGES.STAR}
           alt="logo" className="md:w-[12%] h-auto contrast-more:100 saturate-150 brightness-100" />
         <img src={IMAGES.LOGO} alt="logo" 
-        className="md:w-[17%] h-auto ml-32 contrast-more:90 saturate-150 brightness-100" />
+        className="md:w-[18%] h-auto ml-32 contrast-more:90 saturate-150 brightness-105" />
 
         <div className="hidden md:flex">
           <div className="flex justify-end ml-20">

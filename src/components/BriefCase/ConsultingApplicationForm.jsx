@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Search, Trash2, Edit, CheckCircle, Loader2, Briefcase, Delete, View } from "lucide-react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+
+import { Bell } from "lucide-react"; // Thêm icon chuông
 
 const ConsultingApplicationForm = () => {
     const PAGE_SIZE = 10;
@@ -11,7 +12,7 @@ const ConsultingApplicationForm = () => {
     const [loading, setLoading] = useState(false);
 
     const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
+
     const [selectedApplicant, setSelectedApplicant] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -31,13 +32,34 @@ const ConsultingApplicationForm = () => {
 
     const [toast, setToast] = useState("");
 
+    const [notificationCount, setNotificationCount] = useState(0);
+    const [showNotifications, setShowNotifications] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+
+    // Kết nối WebSocket (giả sử backend hỗ trợ socket.io hoặc ws)
+    useEffect(() => {
+        // Thay thế URL này bằng endpoint WebSocket thực tế của bạn
+        const ws = new WebSocket("ws://localhost:8080/notifications");
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === "NEW_APPLICATION") {
+                setNotificationCount(count => count + 1);
+                setNotifications(list => [
+                    { message: "Có đơn xét tuyển mới!", time: new Date().toLocaleTimeString() },
+                    ...list,
+                ]);
+            }
+        };
+
+        return () => ws.close();
+    }, []);
 
     const showToast = (message) => {
         setToast(message);
         setTimeout(() => setToast(""), 2000);
     };
 
-    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("view"); // 'view' hoặc 'process'
 
     // 1. Add state for modal mode (add/edit), form data, and delete confirmation
@@ -417,32 +439,7 @@ const ConsultingApplicationForm = () => {
         fetchClaimedBookings();
     };
 
-    // 2. Add open/close modal functions for add/edit
-    const openAddModal = () => {
-        setModalMode('add');
-        setFormData({
-            userFullName: '',
-            userEmail: '',
-            userPhoneNumber: '',
-            birthDate: '',
-            gender: '',
-            province: '',
-            address: '',
-            school: '',
-            graduationYear: '',
-            campus: '',
-            interestedAcademicField: '',
-            mathScore: '',
-            literatureScore: '',
-            englishScore: '',
-        });
-        setShowModal(true);
-    };
-    const openEditModal = (applicant) => {
-        setModalMode('edit');
-        setFormData({ ...applicant });
-        setShowModal(true);
-    };
+
 
     // 3. Add placeholder CRUD functions
     const createApplication = async (data) => {
@@ -457,12 +454,6 @@ const ConsultingApplicationForm = () => {
         setShowModal(false);
         fetchApplicationForm(currentPage);
     };
-    const deleteApplication = async (id) => {
-        // TODO: Replace with API call
-        alert('Delete application (API to be implemented)');
-        setShowDeleteConfirm(false);
-        fetchApplicationForm(currentPage);
-    };
 
     // 4. Add form submit handler
     const handleFormSubmit = (e) => {
@@ -474,18 +465,6 @@ const ConsultingApplicationForm = () => {
         }
     };
 
-    // 5. Add delete confirm handler
-    const handleDeleteClick = (id) => {
-        setDeleteId(id);
-        setShowDeleteConfirm(true);
-    };
-    const confirmDelete = () => {
-        deleteApplication(deleteId);
-    };
-    const cancelDelete = () => {
-        setShowDeleteConfirm(false);
-        setDeleteId(null);
-    };
 
     return (
         <div className="flex min-h-screen">
@@ -571,6 +550,44 @@ const ConsultingApplicationForm = () => {
                         </button>
                     </form>
 
+                    <div className="fixed top-6 right-10 z-50">
+                        <button
+                            className="relative"
+                            onClick={() => setShowNotifications(v => !v)}
+                            aria-label="Thông báo"
+                        >
+                            <Bell size={28} className="text-orange-500" />
+                            {notificationCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs">
+                                    {notificationCount}
+                                </span>
+                            )}
+                        </button>
+                        {showNotifications && (
+                            <div className="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg p-4">
+                                <h4 className="font-bold mb-2">Thông báo mới</h4>
+                                {notifications.length === 0 ? (
+                                    <div className="text-gray-500 text-sm">Không có thông báo mới.</div>
+                                ) : (
+                                    <ul>
+                                        {notifications.map((n, i) => (
+                                            <li key={i} className="mb-1 text-sm flex justify-between">
+                                                <span>{n.message}</span>
+                                                <span className="text-gray-400">{n.time}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                                <button
+                                    className="mt-2 text-orange-500 hover:underline text-xs"
+                                    onClick={() => { setNotificationCount(0); setShowNotifications(false); }}
+                                >
+                                    Đánh dấu đã đọc
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
                     {/* ...table... */}
                     <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
                         <table className="min-w-full text-sm">
@@ -584,7 +601,6 @@ const ConsultingApplicationForm = () => {
                                     <th className="p-3 text-left">Họ và Tên</th>
                                     <th className="p-3 text-left">Email</th>
                                     <th className="p-3 text-left">Số Điện Thoại</th>
-                                    <th className="p-3 text-left">Ngày sinh</th>
                                     <th className="p-3 text-left">Giới tính</th>
                                     <th className="p-3 text-left">Tỉnh/Thành Phố</th>
                                     <th className="p-3 text-left">Địa chỉ</th>
@@ -632,7 +648,6 @@ const ConsultingApplicationForm = () => {
                                             <td className="p-3">{applicant.userFullName}</td>
                                             <td className="p-3">{applicant.userEmail}</td>
                                             <td className="p-3">{applicant.userPhoneNumber}</td>
-                                            <td className="p-3">{applicant.birthDate}</td>
                                             <td className="p-3">{applicant.gender}</td>
                                             <td className="p-3">{applicant.province}</td>
                                             <td className="p-3">{applicant.address}</td>
@@ -716,6 +731,45 @@ const ConsultingApplicationForm = () => {
                             <Search size={18} /> Tìm kiếm
                         </button>
                     </form>
+
+                    <div className="fixed top-6 right-10 z-50">
+                        <button
+                            className="relative"
+                            onClick={() => setShowNotifications(v => !v)}
+                            aria-label="Thông báo"
+                        >
+                            <Bell size={28} className="text-orange-500" />
+                            {notificationCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs">
+                                    {notificationCount}
+                                </span>
+                            )}
+                        </button>
+                        {showNotifications && (
+                            <div className="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg p-4">
+                                <h4 className="font-bold mb-2">Thông báo mới</h4>
+                                {notifications.length === 0 ? (
+                                    <div className="text-gray-500 text-sm">Không có thông báo mới.</div>
+                                ) : (
+                                    <ul>
+                                        {notifications.map((n, i) => (
+                                            <li key={i} className="mb-1 text-sm flex justify-between">
+                                                <span>{n.message}</span>
+                                                <span className="text-gray-400">{n.time}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                                <button
+                                    className="mt-2 text-orange-500 hover:underline text-xs"
+                                    onClick={() => { setNotificationCount(0); setShowNotifications(false); }}
+                                >
+                                    Đánh dấu đã đọc
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
                     <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
                         <table className="min-w-full text-sm">
                             <thead>
@@ -918,7 +972,6 @@ const ConsultingApplicationForm = () => {
                                     <div><span className="font-semibold font-mono">Họ và Tên:</span> {selectedApplicant.userFullName}</div>
                                     <div><span className="font-semibold font-mono">Email:</span> {selectedApplicant.userEmail}</div>
                                     <div><span className="font-semibold font-mono">Số Điện Thoại:</span> {selectedApplicant.userPhoneNumber}</div>
-                                    <div><span className="font-semibold font-mono">Ngày sinh:</span> {selectedApplicant.birthDate}</div>
                                     <div><span className="font-semibold font-mono">Giới tính:</span> {selectedApplicant.gender}</div>
                                     <div><span className="font-semibold font-mono">Tỉnh/Thành Phố:</span> {selectedApplicant.province}</div>
                                     <div><span className="font-semibold font-mono">Địa chỉ:</span> {selectedApplicant.address}</div>
@@ -929,7 +982,15 @@ const ConsultingApplicationForm = () => {
                                     <div><span className="font-semibold font-mono">Điểm Toán:</span> {selectedApplicant.mathScore}</div>
                                     <div><span className="font-semibold font-mono">Điểm Văn:</span> {selectedApplicant.literatureScore}</div>
                                     <div><span className="font-semibold font-mono">Điểm Anh:</span> {selectedApplicant.englishScore}</div>
-                                    <div className="md:col-span-2"><span className="font-semibold">Trạng Thái Hồ Sơ:</span> <StatusBadge status={selectedApplicant.status} /></div>
+                                    <div>
+                                        <span className="font-semibold font-mono">Tổng Điểm Xét Tuyển:</span>
+                                        <span
+                                            className="ml-2 px-3 py-1 rounded-lg bg-gradient-to-r from-orange-400 to-orange-500 text-white font-bold text-lg border-2 border-orange-400"
+                                            style={{ letterSpacing: "1px" }}
+                                        >
+                                            {Number(selectedApplicant.mathScore) + Number(selectedApplicant.literatureScore) + Number(selectedApplicant.englishScore)}
+                                        </span>
+                                    </div>     <div className="md:col-span-2"><span className="font-semibold">Trạng Thái Hồ Sơ:</span> <StatusBadge status={selectedApplicant.status} /></div>
                                 </div>
                                 <div className="mt-8 text-right">
                                     <button

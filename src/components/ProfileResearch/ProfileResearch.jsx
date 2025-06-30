@@ -134,7 +134,7 @@ const ProfileResearch = () => {
                 </div>
             )}
 
-            {toast1 && ( // THÔNG BÁO KẾT QUẢ XÉT TUYỂN THÀNH CÔNG
+            {toast1 && (  // THÔNG BÁO KẾT QUẢ XÉT TUYỂN KHÔNG THÀNH CÔNG
                 <div className="fixed top-6 right-6 z-50
                  bg-red-500 text-white px-6 py-3 rounded shadow-lg animate-fade-in border-10">
                     {toast1}

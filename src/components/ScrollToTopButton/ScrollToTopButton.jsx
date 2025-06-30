@@ -21,10 +21,9 @@ const ScrollToTopButton = () => {
       className="fixed bottom-7 left-6 z-50 bg-orange-500 text-white px-3 py-2 rounded-full shadow-lg hover:bg-orange-600 transition-all flex items-center font-semibold text-sm"
       aria-label="Scroll to top"
     >
-      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <svg className="w-7 h-8 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
       </svg>
-      ĐẦU TRANG
     </button>
   ) : null;
 };

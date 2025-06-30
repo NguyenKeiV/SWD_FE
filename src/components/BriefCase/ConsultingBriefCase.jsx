@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Search, Trash2, Edit, CheckCircle, Loader2, Briefcase, Delete, View } from "lucide-react";
 import axios from "axios";
-import { comment } from "postcss";
-
-
+import { Bell } from "lucide-react";
 const ConsultingBriefCase = () => {
     const PAGE_SIZE = 5;
     const [processPage, setProcessPage] = useState(1);
@@ -42,6 +40,29 @@ const ConsultingBriefCase = () => {
         setToast(message);
         setTimeout(() => setToast(""), 2000);
     };
+
+     const [notificationCount, setNotificationCount] = useState(0);
+    const [showNotifications, setShowNotifications] = useState(false);
+    const [notifications, setNotifications] = useState([]);
+
+    // Kết nối WebSocket (giả sử backend hỗ trợ socket.io hoặc ws)
+    useEffect(() => {
+        // Thay thế URL này bằng endpoint WebSocket thực tế của bạn
+        const ws = new WebSocket("ws://localhost:8080/notifications");
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === "NEW_APPLICATION") {
+                setNotificationCount(count => count + 1);
+                setNotifications(list => [
+                    { message: "Có đơn xét tuyển mới!", time: new Date().toLocaleTimeString() },
+                    ...list,
+                ]);
+            }
+        };
+
+        return () => ws.close();
+    }, []);
 
 
     // MÀU SẮC CHO TỪNG TRẠNG THÁI HỒ SƠ
@@ -133,7 +154,7 @@ const ConsultingBriefCase = () => {
             fetchBriefcases(search, currentPage);
         }
     }, [search, currentPage, activeTab]);
-    
+
 
     const handleViewDetails = (applicant) => {
         setSelectedApplicant(applicant);
@@ -459,6 +480,44 @@ const ConsultingBriefCase = () => {
                         </button>
                     </form>
 
+
+                    <div className="fixed top-6 right-10 z-50">
+                        <button
+                            className="relative"
+                            onClick={() => setShowNotifications(v => !v)}
+                            aria-label="Thông báo"
+                        >
+                            <Bell size={28} className="text-orange-500" />
+                            {notificationCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs">
+                                    {notificationCount}
+                                </span>
+                            )}
+                        </button>
+                        {showNotifications && (
+                            <div className="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg p-4">
+                                <h4 className="font-bold mb-2">Thông báo mới</h4>
+                                {notifications.length === 0 ? (
+                                    <div className="text-gray-500 text-sm">Không có thông báo mới.</div>
+                                ) : (
+                                    <ul>
+                                        {notifications.map((n, i) => (
+                                            <li key={i} className="mb-1 text-sm flex justify-between">
+                                                <span>{n.message}</span>
+                                                <span className="text-gray-400">{n.time}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                                <button
+                                    className="mt-2 text-orange-500 hover:underline text-xs"
+                                    onClick={() => { setNotificationCount(0); setShowNotifications(false); }}
+                                >
+                                    Đánh dấu đã đọc
+                                </button>
+                            </div>
+                        )}
+                    </div>
                     {/* Alerts */}
                     {/* ...table... */}
                     <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
@@ -591,6 +650,44 @@ const ConsultingBriefCase = () => {
                             <Search size={18} /> Tìm kiếm
                         </button>
                     </form>
+
+                    <div className="fixed top-6 right-10 z-50">
+                        <button
+                            className="relative"
+                            onClick={() => setShowNotifications(v => !v)}
+                            aria-label="Thông báo"
+                        >
+                            <Bell size={28} className="text-orange-500" />
+                            {notificationCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs">
+                                    {notificationCount}
+                                </span>
+                            )}
+                        </button>
+                        {showNotifications && (
+                            <div className="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg p-4">
+                                <h4 className="font-bold mb-2">Thông báo mới</h4>
+                                {notifications.length === 0 ? (
+                                    <div className="text-gray-500 text-sm">Không có thông báo mới.</div>
+                                ) : (
+                                    <ul>
+                                        {notifications.map((n, i) => (
+                                            <li key={i} className="mb-1 text-sm flex justify-between">
+                                                <span>{n.message}</span>
+                                                <span className="text-gray-400">{n.time}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                                <button
+                                    className="mt-2 text-orange-500 hover:underline text-xs"
+                                    onClick={() => { setNotificationCount(0); setShowNotifications(false); }}
+                                >
+                                    Đánh dấu đã đọc
+                                </button>
+                            </div>
+                        )}
+                    </div>
                     <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
                         <table className="min-w-full text-sm">
                             <thead>
