@@ -256,20 +256,20 @@ const AdmissionForm = () => {
       await axios.post(
         "http://localhost:8080/applicationbooking/create-application-booking",
         {
-          userFullName: fullName,
-          userEmail: email,
-          userPhoneNumber: phone,
-          birthDate,
-          gender,
-          province,
-          address,
-          school,
-          graduationYear,
-          campus,
-          interestedAcademicField: major,
-          mathScore,
-          literatureScore,
-          englishScore,
+          userFullName: fullName.trim(),
+          userEmail: email.trim(),
+          userPhoneNumber: phone.trim(),
+          birthDate: birthDate.toString(), // đảm bảo là string (kiểm tra lại format nếu cần)
+          gender: gender.toString(),
+          province: province.toString(),
+          address: address.trim(),
+          school: school.trim(),
+          graduationYear: graduationYear.toString(),
+          campus: campus.toString(),
+          interestedAcademicField: major.toString(),
+          mathScore: mathScore.toString(),
+          literatureScore: literatureScore.toString(),
+          englishScore: englishScore.toString(),
         }
       );
 
