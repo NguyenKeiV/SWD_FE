@@ -110,6 +110,7 @@ const ProfileResearch = () => {
             } else {
                 setError('Không tìm thấy hồ sơ. Vui lòng kiểm tra lại.');
                 showToast1("Không tìm thấy hồ sơ. Vui lòng kiểm tra lại !");
+                setResult(null);
             }
         } catch (err) {
             setError(err.response?.data?.message || 'Đã xảy ra lỗi khi tra cứu.');
