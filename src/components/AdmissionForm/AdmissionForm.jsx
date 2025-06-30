@@ -114,6 +114,13 @@ const AdmissionForm = () => {
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Hàm chuyển đổi từ YYYY-MM-DD sang dd-MM-yyyy
+  const formatDateForBackend = (dateString) => {
+    if (!dateString) return "";
+    const [year, month, day] = dateString.split("-");
+    return `${day}-${month}-${year}`;
+  };
+
   const validatePersonalInfo = () => {
     let newErrors = {};
     const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
@@ -247,6 +254,10 @@ const AdmissionForm = () => {
       setErrors(newErrors);
       return;
     }
+
+    // *** CHUYỂN ĐỔI FORMAT NGÀY TRƯỚC KHI GỬI LÊN BACKEND ***
+    const formattedBirthDate = formatDateForBackend(birthDate);
+
     setIsLoading(true);
     setErrors(newErrors);
     setShowError(false);
@@ -256,20 +267,20 @@ const AdmissionForm = () => {
       await axios.post(
         "http://localhost:8080/applicationbooking/create-application-booking",
         {
-          userFullName: fullName.trim(),
-          userEmail: email.trim(),
-          userPhoneNumber: phone.trim(),
-          birthDate: birthDate.toString(), // đảm bảo là string (kiểm tra lại format nếu cần)
-          gender: gender.toString(),
-          province: province.toString(),
-          address: address.trim(),
-          school: school.trim(),
-          graduationYear: graduationYear.toString(),
-          campus: campus.toString(),
-          interestedAcademicField: major.toString(),
-          mathScore: mathScore.toString(),
-          literatureScore: literatureScore.toString(),
-          englishScore: englishScore.toString(),
+          userFullName: fullName,
+          userEmail: email,
+          userPhoneNumber: phone,
+          birthDate: formattedBirthDate,
+          gender,
+          province,
+          address,
+          school,
+          graduationYear,
+          campus,
+          interestedAcademicField: major,
+          mathScore,
+          literatureScore,
+          englishScore,
         }
       );
 
@@ -289,7 +300,7 @@ const AdmissionForm = () => {
       setTimeout(() => {
         setShowError(false);
         navigate("/");
-      }, 1500);
+      }, 2000);
     } finally {
       setIsLoading(false);
     }
@@ -299,8 +310,8 @@ const AdmissionForm = () => {
     e.preventDefault();
     const newErrors = validatePersonalInfo();
     setErrors(newErrors);
+    // KHÔNG CÒN BẤT KỲ THÔNG BÁO LỖI NÀO NỮA
     if (Object.keys(newErrors).length === 0) {
-      // KHÔNG CÒN BẤT KỲ THÔNG BÁO LỖI NÀO NỮA
       setActiveTab("academic");
     }
   };

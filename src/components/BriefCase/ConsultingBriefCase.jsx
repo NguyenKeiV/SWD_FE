@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Search, Trash2, Edit, CheckCircle, Loader2, Briefcase, Delete, View } from "lucide-react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { comment } from "postcss";
+
 
 const ConsultingBriefCase = () => {
-    const PAGE_SIZE = 10;
+    const PAGE_SIZE = 5;
+    const [processPage, setProcessPage] = useState(1);
 
     const [applicants, setApplicants] = useState([]);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
 
     const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
+
     const [selectedApplicant, setSelectedApplicant] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -19,12 +21,27 @@ const ConsultingBriefCase = () => {
     const [claimedBookings, setClaimedBookings] = useState([]);
     const [showModal, setShowModal] = useState(false);
 
-    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("view"); // 'view' hoặc 'process'
 
 
     const [processSearch, setProcessSearch] = useState(""); // Thêm state riêng cho tab process
 
+    const [updateStatus, setUpdateStatus] = useState({}); // { [bookingId]: "Completed" | "Discarded" }
+    const [updatingId, setUpdatingId] = useState(null); // Để disable nút khi đang cập nhật
+
+
+    const handleStatusChange = (bookingId, value) => {
+        setUpdateStatus(prev => ({ ...prev, [bookingId]: value }));
+    };
+
+    const [discardedBookings, setDiscardedBookings] = useState([]);
+    const [toast, setToast] = useState("");
+
+
+    const showToast = (message) => {
+        setToast(message);
+        setTimeout(() => setToast(""), 2000);
+    };
 
 
     // MÀU SẮC CHO TỪNG TRẠNG THÁI HỒ SƠ
@@ -112,21 +129,11 @@ const ConsultingBriefCase = () => {
     };
 
     useEffect(() => {
-        fetchBriefcases(search, currentPage);
-    }, [search, currentPage]);
-
-
-    const handleShowList = async () => {
-        setLoading(true);
-        setError("");
-        try {
-            await fetchBriefcases(1); // lấy trang đầu tiên
-            setSelectedApplicant(true);
-        } catch (error) {
-            setError("Không thể tải danh sách hồ sơ.");
+        if (activeTab === "view") {
+            fetchBriefcases(search, currentPage);
         }
-        setLoading(false);
-    };
+    }, [search, currentPage, activeTab]);
+    
 
     const handleViewDetails = (applicant) => {
         setSelectedApplicant(applicant);
@@ -164,7 +171,7 @@ const ConsultingBriefCase = () => {
             );
 
             if (response.data?.code === "Success!") {
-                // Có thể cập nhật lại danh sách hoặc reload
+                showToast("Đã chuyển sang mục Xử lý hồ sơ");
                 fetchBriefcases(); // gọi lại list
             } else {
                 alert("Không thể claim hồ sơ. Vui lòng thử lại.");
@@ -178,7 +185,7 @@ const ConsultingBriefCase = () => {
                 console.log("⏳ Không có phản hồi:", error.request);
                 alert("Không nhận được phản hồi từ server.");
             } else {
-                console.log("⚠️ Lỗi khác:", error.message);
+                console.log("Lỗi khác:", error.message);
                 alert("Lỗi không xác định.");
             }
         }
@@ -198,7 +205,7 @@ const ConsultingBriefCase = () => {
         }
     };
 
-    const fetchClaimedBookings = async (searchValue = "") => {
+    const fetchClaimedBookings = async (searchValue = "", page = 1) => {
         const token = localStorage.getItem("token");
         const consultantId = getSubFromToken();
 
@@ -211,11 +218,9 @@ const ConsultingBriefCase = () => {
         setError("");
 
         // Xác định query param phù hợp
-        let params = {
-
+        let baseParams = {
             claimedByConsultantId: consultantId,
-            status: "",
-            pageIndex: 1,
+            pageIndex: page,
             pageSize: PAGE_SIZE,
         };
 
@@ -242,30 +247,49 @@ const ConsultingBriefCase = () => {
             const normalized = removeVietnameseTones(searchValue).toLowerCase();
 
             if (/^[0-9a-fA-F-]{36}$/.test(searchValue)) {
-                params.id = searchValue.trim();
+                baseParams.id = searchValue.trim();
             } else if (/^(0|\+84)(3|5|7|8|9)[0-9]{8}$/.test(searchValue)) {
-                params.userPhoneNumber = searchValue.trim();
+                baseParams.userPhoneNumber = searchValue.trim();
             } else if (searchValue.includes("@")) {
-                params.userEmail = searchValue.trim();
+                baseParams.userEmail = searchValue.trim();
             } else if (majors.some(m => removeVietnameseTones(m).toLowerCase() === normalized)) {
-                params.interestedSpecialization = searchValue;
+                baseParams.interestedSpecialization = searchValue;
             } else if (campuses.some(c => removeVietnameseTones(c).toLowerCase() === normalized)) {
-                params.interestedCampus = searchValue.trim();
+                baseParams.interestedCampus = searchValue.trim();
             } else {
-                params.userFullName = searchValue.trim();
+                baseParams.userFullName = searchValue.trim();
             }
         }
 
-        try {
-            const response = await axios.get("http://localhost:8080/bookings/get-all-bookings", {
-                params,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
 
-            const claimedInProgress = (response.data?.data?.items || []);
-            setClaimedBookings(claimedInProgress);
+        // Lấy InProgress
+        const paramsInProgress = { ...baseParams, status: "InProgress" };
+        // Lấy Completed
+        const paramsCompleted = { ...baseParams, status: "Completed" };
+
+        try {
+            const [resInProgress, resCompleted] = await Promise.all([
+                axios.get("http://localhost:8080/bookings/get-all-bookings", {
+                    params: paramsInProgress,
+                    headers: { Authorization: `Bearer ${token}` },
+                }),
+                axios.get("http://localhost:8080/bookings/get-all-bookings", {
+                    params: paramsCompleted,
+                    headers: { Authorization: `Bearer ${token}` },
+                }),
+            ]);
+
+            // Gộp kết quả
+            const itemsInProgress = resInProgress.data?.data?.items || [];
+            const itemsCompleted = resCompleted.data?.data?.items || [];
+            let allItems = [...itemsInProgress, ...itemsCompleted];
+
+            setClaimedBookings(allItems);
+
+            setTotalPages(
+                resInProgress.data?.data?.totalPages || 1,
+                resCompleted.data?.data?.totalPages || 1,
+            );
         } catch (error) {
             console.error("Lỗi khi tải danh sách xử lý:", error);
             setError("Không thể tải danh sách hồ sơ đang xử lý.");
@@ -274,15 +298,92 @@ const ConsultingBriefCase = () => {
         setLoading(false);
     };
 
+    useEffect(() => {
+        if (activeTab === "process") {
+            fetchClaimedBookings(processSearch, processPage);
+        }
+    }, [processSearch, processPage, activeTab]);
+
+
+
+    const handleUpdateStatus = async (bookingId) => {
+        const status = updateStatus[bookingId];
+        if (!status) {
+            alert("Vui lòng chọn trạng thái!");
+            return;
+        }
+        setUpdatingId(bookingId);
+        try {
+            await axios.put(
+                "http://localhost:8080/bookings/update-status",
+                {},
+                {
+                    params: { Id: bookingId, Status: status },
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem("token")}` }
+                }
+            );
+            alert("Cập nhật trạng thái thành công!");
+            fetchClaimedBookings(); // Refresh lại danh sách
+        } catch (error) {
+            alert("Cập nhật thất bại!");
+        }
+        setUpdatingId(null);
+    };
+
+
+    // DANH SÁCH HỒ SƠ "BỊ LOẠI BỎ"
+    const fetchDiscardedBookings = async (searchValue = "", page = 1) => {
+        const token = localStorage.getItem("token");
+        const consultantId = getSubFromToken();
+
+        if (!consultantId) return;
+
+        setLoading(true);
+        setError("");
+
+        let params = {
+            claimedByConsultantId: consultantId,
+            status: "Discarded",
+            pageIndex: page,
+            pageSize: PAGE_SIZE,
+        };
+
+        // ...xử lý searchValue như cũ...
+
+        try {
+            const response = await axios.get("http://localhost:8080/bookings/get-all-bookings", {
+                params,
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setDiscardedBookings(response.data?.data?.items || []);
+            setTotalPages(response.data?.data?.totalPages || 1);
+        } catch (error) {
+            setError("Không thể tải danh sách hồ sơ bị loại bỏ.");
+        }
+        setLoading(false);
+    };
+
+    const handleShowViewTab = () => {
+        setSelectedApplicant(true);
+        setActiveTab("view");
+        fetchBriefcases(search, 1);
+    }
+
     const handleShowProcessTab = () => {
         setActiveTab("process");
         fetchClaimedBookings();
     };
 
     return (
+
         <div className="flex min-h-screen">
             {/* Sidebar */}
-
+            {toast && (
+                <div className="fixed top-6 right-6 z-50
+                 bg-green-500 text-white px-6 py-3 rounded shadow-lg animate-fade-in">
+                    {toast}
+                </div>
+            )}
             <aside className="w-64 bg-orange-600 text-white flex flex-col py-6 px-10">
                 <div className="mb-10">
                     <div className="text-2xl font-bold mb-2 flex items-center gap-2">
@@ -291,26 +392,28 @@ const ConsultingBriefCase = () => {
                 </div>
                 <button
                     className="flex gap-2"
-                    onClick={() => {
-                        setSelectedApplicant(true);
-                        handleShowList();
-                        setActiveTab("view");
-                    }}
+                    onClick={handleShowViewTab}
                 >
-                    <div className="bg-orange-500 rounded px-3 py-2 font-semibold flex items-center gap-2 whitespace-nowrap">
+                    <div className="bg-orange-500 rounded px-3 py-2 font-semibold flex items-center gap-2 whitespace-nowrap
+                      active:bg-orange-800 transition">
                         <View size={22} />
                         <span>Xem danh sách hồ sơ</span>
                     </div>
                 </button>
 
                 <button className="flex flex-col gap-2 mt-2 " onClick={handleShowProcessTab}>
-                    <div className="bg-orange-500 rounded px-3 py-2 font-semibold flex items-center gap-2 text-nowrap">
+                    <div className="bg-orange-500 rounded px-3 py-2 font-semibold flex items-center gap-2 whitespace-nowrap
+                      active:bg-orange-800 transition">
                         <Edit size={20} /> Xử lý hồ sơ
                     </div>
                 </button>
 
-                <button className="flex flex-col gap-2 mt-2">
-                    <div className="bg-orange-500 rounded px-3 py-2 font-semibold flex items-center gap-2 text-nowrap">
+                <button className="flex flex-col gap-2 mt-2" onClick={() => {
+                    setActiveTab("deleted");
+                    fetchDiscardedBookings();
+                }}>
+                    <div className="bg-orange-500 rounded px-3 py-2 font-semibold flex items-center gap-2 whitespace-nowrap
+                     hover:bg-orange-700 active:bg-orange-800 transition">
                         <Delete size={20} /> Xóa hồ sơ
                     </div>
                 </button>
@@ -337,7 +440,7 @@ const ConsultingBriefCase = () => {
                     <form className="mb-4 flex items-center gap-2"
                         onSubmit={e => {
                             e.preventDefault();
-                            setCurrentPage(1);
+                            setCurrentPage(1); // reset về trang 1 khi tìm kiếm mới
                             fetchBriefcases(search, 1);
                         }}
                     >
@@ -469,7 +572,8 @@ const ConsultingBriefCase = () => {
                         className="mb-4 flex items-center gap-2"
                         onSubmit={e => {
                             e.preventDefault();
-                            fetchClaimedBookings(processSearch);
+                            setCurrentPage(1); // reset về trang 1 khi tìm kiếm mới
+                            fetchClaimedBookings(processSearch, 1);
                         }}
                     >
                         <input
@@ -481,7 +585,8 @@ const ConsultingBriefCase = () => {
                         />
                         <button
                             type="submit"
-                            className="bg-orange-500 text-white px-4 py-2 rounded-lg flex items-center gap-1 hover:bg-orange-600"
+                            className="bg-orange-500 text-white px-4 py-2
+                             rounded-lg flex items-center gap-1 hover:bg-orange-600"
                         >
                             <Search size={18} /> Tìm kiếm
                         </button>
@@ -492,13 +597,13 @@ const ConsultingBriefCase = () => {
                                 <tr className="bg-orange-100 text-gray-700">
                                     <th className="p-3 text-left">STT</th>
                                     <th className="p-3 text-left">Mã Hồ Sơ</th>
+                                    <th className="p-3 text-left">Trạng Thái Hồ Sơ</th>
                                     <th className="p-3 text-left">Mã Tư vấn viên</th>
                                     <th className="p-3 text-left">Họ tên</th>
                                     <th className="p-3 text-left">Email</th>
                                     <th className="p-3 text-left">Ngành Học</th>
                                     <th className="p-3 text-left">Campus Đăng Ký</th>
                                     <th className="p-3 text-left">Thắc Mắc</th>
-                                    <th className="p-3 text-left">Trạng thái</th>
                                     <th className="p-3 text-left">Hành Động</th>
                                 </tr>
                             </thead>
@@ -512,26 +617,127 @@ const ConsultingBriefCase = () => {
                                 ) : (
                                     claimedBookings.map((booking, idx) => (
                                         <tr key={booking.id} className="border-b hover:bg-orange-50 transition">
-                                            <td className="p-3">{idx + 1}</td>
+                                            <td className="p-3">{(processPage - 1) * PAGE_SIZE + idx + 1}</td>
                                             <td className="p-3">{booking.id}</td>
+                                            <td className="p-3">
+                                                <StatusBadge status={booking.status} />
+                                            </td>
                                             <td className="p-3">{booking.claimedByConsultantId}</td>
                                             <td className="p-3">{booking.userFullName}</td>
                                             <td className="p-3">{booking.userEmail}</td>
                                             <td className="p-3">{booking.interestedSpecialization}</td>
                                             <td className="p-3">{booking.interestedCampus}</td>
                                             <td className="p-3 text-wrap">{booking.reason}</td>
+
+                                            <td className="p-3 flex items-center gap-2">
+                                                <select
+                                                    className="border rounded px-2 py-1"
+                                                    value={updateStatus[booking.id] || ""}
+                                                    onChange={e => handleStatusChange(booking.id, e.target.value)}
+                                                    disabled={booking.status === "Completed" || booking.status === "Discarded"}
+                                                >
+                                                    <option value="">Chọn trạng thái</option>
+                                                    <option value="Completed">Đã hoàn thành</option>
+                                                    <option value="Discarded">Bị Loại Bỏ</option>
+                                                </select>
+                                                <button
+                                                    className={`bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded transition
+                                                         ${booking.status === "Completed" || booking.status === "Discarded" ? "opacity-35 cursor-not-allowed" : ""}`}
+                                                    disabled={
+                                                        !updateStatus[booking.id] ||
+                                                        updatingId === booking.id ||
+                                                        booking.status === "Completed" ||
+                                                        booking.status === "Discarded"
+                                                    }
+                                                    onClick={() => handleUpdateStatus(booking.id)}
+                                                >
+                                                    {updatingId === booking.id ? "Đang cập nhật..." : "Cập nhật"}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {totalPages > 1 && (
+                        <div className="flex justify-center mt-4 gap-2">
+                            <button
+                                className="px-3 py-1 rounded bg-orange-200 hover:bg-orange-400 disabled:opacity-50"
+
+                                onClick={() => setProcessPage(p => Math.max(1, p - 1))}
+                                disabled={processPage === 1}
+                            >
+                                Trang trước
+                            </button>
+                            {[...Array(totalPages)].map((_, i) => (
+                                <button
+                                    key={i}
+                                    className={`px-3 py-1 rounded ${processPage === i + 1 ? "bg-orange-500 text-white" : "bg-orange-200 hover:bg-orange-400"}`}
+                                    onClick={() => setProcessPage(i + 1)}
+                                >
+                                    {i + 1}
+                                </button>
+                            ))}
+                            <button
+                                className="px-3 py-1 rounded bg-orange-200 hover:bg-orange-400 disabled:opacity-50"
+                                onClick={() => setProcessPage(p => Math.min(totalPages, p + 1))}
+                                disabled={processPage === totalPages}
+                            >
+                                Trang sau
+                            </button>
+                        </div>
+                    )}
+                </main>
+            )}
+
+
+            {activeTab === "deleted" && (
+                <main className="flex-1 bg-gray-50 p-8">
+                    <h2 className="text-2xl font-bold mb-6 text-orange-600">Danh Sách Hồ Sơ Bị Loại Bỏ</h2>
+                    <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
+                        <table className="min-w-full text-sm">
+
+                            <thead>
+                                <tr className="bg-orange-100 text-gray-700">
+                                    <th className="p-3 text-left">STT</th>
+                                    <th className="p-3 text-left">Trạng thái</th>
+                                    <th className="p-3 text-left">Mã Hồ Sơ</th>
+                                    <th className="p-3 text-left">Mã Tư vấn viên</th>
+                                    <th className="p-3 text-left">Họ tên</th>
+                                    <th className="p-3 text-left">Email</th>
+                                    <th className="p-3 text-left">Ngành Học</th>
+                                    <th className="p-3 text-left">Campus Đăng Ký</th>
+                                    <th className="p-3 text-left">Thắc Mắc</th>
+
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {discardedBookings.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={7} className="text-center py-8 text-gray-500">
+                                            Không có hồ sơ nào bị loại bỏ.
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    discardedBookings.map((booking, idx) => (
+                                        <tr key={booking.id} className="border-b hover:bg-orange-50 transition">
+                                            <td className="p-3">{(processPage - 1) * PAGE_SIZE + idx + 1}</td>
                                             <td className="p-3">
                                                 <StatusBadge status={booking.status} />
                                             </td>
-                                            <td className="p-3">
-                                                {/* Thêm nút cập nhật hoặc thao tác khác nếu muốn */}
-                                                <button
-                                                    className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded transition"
-                                                // onClick={() => ...}
-                                                >
-                                                    Cập nhật
-                                                </button>
-                                            </td>
+                                            <td className="p-3">{booking.id}</td>
+
+                                            <td className="p-3">{booking.claimedByConsultantId}</td>
+                                            <td className="p-3">{booking.userFullName}</td>
+                                            <td className="p-3">{booking.userEmail}</td>
+                                            <td className="p-3">{booking.interestedSpecialization}</td>
+                                            <td className="p-3">{booking.interestedCampus}</td>
+                                            <td className="p-3 text-wrap">{booking.reason}</td>
+
                                         </tr>
                                     ))
                                 )}
