@@ -33,10 +33,11 @@ const Header2 = () => {
             {/* Header top */}
             <div className="flex justify-between items-center px-4 py-2">
                 {/* Logo */}
-                <img src='https://caohoc.fpt.edu.vn/wp-content/uploads/2023/08/logo-qs-star-2012.png'
-                    alt="logo" className="w-20 md:w-[8%] h-auto contrast-more:100 saturate-150 brightness-100" />
+                <img src={IMAGES.STAR}
+                    alt="logo" 
+                    className="md:w-[12%] h-auto contrast-more:100 saturate-150 brightness-100" />
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/FPT_logo_2010.svg/1200px-FPT_logo_2010.svg.png"
-                 alt="logo" className="w-24 h-auto ml-72 contrast-more:100 saturate-200 brightness-100" />
+                 alt="logo" className="md:w-[8%] h-auto ml-56 contrast-more:100 saturate-200 brightness-105" />
 
                 <img src={IMAGES.LOGO} alt="logo" className="w-32 md:w-[15%] h-auto ml-52 contrast-more:90 saturate-150 brightness-100" />
             </div>
