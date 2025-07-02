@@ -643,6 +643,7 @@ const AdmissionForm = () => {
                       >
                         <option value="">Chọn năm tốt nghiệp</option>
                         <option value="2025">2025</option>
+                        <option value="2024">2024</option>
                       </select>
                       {errors.graduationYear && (
                         <div className="text-red-500 text-xs flex items-center font-mono font-bold mt-auto">
