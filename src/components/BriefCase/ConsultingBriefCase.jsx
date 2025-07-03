@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Search, Trash2, Edit, CheckCircle, Loader2, Briefcase, Delete, View } from "lucide-react";
 import axios from "axios";
 import { Bell } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { LogOutIcon } from "lucide-react";
+import LoadingPage from "../LoadingPage/LoadingPage";
 const ConsultingBriefCase = () => {
     const PAGE_SIZE = 5;
     const [processPage, setProcessPage] = useState(1);
@@ -18,6 +21,9 @@ const ConsultingBriefCase = () => {
 
     const [claimedBookings, setClaimedBookings] = useState([]);
     const [showModal, setShowModal] = useState(false);
+
+    const navigate = useNavigate();
+    const [collapsed, setCollapsed] = useState(false);
 
     const [activeTab, setActiveTab] = useState("view"); // 'view' hoặc 'process'
 
@@ -41,7 +47,7 @@ const ConsultingBriefCase = () => {
         setTimeout(() => setToast(""), 2000);
     };
 
-     const [notificationCount, setNotificationCount] = useState(0);
+    const [notificationCount, setNotificationCount] = useState(0);
     const [showNotifications, setShowNotifications] = useState(false);
     const [notifications, setNotifications] = useState([]);
 
@@ -395,6 +401,15 @@ const ConsultingBriefCase = () => {
         fetchClaimedBookings();
     };
 
+
+    const handleLogout = () => {
+        setLoading(true);
+        setTimeout(() => {
+            localStorage.removeItem("token");
+            navigate("/");
+        }, 1500);
+    };
+
     return (
 
         <div className="flex min-h-screen">
@@ -405,6 +420,9 @@ const ConsultingBriefCase = () => {
                     {toast}
                 </div>
             )}
+
+            {loading && <LoadingPage />}
+
             <aside className="w-64 bg-orange-600 text-white flex flex-col py-6 px-10">
                 <div className="mb-10">
                     <div className="text-2xl font-bold mb-2 flex items-center gap-2">
@@ -438,7 +456,21 @@ const ConsultingBriefCase = () => {
                         <Delete size={20} /> Xóa hồ sơ
                     </div>
                 </button>
+
+                <div className="p-1 border-t border-orange-400 bg-orange-500 mt-auto">
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center justify-center gap-2 w-full hover:bg-orange-600 px-2 py-2 text-center rounded transition text-sm"
+                        style={{ minHeight: 0 }}
+                    >
+                        <LogOutIcon size={18} />
+                        {!collapsed && <span className="font-semibold">Log out</span>}
+                    </button>
+                </div>
+
             </aside>
+
+
 
             {/* Hiển thị hình ảnh khi chưa chọn chức năng nào */}
             {!selectedApplicant && (

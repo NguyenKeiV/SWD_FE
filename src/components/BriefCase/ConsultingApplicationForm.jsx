@@ -3,7 +3,9 @@ import { Search, Trash2, Edit, CheckCircle, Loader2, Briefcase, Delete, View } f
 import axios from "axios";
 
 import { Bell } from "lucide-react"; // Thêm icon chuông
-
+import { useNavigate } from "react-router-dom";
+import { LogOutIcon } from "lucide-react";
+import LoadingPage from "../LoadingPage/LoadingPage";
 const ConsultingApplicationForm = () => {
     const PAGE_SIZE = 10;
     const [processPage, setProcessPage] = useState(1);
@@ -12,6 +14,10 @@ const ConsultingApplicationForm = () => {
     const [loading, setLoading] = useState(false);
 
     const [error, setError] = useState("");
+
+    const navigate = useNavigate();
+    const [collapsed, setCollapsed] = useState(false);
+
 
     const [selectedApplicant, setSelectedApplicant] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -62,8 +68,8 @@ const ConsultingApplicationForm = () => {
 
     const [activeTab, setActiveTab] = useState("view"); // 'view' hoặc 'process'
 
-    // 1. Add state for modal mode (add/edit), form data, and delete confirmation
-    const [modalMode, setModalMode] = useState(null); // 'add' | 'edit' | null
+
+    const [modalMode, setModalMode] = useState(null);
     const [formData, setFormData] = useState({
         userFullName: '',
         userEmail: '',
@@ -80,8 +86,6 @@ const ConsultingApplicationForm = () => {
         literatureScore: '',
         englishScore: '',
     });
-    const [deleteId, setDeleteId] = useState(null);
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     // MÀU SẮC CHO TỪNG TRẠNG THÁI HỒ SƠ
     const StatusBadge = ({ status }) => {
@@ -438,33 +442,15 @@ const ConsultingApplicationForm = () => {
         setActiveTab("process");
         fetchClaimedBookings();
     };
+    
 
-
-
-    // 3. Add placeholder CRUD functions
-    const createApplication = async (data) => {
-        // TODO: Replace with API call
-        alert('Create application (API to be implemented)');
-        setShowModal(false);
-        fetchApplicationForm(currentPage);
+    const handleLogout = () => {
+        setLoading(true);
+        setTimeout(() => {
+            localStorage.removeItem("token");
+            navigate("/");
+        }, 1500);
     };
-    const updateApplication = async (data) => {
-        // TODO: Replace with API call
-        alert('Update application (API to be implemented)');
-        setShowModal(false);
-        fetchApplicationForm(currentPage);
-    };
-
-    // 4. Add form submit handler
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        if (modalMode === 'add') {
-            createApplication(formData);
-        } else if (modalMode === 'edit') {
-            updateApplication(formData);
-        }
-    };
-
 
     return (
         <div className="flex min-h-screen">
@@ -476,6 +462,8 @@ const ConsultingApplicationForm = () => {
                     {toast}
                 </div>
             )}
+
+            {loading && <LoadingPage />}
 
             <aside className="w-64 bg-orange-600 text-white flex flex-col py-6 px-10">
                 <div className="mb-10">
@@ -509,6 +497,18 @@ const ConsultingApplicationForm = () => {
                         <Delete size={20} /> Xóa hồ sơ
                     </div>
                 </button>
+
+                <div className="p-1 border-t border-orange-400 bg-orange-500 mt-auto">
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center justify-center gap-2 w-full hover:bg-orange-600 px-2 py-2 text-center rounded transition text-sm"
+                        style={{ minHeight: 0 }}
+                    >
+                        <LogOutIcon size={18} />
+                        {!collapsed && <span className="font-semibold">Log out</span>}
+                    </button>
+                </div>
+
             </aside>
 
             {/* Hiển thị hình ảnh khi chưa chọn chức năng nào */}
@@ -929,10 +929,8 @@ const ConsultingApplicationForm = () => {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-8 border-t-8 border-orange-500 animate-fade-in-up">
                         {modalMode ? (
-                            <form onSubmit={handleFormSubmit}>
-                                <h2 className="text-2xl font-bold mb-6 text-orange-600 text-center">
-                                    {modalMode === 'add' ? 'Thêm Hồ Sơ Mới' : 'Chỉnh Sửa Hồ Sơ'}
-                                </h2>
+                            <form>
+                                
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-800">
                                     <div><label className="font-semibold">Họ và Tên:</label><input type="text" className="border rounded w-full px-2 py-1" value={formData.userFullName} onChange={e => setFormData({ ...formData, userFullName: e.target.value })} required /></div>
                                     <div><label className="font-semibold">Email:</label><input type="email" className="border rounded w-full px-2 py-1" value={formData.userEmail} onChange={e => setFormData({ ...formData, userEmail: e.target.value })} required /></div>
