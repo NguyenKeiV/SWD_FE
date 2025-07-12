@@ -124,12 +124,14 @@ const AdmissionForm = () => {
   const validatePersonalInfo = () => {
     let newErrors = {};
     const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+    // regex số điện thoại Việt Nam
     const phoneRegex = /^(0|\+84)(3|5|7|8|9)[0-9]{8}$/;
 
     const vietnameseNameRegex =
       /^[AÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪBCDĐEÈÉẸẺẼÊỀẾỆỂỄFGHIÌÍỊỈĨJKLMNOÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠPQRSTUÙÚỤỦŨƯỪỨỰỬỮVWXYỲÝỴỶỸZ][aàáạảãăằắặẳẵâầấậẩẫbcdđeèéẹẻẽêềếệểễfghiìíịỉĩjklmnoòóọỏõôồốộổỗơờớợởỡpqrstuùúụủũưừứựửữvwxyỳýỵỷỹz]+ [AÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪBCDĐEÈÉẸẺẼÊỀẾỆỂỄFGHIÌÍỊỈĨJKLMNOÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠPQRSTUÙÚỤỦŨƯỪỨỰỬỮVWXYỲÝỴỶỸZ][aàáạảãăằắặẳẵâầấậẩẫbcdđeèéẹẻẽêềếệểễfghiìíịỉĩjklmnoòóọỏõôồốộổỗơờớợởỡpqrstuùúụủũưừứựửữvwxyỳýỵỷỹz]+/;
 
-    // Full Name Validation
+    // Full Name Validation 
     if (!fullName.trim()) {
       newErrors.fullName = "Please enter your full name";
     } else if (!vietnameseNameRegex.test(fullName)) {
@@ -403,7 +405,7 @@ const AdmissionForm = () => {
                 <img
                   src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/FPT_Education_logo.svg/2560px-FPT_Education_logo.svg.png"
                   alt="FPT Education Logo"
-                  className="h-16 w-auto"
+                  className="h-20 w-auto contrast-100 brightness-105 saturate-150"
                   style={{ backgroundColor: "transparent" }} // Đảm bảo logo có nền trong suốt
                 />
               </div>

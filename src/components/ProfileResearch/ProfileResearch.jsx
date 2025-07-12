@@ -345,7 +345,7 @@ const ProfileResearch = () => {
                                         </div>
                                         <div>
                                             <label className="text-xs font-medium text-gray-500 tracking-wide">Ngày Tạo Hồ Sơ</label>
-                                            <p className="text-gray-700">{dayjs(result.createdAt).format('DD/MM/YYYY HH:mm:ss')}</p>
+                                            <p className="text-gray-700">{dayjs(result.createdAt).format('DD/MM/YYYY')}</p>
                                         </div>
                                         <div>
                                             <label className="text-xs font-medium text-gray-500 tracking-wide ">Trạng Thái Hồ Sơ</label>

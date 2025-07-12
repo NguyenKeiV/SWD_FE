@@ -11,7 +11,8 @@ const LoadingPage = () => (
     {/* Spinner */}
     <div className="flex items-center space-x-3 mb-3">
       <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-      <span className="text-xl font-semibold text-orange-600 font-sans animate-pulse contrast-125 saturate-150">
+      <span className="text-xl font-semibold text-orange-600 font-sans
+       animate-pulse contrast-125 saturate-150">
         Đang chuyển trang...
       </span>
     </div>

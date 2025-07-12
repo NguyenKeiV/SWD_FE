@@ -29,14 +29,16 @@ const Header = () => {
 
   return (
     <div className="w-full">
-      {loading && <LoadingPage />}
+      {/* hiển thị LoadingPage khi loading là true */}
+      {loading && <LoadingPage />} 
       {/* Header top */}
       <div className="flex justify-between items-center px-4 py-2">
         {/* Logo */}
         <img src= {IMAGES.STAR}
           alt="logo" className="md:w-[12%] h-auto contrast-more:100 saturate-150 brightness-100" />
-        <img src={IMAGES.LOGO} alt="logo" 
-        className="md:w-[18%] h-auto ml-32 contrast-more:90 saturate-150 brightness-105" />
+        <img src= 'https://upload.wikimedia.org/wikipedia/vi/thumb/2/2d/Logo_Tr%C6%B0%E1%BB%9Dng_%C4%90%E1%BA%A1i_h%E1%BB%8Dc_FPT.svg/1200px-Logo_Tr%C6%B0%E1%BB%9Dng_%C4%90%E1%BA%A1i_h%E1%BB%8Dc_FPT.svg.png'
+        alt="logo" 
+        className="md:w-[12.5%] h-auto ml-32 contrast-100 saturate-150 brightness-100" />
 
         <div className="hidden md:flex">
           <div className="flex justify-end ml-20">

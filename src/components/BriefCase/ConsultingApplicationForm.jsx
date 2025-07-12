@@ -70,23 +70,7 @@ const ConsultingApplicationForm = () => {
 
 
     const [modalMode, setModalMode] = useState(null);
-    const [formData, setFormData] = useState({
-        userFullName: '',
-        userEmail: '',
-        userPhoneNumber: '',
-        birthDate: '',
-        gender: '',
-        province: '',
-        address: '',
-        school: '',
-        graduationYear: '',
-        campus: '',
-        interestedAcademicField: '',
-        mathScore: '',
-        literatureScore: '',
-        englishScore: '',
-    });
-
+   
     // MÀU SẮC CHO TỪNG TRẠNG THÁI HỒ SƠ
     const StatusBadge = ({ status }) => {
         const base = "px-2 py-1 rounded text-xs font-semibold";
@@ -113,12 +97,12 @@ const ConsultingApplicationForm = () => {
     };
 
 
-    const fetchApplicationForm = async (searchValue = "", page = 1) => {
+    const fetchApplicationForm = async (searchValue = "", page = 31) => {
         setLoading(true);
         setError("");
         try {
             let params = {
-                pageIndex: page,
+                pageIndex: 31,
                 pageSize: PAGE_SIZE,
                 status: "Waiting",
             };
@@ -401,7 +385,7 @@ const ConsultingApplicationForm = () => {
     };
 
     // DANH SÁCH HỒ SƠ "BỊ LOẠI BỎ"
-    const fetchDiscardedBookings = async (searchValue = "", page = 1) => {
+    const fetchDiscardedBookings = async (page = 1) => {
         const token = localStorage.getItem("token");
         const consultantId = getSubFromToken();
 
@@ -550,6 +534,8 @@ const ConsultingApplicationForm = () => {
                         </button>
                     </form>
 
+
+{/* ================================================================== */}
                     <div className="fixed top-6 right-10 z-50">
                         <button
                             className="relative"
@@ -588,6 +574,8 @@ const ConsultingApplicationForm = () => {
                         )}
                     </div>
 
+{/* ================================================================== */}
+
                     {/* ...table... */}
                     <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
                         <table className="min-w-full text-sm">
@@ -595,7 +583,6 @@ const ConsultingApplicationForm = () => {
                             <thead>
                                 <tr className="bg-orange-100 text-gray-700">
                                     <th className="p-3 text-left">ID</th>
-                                    <th className="p-3 text-left">Mã Hồ Sơ</th>
                                     <th className="p-3 text-left">Ngày Tạo</th>
                                     <th className="p-3 text-left">Xem Chi Tiết</th>
                                     <th className="p-3 text-left">Họ và Tên</th>
@@ -633,7 +620,6 @@ const ConsultingApplicationForm = () => {
                                     applicants.map((applicant, idx) => (
                                         <tr key={applicant.id} className="border-b hover:bg-orange-50">
                                             <td className="p-3">{(currentPage - 1) * PAGE_SIZE + idx + 1}</td>
-                                            <td className="p-3">{applicant.id}</td>
                                             <td className="p-3">
                                                 {new Date(applicant.createdAt).toLocaleDateString('vi-VN')}
                                             </td>
@@ -684,7 +670,7 @@ const ConsultingApplicationForm = () => {
                             >
                                 Trang trước
                             </button>
-                            {[...Array(totalPages)].map((_, i) => (
+                            {[...Array(totalPages - 30)].map((_, i) => (
                                 <button
                                     key={i}
                                     className={`px-3 py-1 rounded ${currentPage === i + 1 ? "bg-orange-500 text-white" : "bg-orange-200 hover:bg-orange-400"}`}
@@ -732,6 +718,8 @@ const ConsultingApplicationForm = () => {
                         </button>
                     </form>
 
+
+{/* ================================================================== */}
                     <div className="fixed top-6 right-10 z-50">
                         <button
                             className="relative"
@@ -745,6 +733,7 @@ const ConsultingApplicationForm = () => {
                                 </span>
                             )}
                         </button>
+
                         {showNotifications && (
                             <div className="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg p-4">
                                 <h4 className="font-bold mb-2">Thông báo mới</h4>
@@ -768,6 +757,7 @@ const ConsultingApplicationForm = () => {
                                 </button>
                             </div>
                         )}
+{/* ================================================================== */}
                     </div>
 
                     <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
@@ -775,7 +765,6 @@ const ConsultingApplicationForm = () => {
                             <thead>
                                 <tr className="bg-orange-100 text-gray-700">
                                     <th className="p-3 text-left">ID</th>
-                                    <th className="p-3 text-left">Mã Hồ Sơ</th>
                                     <th className="p-3 text-left">Trạng Thái Hồ Sơ</th>
                                     <th className="p-3 text-left">Họ và Tên</th>
                                     <th className="p-3 text-left">Email</th>
@@ -805,7 +794,6 @@ const ConsultingApplicationForm = () => {
                                     claimedBookings.map((booking, idx) => (
                                         <tr key={booking.id} className="border-b hover:bg-orange-50 transition">
                                             <td className="p-3">{(processPage - 1) * PAGE_SIZE + idx + 1}</td>
-                                            <td className="p-3">{booking.id}</td>
                                             <td className="p-3"><StatusBadge status={booking.status} /></td>
                                             {/* <td className="p-3">{booking.ClaimedByConsultantId}</td> */}
                                             <td className="p-3">{booking.userFullName}</td>
@@ -896,7 +884,6 @@ const ConsultingApplicationForm = () => {
                                     discardedBookings.map((booking, idx) => (
                                         <tr key={booking.id} className="border-b hover:bg-orange-50 transition">
                                             <td className="p-3">{(processPage - 1) * PAGE_SIZE + idx + 1}</td>
-                                            <td className="p-3">{booking.id}</td>
                                             <td className="p-3"><StatusBadge status={booking.status} /></td>
                                             {/* <td className="p-3">{booking.ClaimedByConsultantId}</td> */}
                                             <td className="p-3">{booking.userFullName}</td>

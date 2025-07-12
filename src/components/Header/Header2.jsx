@@ -37,9 +37,10 @@ const Header2 = () => {
                     alt="logo" 
                     className="md:w-[12%] h-auto contrast-more:100 saturate-150 brightness-100" />
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/FPT_logo_2010.svg/1200px-FPT_logo_2010.svg.png"
-                 alt="logo" className="md:w-[8%] h-auto ml-56 contrast-more:100 saturate-200 brightness-105" />
+                 alt="logo" className="md:w-[7.5%] h-auto ml-60 contrast-more:100 saturate-200 brightness-105" />
 
-                <img src={IMAGES.LOGO} alt="logo" className="w-32 md:w-[15%] h-auto ml-52 contrast-more:90 saturate-150 brightness-100" />
+                <img src = 'https://upload.wikimedia.org/wikipedia/commons/6/68/Logo_FPT_Education.png'
+                 alt="logo" className="w-32 md:w-[15%] h-auto ml-52 contrast-more:90 saturate-150 brightness-100" />
             </div>
 
             {/* Toolbar */}

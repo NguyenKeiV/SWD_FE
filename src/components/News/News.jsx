@@ -6,7 +6,7 @@ import ScrollToTopButton from "../ScrollToTopButton/ScrollToTopButton";
 const newsList1 = [
     {
         title: "FPT University công bố phương thức tuyển sinh năm 2025",
-        image: "https://daihoc.fpt.edu.vn/wp-content/uploads/2025/06/1S6A0218-1-650x460.avif",
+        image: "https://daihoc.fpt.edu.vn/wp-content/uploads/2025/06/z6750195980950_6e5cb009218b935a2abe53937beb15d8-2048x1365.avif",
         date: "15/06/2025",
         summary:
             "Trường Đại học FPT chính thức công bố phương thức tuyển sinh năm 2025 với nhiều điểm mới, tạo điều kiện thuận lợi cho thí sinh trên toàn quốc.",
@@ -173,7 +173,7 @@ const News = () => {
             {/* Banner */}
             <div className="relative h-64 w-full">
                 <img
-                    src="https://daihoc.fpt.edu.vn/wp-content/uploads/2025/01/header-2024-png.avif"
+                    src="https://ptehelper.com.au/wp-content/uploads/2025/03/fpt-can-tho-hoc-phi-1-nam-1.jpg"
                     alt="Tin tức và sự kiện FPT"
                     className="w-full h-full object-cover"
                 />

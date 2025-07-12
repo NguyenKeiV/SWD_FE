@@ -19,7 +19,7 @@ const Introduction = () => {
                 {/* Hero Section */}
                 <div className="relative h-[150]">
                     <img
-                        src="https://daihoc.fpt.edu.vn/wp-content/uploads/2025/01/header-2024-png.avif"
+                        src="https://ptehelper.com.au/wp-content/uploads/2025/03/fpt-can-tho-hoc-phi-1-nam-1.jpg"
                         alt="FPT University Campus"
                         className=" h-full w-auto object-cover"
                     />
@@ -63,7 +63,7 @@ const Introduction = () => {
                                 <p>Theo mô hình của một trường đại học thế hệ mới, gắn đào tạo với thực tiễn doanh nghiệp.</p>
                             </div>
                             <img
-                                src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/128519036_1735296023299592_2956495484616895293_n-1536x1058.avif"
+                                src="https://images02.vietnamworks.com//companyprofile/FPT-Education/en/CT_HDQT_Le_Truong_Tung_fn_.jpg"
                                 alt="FPT University Students"
                                 className="rounded-xl shadow-lg h-full w-full"
                             />
@@ -100,7 +100,7 @@ const Introduction = () => {
                             {/* Campus Hà Nội */}
                             <div className="relative group overflow-hidden rounded-xl">
                                 <img
-                                    src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/07/186495053_4677120922317472_6915415257506550014_n-650x488.webp"
+                                    src="https://cdnphoto.dantri.com.vn/X2770V8G-b149OhGhotqbyIut98=/zoom/1200_630/2021/01/31/czxczczcz-1612100910190.png"
                                     alt="Campus Hà Nội"
                                     className="w-full h-64 object-cover transform group-hover:scale-110 transition duration-500"
                                 />
@@ -112,7 +112,7 @@ const Introduction = () => {
                             {/* Campus TP. HCM */}
                             <div className="relative group overflow-hidden rounded-xl">
                                 <img
-                                    src="https://daihoc.fpt.edu.vn/wp-content/uploads/2022/08/dai-hoc-fpt-tp-hcm-1.jpeg"
+                                    src="https://images2.thanhnien.vn/528068263637045248/2024/6/21/fpt-17189567344561397268426.png"
                                     alt="Campus TP. HCM"
                                     className="w-full h-64 object-cover transform group-hover:scale-110 transition duration-500"
                                 />
@@ -136,7 +136,7 @@ const Introduction = () => {
                             {/* Campus Cần Thơ */}
                             <div className="relative group overflow-hidden rounded-xl">
                                 <img
-                                    src="https://daihoc.fpt.edu.vn/wp-content/uploads/2021/12/DH-FPT-Ca%CC%82%CC%80n-Tho%CC%9B.jpeg"
+                                    src="https://360view.vn/data3/projects/vietnam/2024/fptu-can-tho/images/thumb.jpg"
                                     alt="Campus Cần Thơ"
                                     className="w-full h-64 object-cover transform group-hover:scale-110 transition duration-500"
                                 />
@@ -148,7 +148,7 @@ const Introduction = () => {
                             {/* Campus Quy Nhơn */}
                             <div className="relative group overflow-hidden rounded-xl">
                                 <img
-                                    src="https://image.tinnhanhchungkhoan.vn/w660/Uploaded/2025/bvunahu/2019_10_10/hinhanhphoicanhtongtheduandhfptphanhieuaiquynhon_KIPH.jpg"
+                                    src="https://i.chungta.vn/2023/12/25/-6487-1703476918_1200x0.png"
                                     alt="Campus Quy Nhơn"
                                     className="w-full h-64 object-cover transform group-hover:scale-110 transition duration-500"
                                 />
@@ -193,7 +193,7 @@ const Introduction = () => {
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
                                 <div className="flex flex-col items-center space-y-4">
                                     <img
-                                        src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/2021-FPTU-Eng-1-e1716873881209-1024x416-1.webp"
+                                        src="https://upload.wikimedia.org/wikipedia/commons/6/68/Logo_FPT_Education.png"
                                         alt="Trường Đại học FPT"
                                         className="h-16 object-contain"
                                     />
@@ -202,7 +202,7 @@ const Introduction = () => {
 
                                 <div className="flex flex-col items-center space-y-4">
                                     <img
-                                        src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/Screen-Shot-2024-12-05-at-17.11.43-png.avif"
+                                        src="https://frtc.fsb.edu.vn/wp-content/uploads/2021/07/Logo-FSB.png"
                                         alt="Viện Quản trị & Công nghệ FSB"
                                         className="h-16 object-contain"
                                     />
@@ -211,7 +211,7 @@ const Introduction = () => {
 
                                 <div className="flex flex-col items-center space-y-4">
                                     <img
-                                        src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/2022-Greenwich-Eng-e1716872574243.webp"
+                                        src="https://cdn1.vieclam24h.vn/upload/files_cua_nguoi_dung/logo/2018/01/05/1515132143_Logo-_Greenwich.png"
                                         alt="Greenwich Việt Nam"
                                         className="h-16 object-contain"
                                     />
@@ -220,7 +220,7 @@ const Introduction = () => {
 
                                 <div className="flex flex-col items-center space-y-4">
                                     <img
-                                        src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/Logo-Swinburne.webp"
+                                        src="https://swinburne-vn.edu.vn/wp-content/themes/swinburne/resources/assets/images/header/Logo_SUT.jpg"
                                         alt="Swinburne Việt Nam"
                                         className="h-16 object-contain"
                                     />
@@ -229,7 +229,7 @@ const Introduction = () => {
 
                                 <div className="flex flex-col items-center space-y-4">
                                     <img
-                                        src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/polym.webp"
+                                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ-TT5znxXn88RrZgJ811R4f0Yagf4zshbzzg&s"
                                         alt="Melbourne Polytechnic Việt Nam"
                                         className="h-16 object-contain"
                                     />
@@ -238,7 +238,7 @@ const Introduction = () => {
 
                                 <div className="flex flex-col items-center space-y-4">
                                     <img
-                                        src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/Logo-Btec.webp"
+                                        src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/company_logos/spcMHA7eH1INBQFvqh6Wkj266e8IzRkY_1644922155____da2e99d299b5f54dd5123fba1e415d3e.jpg"
                                         alt="Cao đẳng Anh quốc BTEC FPT"
                                         className="h-16 object-contain"
                                     />
@@ -247,7 +247,7 @@ const Introduction = () => {
 
                                 <div className="flex flex-col items-center space-y-4">
                                     <img
-                                        src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/image-e1716873643164-1024x333-1.webp"
+                                        src="https://blob-careerlinkvn.careerlink.vn/company_logos/6c7278a645f04fda4b16038e6dff95af.png"
                                         alt="Viện Đào tạo Quốc tế FPT"
                                         className="h-16 object-contain"
                                     />
@@ -256,7 +256,7 @@ const Introduction = () => {
 
                                 <div className="flex flex-col items-center space-y-4">
                                     <img
-                                        src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/Poly.webp"
+                                        src="https://upload.wikimedia.org/wikipedia/commons/2/20/FPT_Polytechnic.png"
                                         alt="Cao đẳng FPT Polytechnic"
                                         className="h-16 object-contain"
                                     />
@@ -265,7 +265,7 @@ const Introduction = () => {
 
                                 <div className="flex flex-col items-center space-y-4">
                                     <img
-                                        src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/2021-PhoThongFPT-e1716874080687.webp"
+                                        src="https://cdn-new.topcv.vn/unsafe/https://static.topcv.vn/company_logos/N0yqyTYJJxlce2Sb0s3WzIREVmycF2hq_1694482484____4500e4dce375fcc0504808f0c3053f87.png"
                                         alt="Hệ thống Trường Phổ thông FPT"
                                         className="h-16 object-contain"
                                     />
@@ -274,9 +274,9 @@ const Introduction = () => {
 
                                 <div className="flex flex-col items-center space-y-4">
                                     <img
-                                        src="https://daihoc.fpt.edu.vn/wp-content/uploads/2024/11/logoPTCD.webp"
+                                        src="https://caodangfpt840897247.wordpress.com/wp-content/uploads/2019/04/logofpt.jpg"
                                         alt="Phổ thông Cao đẳng"
-                                        className="h-16 object-contain"
+                                        className="h-16 w-auto object-contain"
                                     />
                                     <p className="text-center font-semibold">Phổ thông Cao đẳng</p>
                                 </div>

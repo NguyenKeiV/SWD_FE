@@ -17,9 +17,9 @@ const Contact = () => {
             {/* Banner */}
             <div className="relative h-56 w-full">
                 <img
-                    src="https://daihoc.fpt.edu.vn/wp-content/uploads/2025/01/header-2024-png.avif"
+                    src="https://cdn.giaoducthoidai.vn/images/fcae8f2690d9fbe754ba1ab12fb4ea0e6c94767fb0d6524f2f6cba7afd830c142d252a321927b61b3fdd61a13b259f6a1aafc806cffbf194342a5f86bf37adac/dd-nl-9641.jpeg"
                     alt="Liên hệ FPT University"
-                    className="w-full h-full object-cover"
+                    className="w-full h-56 object-cover"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                     <h1 className="text-2xl md:text-5xl font-bold text-white text-center px-4">

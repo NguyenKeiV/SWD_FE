@@ -512,7 +512,7 @@ const ConsultingBriefCase = () => {
                         </button>
                     </form>
 
-
+{/* ================================================================== */}
                     <div className="fixed top-6 right-10 z-50">
                         <button
                             className="relative"
@@ -550,6 +550,8 @@ const ConsultingBriefCase = () => {
                             </div>
                         )}
                     </div>
+{/* ================================================================== */}
+
                     {/* Alerts */}
                     {/* ...table... */}
                     <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
@@ -558,7 +560,7 @@ const ConsultingBriefCase = () => {
                             <thead>
                                 <tr className="bg-orange-100 text-gray-700">
                                     <th className="p-3 text-left">ID</th>
-                                    <th className="p-3 text-left">Mã Hồ Sơ</th>
+                                    
                                     <th className="p-3 text-left">Xem Chi Tiết</th>
                                     <th className="p-3 text-left">Họ và Tên</th>
                                     <th className="p-3 text-left">Email</th>
@@ -590,7 +592,6 @@ const ConsultingBriefCase = () => {
                                     applicants.map((applicant, idx) => (
                                         <tr key={applicant.id} className="border-b hover:bg-orange-50">
                                             <td className="p-3">{(currentPage - 1) * PAGE_SIZE + idx + 1}</td>
-                                            <td className="p-3">{applicant.id}</td>
                                             <td className="p-3">
                                                 <button
                                                     onClick={() => handleViewDetails(applicant)}
@@ -682,7 +683,7 @@ const ConsultingBriefCase = () => {
                             <Search size={18} /> Tìm kiếm
                         </button>
                     </form>
-
+{/* ================================================================== */}
                     <div className="fixed top-6 right-10 z-50">
                         <button
                             className="relative"
@@ -693,7 +694,7 @@ const ConsultingBriefCase = () => {
                             {notificationCount > 0 && (
                                 <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs">
                                     {notificationCount}
-                                </span>
+                                </span>  
                             )}
                         </button>
                         {showNotifications && (
@@ -720,14 +721,15 @@ const ConsultingBriefCase = () => {
                             </div>
                         )}
                     </div>
+
+{/* ================================================================== */}       
+             
                     <div className="overflow-x-auto bg-white rounded-xl shadow text-nowrap">
                         <table className="min-w-full text-sm">
                             <thead>
                                 <tr className="bg-orange-100 text-gray-700">
                                     <th className="p-3 text-left">STT</th>
-                                    <th className="p-3 text-left">Mã Hồ Sơ</th>
                                     <th className="p-3 text-left">Trạng Thái Hồ Sơ</th>
-                                    <th className="p-3 text-left">Mã Tư vấn viên</th>
                                     <th className="p-3 text-left">Họ tên</th>
                                     <th className="p-3 text-left">Email</th>
                                     <th className="p-3 text-left">Ngành Học</th>
@@ -747,11 +749,10 @@ const ConsultingBriefCase = () => {
                                     claimedBookings.map((booking, idx) => (
                                         <tr key={booking.id} className="border-b hover:bg-orange-50 transition">
                                             <td className="p-3">{(processPage - 1) * PAGE_SIZE + idx + 1}</td>
-                                            <td className="p-3">{booking.id}</td>
+                                        
                                             <td className="p-3">
                                                 <StatusBadge status={booking.status} />
                                             </td>
-                                            <td className="p-3">{booking.claimedByConsultantId}</td>
                                             <td className="p-3">{booking.userFullName}</td>
                                             <td className="p-3">{booking.userEmail}</td>
                                             <td className="p-3">{booking.interestedSpecialization}</td>
@@ -832,7 +833,6 @@ const ConsultingBriefCase = () => {
                                 <tr className="bg-orange-100 text-gray-700">
                                     <th className="p-3 text-left">STT</th>
                                     <th className="p-3 text-left">Trạng thái</th>
-                                    <th className="p-3 text-left">Mã Hồ Sơ</th>
                                     <th className="p-3 text-left">Mã Tư vấn viên</th>
                                     <th className="p-3 text-left">Họ tên</th>
                                     <th className="p-3 text-left">Email</th>
@@ -858,7 +858,6 @@ const ConsultingBriefCase = () => {
                                             <td className="p-3">
                                                 <StatusBadge status={booking.status} />
                                             </td>
-                                            <td className="p-3">{booking.id}</td>
 
                                             <td className="p-3">{booking.claimedByConsultantId}</td>
                                             <td className="p-3">{booking.userFullName}</td>
