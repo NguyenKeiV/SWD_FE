@@ -16,16 +16,18 @@ const LoginPage = () => {
 
   const navigate = useNavigate(); // Hook để điều hướng
 
-  // Microsoft Identity Claims: Backend sử dụng Microsoft Identity framework,
+  // "Microsoft Identity Claims": Backend sử dụng Microsoft Identity framework,
   //  nên role được lưu theo format claim standard của Microsoft
 
   // Hàm decode JWT token để lấy role
   const decodeJWTToken = (token) => { // Hàm này sẽ decode JWT token
     try {
       // JWT có 3 phần: header.payload.signature
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const jsonPayload = decodeURIComponent(
+      const base64Url = token.split(".")[1]; // Payload được mã hóa dưới dạng Base64URL
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/"); // Hàm này chuyển đổi về định dạng Base64 chuẩn
+
+      // Decode Base64 và xử lý UTF-8
+      const jsonPayload = decodeURIComponent(  // Payload có thể chứa ký tự Unicode, cần xử lý đúng encoding
         atob(base64)
           .split("")
           .map(function (c) {
@@ -33,14 +35,14 @@ const LoginPage = () => {
           })
           .join("")
       );
-      return JSON.parse(jsonPayload);
+      return JSON.parse(jsonPayload); // Chuyển đổi chuỗi JSON thành object JavaScript
     } catch (error) {
       console.error("Error decoding JWT:", error);
       return null;
     }
   };
 
-  // Hàm lấy role từ JWT payload
+  // Trích xuất thông tin role/quyền từ JWT token Payload đã được decode
   const getRoleFromToken = (decodedToken) => {
     if (!decodedToken) return null;
 
@@ -55,7 +57,7 @@ const LoginPage = () => {
       "scope",
     ];
 
-    for (const claim of roleClaims) {
+    for (const claim of roleClaims) { // Duyệt qua từng claim để tìm role
       if (decodedToken[claim]) {
         return decodedToken[claim];
       }
@@ -67,6 +69,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault(); // Ngăn chặn hành vi mặc định của form (submit, reload trang, v.v.)
     let newErrors = {};
+
     // email regex để kiểm tra định dạng email
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -88,7 +91,7 @@ const LoginPage = () => {
       return;
     }
 
-    setIsLoading(true);
+    setIsLoading(true); // Bắt đầu quá trình đăng nhập
 
     try {
       const response = await axios.post(
@@ -113,7 +116,8 @@ const LoginPage = () => {
         // Lấy token từ response
         const token = data.token || data.accessToken || data.access_token;
 
-        if (token) {
+        if (token) { // Kiểm tra xem token có tồn tại không ?
+
           // Decode JWT token để lấy role
           const decodedToken = decodeJWTToken(token);
           console.log("Decoded token payload:", decodedToken);
@@ -355,7 +359,7 @@ const LoginPage = () => {
                     Đang điều hướng trang...
                   </div>
                 ) : (
-                  "Log in" // Hiển thị chữ "Log in" khi không đang loading
+                  "Log in"
                 )}
               </button>
             </div>

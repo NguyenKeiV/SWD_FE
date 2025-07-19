@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
-import axios from 'axios';
-import dayjs from 'dayjs';
+import axios from 'axios'; 
+import dayjs from 'dayjs'; // Thư viện để định dạng ngày tháng
 const ProfileResearch = () => {
 
     const [name, setName] = useState('');
@@ -34,7 +34,7 @@ const ProfileResearch = () => {
 
         const displayText =
 
-            status === 'Waiting' ? 'Đang Chờ Xử Lý' :
+            status === 'Waiting' ? 'Đang Chờ Xử Lý' : // Hiển thị trạng thái tương ứng
                 status === 'InProgress'
                     ? 'Đang Trong Quá Trình Xét Tuyển' :
                     status === 'Approved' ? 'Đã Phê Duyệt Thành Công'

@@ -75,7 +75,7 @@ const Toolbar2 = () => {
                         ) : item === text.TrangChu ? (
                             <button
                                 className="text-white"
-                                onClick={() => handleNavigateWithLoading("/")}
+                                onClick={() => handleNavigateWithLoading("/consultant")}
                             >
                                 {item}
                             </button>

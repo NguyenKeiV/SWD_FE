@@ -256,7 +256,140 @@ Bộ phận tư vấn viên của trường Đại học FPT sẽ là nhóm ngư
 
 Thời gian xử lý hồ sơ đăng ký tư vấn / đăng ký xét tuyển ?
 
-.Đối với hồ sơ đăng ký tư vấn, bộ phận Tư vấn viên sẽ chủ động liên hệ và xử lý hồ sơ cho bạn (chậm nhất là 2 ngày làm việc), không tính Thứ 7/Chủ nhật và ngày nghỉ lễ
-.Đối với hô sơ xét tuyển, bộ phận Tư vấn viên sẽ sàng lọc và đánh giá hồ sơ của bạn dựa theo quy định xét tuyển của Đại học FPT (2 tuần kể từ ngày nộp hồ sơ), , không tính Thứ 7/Chủ nhật và ngày nghỉ lễ
+.Đối với hồ sơ đăng ký "tư vấn", bộ phận Tư vấn viên sẽ chủ động liên hệ và xử lý hồ sơ cho bạn (chậm nhất là 2 ngày làm việc), không tính Thứ 7/Chủ nhật và ngày nghỉ lễ
+.Đối với hồ sơ "xét tuyển", bộ phận Tư vấn viên sẽ sàng lọc và đánh giá hồ sơ của bạn dựa theo quy định xét tuyển của Đại học FPT (2 tuần kể từ ngày nộp hồ sơ), không tính Thứ 7/Chủ nhật và ngày nghỉ lễ
+
+
+
+Có yêu cầu bắt buộc nào đối với đăng ký không ?
+
+.Đối với hồ sơ đăng ký "tư vấn", bạn vui lòng điền đầy đủ thông tin bao gồm (Họ và tên, Số điện thoại, Email, Tỉnh/Thành phố, Ngành học, Cơ sở đào tạo và Ghi chú thêm)
+Bộ phận Tư vấn viên có thể sàng lọc và phản hồi thắc mắc của bạn trong thời gian sớm nhất nhé.
+
+.Đối với hồ sơ "xét tuyển", bạn vui lòng điền đầy đủ thông tin (Họ và tên, Số điện thoại, Email, Tỉnh/Thành phố, Ngành học, Cơ sở đào tạo, Điểm 3 môn học "Toán, Văn, Anh", trường THPT, năm Tốt nghiệp, ...)
+Bộ phận Tư vấn viên sẽ sàng lọc và đánh giá hồ sơ của bạn dựa theo quy định xét tuyển của Đại học FPT (2 tuần kể từ ngày nộp hồ sơ), không tính Thứ 7/Chủ nhật và ngày nghỉ lễ
+
+1. Tôi cần chuẩn bị giấy tờ gì khi đăng ký xét tuyển vào Đại học FPT?
+Bạn cần chuẩn bị: Học bạ THPT, giấy chứng nhận tốt nghiệp tạm thời hoặc bằng tốt nghiệp THPT, giấy khai sinh, CCCD/CMND, ảnh thẻ, các giấy tờ ưu tiên (nếu có).
+
+2. Nếu tôi chưa có điểm thi tốt nghiệp THPT thì có đăng ký xét tuyển được không?
+Bạn có thể đăng ký trước, sau đó bổ sung điểm thi khi có kết quả. Nhà trường sẽ hướng dẫn cập nhật thông tin.
+
+3. Tôi có thể đăng ký xét tuyển nhiều ngành cùng lúc không?
+Có, bạn được phép đăng ký xét tuyển nhiều ngành để tăng cơ hội trúng tuyển.
+
+4. Sau khi đăng ký tư vấn/xét tuyển, tôi sẽ nhận được phản hồi qua kênh nào?
+Bạn sẽ nhận được phản hồi qua email, điện thoại hoặc tài khoản đã đăng ký trên hệ thống.
+
+5. Nếu thông tin đăng ký bị sai, tôi có thể sửa lại không?
+Bạn có thể liên hệ bộ phận tư vấn viên qua hotline hoặc email để được hỗ trợ chỉnh sửa thông tin.
+
+6. Có cần nộp bản giấy hồ sơ không hay chỉ cần đăng ký online?
+Bạn chỉ cần đăng ký online trước, khi nhập học sẽ nộp bản giấy theo hướng dẫn của nhà trường.
+
+7. Tôi muốn đăng ký xét tuyển bằng học bạ thì cần điều kiện gì?
+Bạn cần đạt xếp hạng Top50 theo điểm học bạ lớp 11 và học kỳ 1 lớp 12, điểm Toán + 2 môn bất kỳ học kỳ 2 lớp 12 từ 21 điểm trở lên.
+
+8. Tôi có thể tra cứu trạng thái hồ sơ xét tuyển ở đâu?
+Bạn truy cập mục "TRA CỨU HỒ SƠ" trên website hoặc đường dẫn http://localhost:5173/lookup-profile.
+
+9. Nếu tôi thuộc diện ưu tiên, cần nộp giấy tờ gì?
+Bạn cần nộp giấy chứng nhận ưu tiên (con thương binh, dân tộc thiểu số, vùng khó khăn...) theo quy định của Bộ GD&ĐT.
+
+10. Tôi có thể nhận tư vấn trực tiếp tại cơ sở không?
+Có, bạn có thể đến trực tiếp các cơ sở của Đại học FPT để được tư vấn hoặc đăng ký online để đặt lịch hẹn.
+
+11. Thời gian nhập học dự kiến là khi nào?
+Thời gian nhập học dự kiến sẽ được thông báo trên website chính thức của trường và qua email cho thí sinh trúng tuyển.
+Đại học FPT sẽ tổ chức nhập học theo “lịch chung của Bộ Giáo dục & Đào tạo cho đợt 1”, tức là vào khoảng cuối tháng 8 – đầu tháng 9, giống như các trường đại học khác 
+"KHUNG THỜI GIAN":
+.Khoảng cuối tháng 8: Xác nhận nhập học trực tuyến và/hoặc nộp hồ sơ, tiền học phí theo thông báo của FPT.
+.Đầu tháng 9: Tựu trường, kiểm tra tiếng Anh, khai giảng.
+.Một tuần sau đó: Tuần định hướng, F‑Camp, rèn luyện tập trung,…
+
+12. Có chương trình học tiếng Anh dự bị không?
+Có, trường tổ chức chương trình tiếng Anh dự bị cho sinh viên chưa đạt chuẩn đầu vào tiếng Anh.
+
+13. Tôi có thể đăng ký xét tuyển online ở đâu?
+Bạn có thể đăng ký xét tuyển online tại website http://localhost:5173/admission-form.
+
+14. Nếu tôi muốn chuyển ngành sau khi nhập học thì có được không?
+Bạn có thể chuyển ngành theo quy định của trường, cần liên hệ phòng đào tạo để được hướng dẫn.
+
+15. Trường có hỗ trợ vay vốn học phí không?
+Có, trường liên kết với các ngân hàng để hỗ trợ sinh viên vay vốn học phí với lãi suất ưu đãi.
+
+16. Tôi có thể đăng ký xét tuyển bằng chứng chỉ ngoại ngữ quốc tế không?
+Có, bạn có thể sử dụng các chứng chỉ như IELTS, TOEFL, JLPT, TOPIK... để xét tuyển theo quy định của trường.
+
+17. Có giới hạn độ tuổi khi đăng ký xét tuyển không?
+Không, trường không giới hạn độ tuổi khi đăng ký xét tuyển đại học.
+
+18. Tôi có thể đăng ký xét tuyển vào nhiều cơ sở cùng lúc không?
+Bạn có thể chọn cơ sở mong muốn khi đăng ký, mỗi thí sinh chỉ được xét tuyển vào một cơ sở cho mỗi ngành.
+
+19. Khi nào tôi nhận được giấy báo nhập học?
+Giấy báo nhập học sẽ được gửi qua email hoặc tài khoản đăng ký sau khi bạn trúng tuyển và hoàn thành thủ tục xác nhận nhập học.
+
+20. Trường có tổ chức ngày hội tư vấn tuyển sinh không?
+Có, trường thường xuyên tổ chức ngày hội tư vấn tuyển sinh tại các cơ sở và trực tuyến.
+
+21. Tôi có thể đăng ký xét tuyển bằng kết quả thi đánh giá năng lực không?
+Có, trường chấp nhận kết quả kỳ thi đánh giá năng lực của ĐHQG Hà Nội và ĐHQG TP.HCM.
+
+22. Nếu tôi là sinh viên quốc tế, cần chuẩn bị gì khi đăng ký?
+Sinh viên quốc tế cần chuẩn bị hộ chiếu, giấy tờ tùy thân, bằng tốt nghiệp THPT và các giấy tờ liên quan theo hướng dẫn của trường.
+
+23. Có chương trình học bổng cho sinh viên quốc tế không?
+Có, sinh viên quốc tế có thể đăng ký các chương trình học bổng theo quy định của trường.
+
+24. Tôi có thể đăng ký xét tuyển ngành khác ngoài CNTT không?
+Có, trường đào tạo nhiều ngành như Quản trị kinh doanh, Ngôn ngữ, Luật, Công nghệ truyền thông...
+
+25. Nếu tôi đã tốt nghiệp THPT từ năm trước, có thể đăng ký không?
+Có, thí sinh đã tốt nghiệp THPT các năm trước vẫn có thể đăng ký xét tuyển. (TRỄ NHẤT là 1 NĂM, tính từ thời điểm của năm hiện tại)
+(Ví dụ: khi bạn đã tốt nghiệp THPT vào NĂM 2024, nếu vẫn muốn đăng ký xét tuyển, hồ sơ của bạn HOÀN TOÀN HỢP LỆ)
+
+26. Trường có hỗ trợ ký túc xá cho sinh viên không?
+Có, trường có ký túc xá tại các cơ sở (Cần Thơ, Hà Nội, Quy Nhơn và Đà Nẵng) bạn có thể đăng ký khi nhập học.
+
+27. Tôi có thể đăng ký xét tuyển bằng điểm học bạ lớp 12 không?
+Có, bạn có thể đăng ký xét tuyển bằng điểm học bạ lớp 12 theo phương thức Top50.
+
+28. Nếu tôi muốn biết thêm về ngành học, liên hệ ở đâu?
+Bạn có thể liên hệ bộ phận tư vấn qua hotline, email hoặc website chính thức của trường.
+
+29. Có chương trình thực tập doanh nghiệp cho sinh viên không?
+Có, 100% sinh viên được thực tập tại doanh nghiệp từ năm 3 (KỲ 6).
+
+30. Tôi có thể đăng ký xét tuyển vào chương trình liên kết quốc tế không?
+Có, trường có các chương trình liên kết quốc tế, bạn có thể đăng ký theo hướng dẫn trên website.
+
+Chi tiết ngành "Kỹ thuật phần mềm"
+
+Tổng quan và mục tiêu đào tạo
+Cung cấp nền tảng vững chắc về tin học, toán, quy trình phát triển phần mềm (phân tích, thiết kế, kiểm thử, bảo trì, quản lý dự án) và công nghệ SMAC (Social, Mobility, Analytics, Cloud)
+Trường đào tạo theo tiêu chuẩn quốc tế: ACM, ABET (Mỹ), VINASA, EC-Council, Oracle, Cisco… sử dụng giáo trình bản quyền McGraw‑Hill, Pearson 
+Gồm 9 học kỳ trong 4 năm, trong đó có giai đoạn chuyên sâu, chọn môn theo định hướng cá nhân, tích hợp AI, IoT và mô hình “On‑the‑Job Training” thực tế từ học kỳ 6
+
+Cấu trúc chương trình đào tạo
+Năm 1: Nền tảng
+Học định hướng đại học, tiếng Anh cơ bản, thể chất, nhạc cụ truyền thống 
+
+Năm 2–3: Kiến thức chuyên ngành tổng quát
+Học về khoa học máy tính, hệ thống thông tin, OOP, cấu trúc dữ liệu, cơ sở dữ liệu, phát triển ứng dụng, kiểm thử, đạo đức CNTT, tiếng Nhật 
+
+Năm 3–4: Thực tập doanh nghiệp – OJT (4–8 tháng)
+Sinh viên tham gia dự án thực tế tại FPT Software hoặc hơn 300 doanh nghiệp đối tác (Amazon, Intel, Viettel…) 
+Business Wire
+
+Năm 4: Chuyên sâu & đồ án tốt nghiệp
+Chuyên sâu về mobile, UI/UX, kiến trúc phần mềm, quản lý dự án, và thực hiện đồ án tốt nghiệp hợp tác trực tiếp với doanh nghiệp
+
+Cơ hội nghề nghiệp sau tốt nghiệp
+Các vị trí: front-/back-end developer, full-stack, mobile, game, tester, business analyst, QA, SAP consultant, bridge engineer (dành cho thị trường Nhật, Hàn) 
+
+Tỷ lệ sinh viên có việc ngay sau tốt nghiệp đạt 98%, nhiều em làm việc ở Mỹ, Nhật, Đức, Singapore với mức lương khởi điểm từ 300–1 000 USD (có thể cao hơn) 
+Kỹ năng mềm, tiếng Anh, ngoại ngữ thứ 2, dự án thực tế là điểm cộng lớn khi vào doanh nghiệp nước ngoài.
 
 

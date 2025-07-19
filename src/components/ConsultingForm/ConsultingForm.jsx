@@ -13,7 +13,7 @@ const ConsultingForm = () => {
         "Tây Ninh", "Vĩnh Long", "Đồng Tháp", "Cà Mau", "An Giang"
     ];
 
-    const sortedProvinces = [...provinces].sort((a, b) => a.localeCompare(b, 'vi'));
+    const sortedProvinces = [...provinces].sort((a, b) => a.localeCompare(b, 'vi')); 
 
     const majors = [
         'Kỹ thuật phần mềm', 'An toàn thông tin', 'Trí tuệ nhân tạo', 'Vi mạch bán dẫn',
@@ -49,6 +49,7 @@ const ConsultingForm = () => {
 
 
     const navigate = useNavigate();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         let newErrors = {};
@@ -141,7 +142,7 @@ const ConsultingForm = () => {
 
                     setIsLoadingPage(false);
                     navigate('/');
-                }, 1500);
+                }, 2000);
             }
         } catch (error) {
             console.error('Booking error:', error);

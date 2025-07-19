@@ -102,13 +102,14 @@ const ConsultingApplicationForm = () => {
         setError("");
         try {
             let params = {
-                pageIndex: 31,
+                pageIndex: page,
                 pageSize: PAGE_SIZE,
-                status: "Waiting",
+                status: "Waiting", // Chỉ lấy hồ sơ đang chờ xử lý
             };
 
-            const removeVietnameseTones = (str) => {
-                return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+            // Hàm loại bỏ dấu tiếng Việt
+            const removeVietnameseTones = (str) => { 
+                return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D'); 
             }
 
             const provinces = [
@@ -167,13 +168,11 @@ const ConsultingApplicationForm = () => {
         setLoading(false);
     };
 
-    useEffect(() => {
+    useEffect(() => { 
         if (activeTab === "view") {
             fetchApplicationForm(search, currentPage);
         }
     }, [search, currentPage, activeTab]);
-
-
 
 
     const handleViewDetails = (applicant) => {
@@ -183,13 +182,12 @@ const ConsultingApplicationForm = () => {
 
     const closeModal = () => {
         setShowModal(false);
-
     };
 
     // XỬ LÝ HỒ SƠ
     const claimApplication = async (bookingId) => {
-        const token = localStorage.getItem("token");
-        const userRole = localStorage.getItem("role");
+        const token = localStorage.getItem("token"); // Lấy token từ localStorage
+        const userRole = localStorage.getItem("role"); // Lấy role từ localStorage
         if (userRole != 'Consultant') {
             alert("Bạn không có quyền xử lý hồ sơ này.");
             return;
@@ -908,7 +906,6 @@ const ConsultingApplicationForm = () => {
                     </div>
                 </main>
             )}
-
 
 
             {/* XEM CHI TIẾT HỒ SƠ */}

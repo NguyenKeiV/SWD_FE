@@ -27,12 +27,10 @@ const ConsultingBriefCase = () => {
 
     const [activeTab, setActiveTab] = useState("view"); // 'view' hoặc 'process'
 
-
     const [processSearch, setProcessSearch] = useState(""); // Thêm state riêng cho tab process
 
     const [updateStatus, setUpdateStatus] = useState({}); // { [bookingId]: "Completed" | "Discarded" }
     const [updatingId, setUpdatingId] = useState(null); // Để disable nút khi đang cập nhật
-
 
     const handleStatusChange = (bookingId, value) => {
         setUpdateStatus(prev => ({ ...prev, [bookingId]: value }));
@@ -40,7 +38,6 @@ const ConsultingBriefCase = () => {
 
     const [discardedBookings, setDiscardedBookings] = useState([]);
     const [toast, setToast] = useState("");
-
 
     const showToast = (message) => {
         setToast(message);
@@ -69,7 +66,6 @@ const ConsultingBriefCase = () => {
 
         return () => ws.close();
     }, []);
-
 
     // MÀU SẮC CHO TỪNG TRẠNG THÁI HỒ SƠ
     const StatusBadge = ({ status }) => {
@@ -144,9 +140,9 @@ const ConsultingBriefCase = () => {
                 }
             }
             const res = await axios.get("http://localhost:8080/bookings/get-all-bookings", { params });
-            const items = res.data?.data?.items || [];
+            const items = res.data?.data?.items || []; // Lấy danh sách hồ sơ từ response
             setApplicants(items);
-            setTotalPages(res.data?.data?.totalPages || 1);
+            setTotalPages(res.data?.data?.totalPages || 1); // Cập nhật tổng số trang
 
         } catch (error) {
             setError("Không thể tải danh sách hồ sơ.");
@@ -172,8 +168,6 @@ const ConsultingBriefCase = () => {
 
     };
 
-
-
     const ResolveBriefcase = async (bookingId) => {
         const token = localStorage.getItem("token");
         const userRole = localStorage.getItem("role");
@@ -197,7 +191,7 @@ const ConsultingBriefCase = () => {
                 }
             );
 
-            if (response.data?.code === "Success!") {
+            if (response.data?.code === "Success!") { 
                 showToast("Đã chuyển sang mục Xử lý hồ sơ");
                 fetchBriefcases(); // gọi lại list
             } else {
@@ -218,13 +212,13 @@ const ConsultingBriefCase = () => {
         }
     };
 
-    const getSubFromToken = () => {
+    const getSubFromToken = () => { // Hàm này sẽ lấy sub từ token JWT
         const token = localStorage.getItem('token');
-        if (!token) return null;
+        if (!token) return null; 
 
         try {
-            const payload = token.split('.')[1];
-            const decodedPayload = JSON.parse(atob(payload));
+            const payload = token.split('.')[1]; // Lấy phần payload của token
+            const decodedPayload = JSON.parse(atob(payload)); // Giải mã base64
             return decodedPayload.sub || null;
         } catch (err) {
             console.error("Lỗi khi decode JWT:", err);
@@ -244,7 +238,6 @@ const ConsultingBriefCase = () => {
         setLoading(true);
         setError("");
 
-        // Xác định query param phù hợp
         let baseParams = {
             claimedByConsultantId: consultantId,
             pageIndex: page,
@@ -288,14 +281,13 @@ const ConsultingBriefCase = () => {
             }
         }
 
-
         // Lấy InProgress
         const paramsInProgress = { ...baseParams, status: "InProgress" };
         // Lấy Completed
         const paramsCompleted = { ...baseParams, status: "Completed" };
 
         try {
-            const [resInProgress, resCompleted] = await Promise.all([
+            const [resInProgress, resCompleted] = await Promise.all([ // Gọi API song song 
                 axios.get("http://localhost:8080/bookings/get-all-bookings", {
                     params: paramsInProgress,
                     headers: { Authorization: `Bearer ${token}` },
@@ -307,13 +299,13 @@ const ConsultingBriefCase = () => {
             ]);
 
             // Gộp kết quả
-            const itemsInProgress = resInProgress.data?.data?.items || [];
+            const itemsInProgress = resInProgress.data?.data?.items || []; // Lấy danh sách hồ sơ đang xử lý
             const itemsCompleted = resCompleted.data?.data?.items || [];
-            let allItems = [...itemsInProgress, ...itemsCompleted];
+            let allItems = [...itemsInProgress, ...itemsCompleted]; // Gộp cả 2 danh sách
 
             setClaimedBookings(allItems);
 
-            setTotalPages(
+            setTotalPages( // Tính tổng số trang từ cả 2 danh sách
                 resInProgress.data?.data?.totalPages || 1,
                 resCompleted.data?.data?.totalPages || 1,
             );
@@ -383,7 +375,7 @@ const ConsultingBriefCase = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setDiscardedBookings(response.data?.data?.items || []);
-            setTotalPages(response.data?.data?.totalPages || 1);
+            setTotalPages(response.data?.data?.totalPages || 1); // Tính tổng số trang
         } catch (error) {
             setError("Không thể tải danh sách hồ sơ bị loại bỏ.");
         }
@@ -774,8 +766,8 @@ const ConsultingBriefCase = () => {
                                                     className={`bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded transition
                                                          ${booking.status === "Completed" || booking.status === "Discarded" ? "opacity-35 cursor-not-allowed" : ""}`}
                                                     disabled={
-                                                        !updateStatus[booking.id] ||
-                                                        updatingId === booking.id ||
+                                                        !updateStatus[booking.id] || 
+                                                        updatingId === booking.id || // Đang cập nhật
                                                         booking.status === "Completed" ||
                                                         booking.status === "Discarded"
                                                     }
@@ -791,28 +783,28 @@ const ConsultingBriefCase = () => {
                         </table>
                     </div>
 
-                    {totalPages > 1 && (
+                    {totalPages > 1 && ( // Hiển thị phân trang nếu có nhiều trang
                         <div className="flex justify-center mt-4 gap-2">
                             <button
                                 className="px-3 py-1 rounded bg-orange-200 hover:bg-orange-400 disabled:opacity-50"
 
-                                onClick={() => setProcessPage(p => Math.max(1, p - 1))}
+                                onClick={() => setProcessPage(p => Math.max(1, p - 1))} // Giảm trang xuống 1
                                 disabled={processPage === 1}
                             >
                                 Trang trước
                             </button>
-                            {[...Array(totalPages)].map((_, i) => (
+                            {[...Array(totalPages)].map((_, i) => ( // Tạo nút cho từng trang
                                 <button
                                     key={i}
                                     className={`px-3 py-1 rounded ${processPage === i + 1 ? "bg-orange-500 text-white" : "bg-orange-200 hover:bg-orange-400"}`}
-                                    onClick={() => setProcessPage(i + 1)}
+                                    onClick={() => setProcessPage(i + 1)} // Chuyển đến trang i + 1
                                 >
-                                    {i + 1}
+                                    {i + 1} 
                                 </button>
                             ))}
                             <button
                                 className="px-3 py-1 rounded bg-orange-200 hover:bg-orange-400 disabled:opacity-50"
-                                onClick={() => setProcessPage(p => Math.min(totalPages, p + 1))}
+                                onClick={() => setProcessPage(p => Math.min(totalPages, p + 1))} // Tăng trang lên 1
                                 disabled={processPage === totalPages}
                             >
                                 Trang sau

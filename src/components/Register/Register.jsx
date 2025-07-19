@@ -33,10 +33,6 @@ const RegisterPage = () => {
         setIsLoading(true);
         const token = localStorage.getItem('token'); // Get token when making request
 
-        // setShowSuccess(true);
-        // setTimeout(() => setShowSuccess(false), 3000);
-        // Gửi API đăng ký tại đây nếu cần
-
         try {
             const response = await axios.post(
                 'http://localhost:8080/user/register',
